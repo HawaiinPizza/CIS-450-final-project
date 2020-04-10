@@ -1,66 +1,34 @@
 #+LATEX_HEADER : \usepackage{amsmath}
-* Specifications 
-** System Decomposistion  
-*** Data
-    - External Disk :: The disk to store things onto.
-    - Working Disk :: The disk represnting ram, where you temporary store data onto.
-    - Buffer :: A stream of bits, used ot reprsent data.
-    - Open Files :: A list of files/file descriptors that are currently open.
-*** Parameters
-**** Disk    
-    - Buffer SIze :: 512 Bytes.
-    - Inode Count :: Number of indoes within a sector. 3 within each sector
-    - Sector Size :: 512 Bytes
-    - Sector Num :: 1000  num.
-**** Files/Open Files
-    - MaxOpenFiles ::   Max open files is 10, but there's a paremeter here
-    - Max Path Length :: 256 characters
-    - Directory Name/Inode location :: 16 bytes for the name, 4 bytes for the inode
-    - Types of characters in file name :: case senstive letters, numbers and dots.
-    - Max number of files/dreictories ::  100
-    - Max number of files within a directory :: $\frac{\text{sectorSize}-16}{4}$
-*** Sets of function
-    Assume global data is always available.
-     Return 0 if successful.
-**** File System
-     - FS_BOOT() :: Check if external disk is made and if not, make it. Copy it to wrokign disk. If external disk exist BUT it's superblcok si wrong, osErrMsg=E_FILE_BOOT
-     - FS_SYNC() :: Copys the working disk to the external disk. 
-     - FS_RESET() :: Call FS_SYNC(), than make file system unavaible till FS_BOOT(). If the system already is unavaible, return E_FILE_RESET osErrMsg
-     - Access file system when not available :: osErrMsg is E_INVALID_ACCESS_ATTEMPT.
-**** File Access
-     - File_Create(string path)  :: create a file to the path. if this fails, due to there already being a file in the path, return with the E_FILE_CREATE errorr
-     - File_Open(string path) :: Put that file in the open file table
-     - File_Read(int fd, string buffer, int size)
-**** Direcotry
-**** Disk
-** Glossary/Notes 
-*** Glossary   
-
-   - SuperBlock :: Block of data used as metadata. In this project, it'll be in Block 0.
-     
-   - Sector :: A [Sector_SIZE]*512, made up of a bitmap.
-   - Disk :: A set of NUM_SECTORS * 1000 of sectors
-   - inode Block :: a Block of data that has metadata of the file. 
-     + Size of the file
-     + type of the file (normal/dicteory)
-     + which data blcoks are allociated ot ehre.
-   - Data Blocks :: Same size as a disk sector Part of the disk is dedicated to data block, with each data block being one to one with a file.
-   - Path lookup Process :: Go to root node (should be at 0), and check it's
-     
-*** Psudocode
-   - Disk :: Each disk is made up of an array of sectors, of size SECTOR_SIZE*512, and there's NUM_OF_SECTORS*1000
-     - Each
-   - Open file table :: The open file table has a maxium of 10 files, and for each file, it has a pointer, indicating it's current posistion
-     + Each read/write invokes seek, which shifts the direction *postivily*. Once it hits the end of the file lenght, it should stop.
 * Totest list
-  
-** Setting up the drives [0/1]
-*** File system scope   
+** Bitmaniplation     [0/2] :BIT:
+*** TODO Inode :INODE: [0/2]
+    
+    | Input              | Expected Output                                 | Actual Output |
+    |--------------------+-------------------------------------------------+---------------|
+    | Stream of 114 bits | Create an inode object, by the spefied 114 bits |               |
+    | Inode object       | write as a stream of 114 bits                   |               |
+    - [ ] WriteInode :: Covnert inode to 114 bit stream, an return this.
+    - [ ] ReadInode :: Convert 114 bit stream to inode, adn return it.
+*** TODO Directory :DIR: [0/2]
+    | Input               | Expected Output                                    | Actual Output |
+    |---------------------+----------------------------------------------------+---------------|
+    | Stream of 4096 bits | Create an direcotry object, with the specifcations |               |
+    | Directory object    | write as a stream of 4096 bits                     |               |
+    - [ ] WriteDir :: Covnert directory to 4096 bit stream, an return this.
+    - [ ] ReadDir :: Convert 4096 bit stream to directory, adn return it.
+** Setting up the drives  [0/2]
+*** TODO File system scope   :FS:
     Error MEssages are sent to osErrMsg
 **** TODO FS_Boot [0/3]   
      - INPUT :: External Disk Image/Lack of disk image
      - EX-OUTPUT :: Create disk if successful/mount disk. E_FILE_BOOT if failure
      - AC-OUTPUT ::
+       | Input                                        | Expected Output                              | Acutal Output |
+       |----------------------------------------------+----------------------------------------------+---------------|
+       | No external disk                             | Create a external disk, than rerun FS_BOOT() |               |
+       | Exeternal disk with correct magical number   | cloen external disk to working disk          |               |
+       | Exeternal disk with incorrect magical number | retrun E_FILE_BOOT                           |               |
+       
      - [ ] Success NoDisk :: The external disk does not exist, creates it
       
      - [ ] Success Disk :: The external disk does  exist, clone it to wroking test and verify
@@ -77,16 +45,7 @@
      - [ ] File System is unavaible to write till fs_BOOT :: The file system is unable to be access til FS_Boot is claled. Any attmpt to do so will result in E_INVALID_ACCESS_ATTEMPT
      - [ ] Attmpt to access filesystem before/after FS_Reset ::  Access Stuff/E_INVALID_ACCESS_ATTEMPT
      - [ ] Attmpt to access filestyem before/after FS_Boot ::  E_INVALID_ACCESS_ATTEMPT/Access Stuff
-**** TODO Correct parameters and read disk     
-     - INPUT :: Paremters of the system.
-       + Number of sectors
-       + Size of each sector
-       + Number of Inodes within each sector
-     - Function :: Check the paremetsr, and if correct, read disk
-     - [ ] Make sure SectorSize/SectorNum is nonzero :: Invalid size/num exception;
-     - [ ] Make sure SectorNum does not exceed $\frac{2^{\text{Sector Size/Number of Inodes within a Sector}}}{\text{Sector Size} \ *\ 1024E3}$ :: Number of sectors exceed Sector Size/number of inodes iwthin each sector
-     - [ ]  :: 
-*** Disk Scope       
+*** TODO Disk Scope      :DS:
     Error MEssages are sent to diskErrMsg
 **** TODO DISK_SETUP and Save [0/3]
      These are the settuping up, and saving/loading disks.
@@ -118,7 +77,7 @@
     - Expected Output :: given path, get the inode assoicated with it | -1 if that path is not found with the correct type
     - AOutput :: 
       
-*** TODO DIR     [0/2]
+*** TODO DIR     [0/2] :DIR:
 **** TODO Directory Create [0/5]
      ERROR MESSAGE to osErrMsg 
 	  - Input :: String Path
@@ -140,7 +99,7 @@
      - [ ] DIR_READ Success :: The buffer is of appoperaite size, adn as such, you can write each inode to it.
      - [ ] DIR_READ Faiure Size too small :: The buffer is of too small size, return E_BUFFER_TOO_SMALL
      - [ ] DIR_READ Faiure Dir no eixst :: directory does not exist, return E_DIR_NO_EXIST
-*** TODO Files [0/2]
+*** TODO Files [0/2] :FILE:
 **** TODO Create/Open and Close [0/10]
     Errors go to osErrMsg
     - INPUT :: string File
@@ -172,7 +131,7 @@
     - [ ] File_Write(int fd, string fuffer, int size) Failure maximum file size :: While writing, if you find there's the file takes up more than 10 data blcoks, return E_FILE_TOO_BIG
       
 ** Seek and unLink [0/1]
-*** TODO File_Seek and Dir/File_UnLink[0/10]
+*** TODO File_Seek and Dir/File_UnLink [0/10]  :FILE:DIR: 
     Error -> osErrMsg
     - Input ::  string file | strign file | string path
     - Expected Ouput ::   new location of file poitner. | file/dir is deleted
@@ -193,7 +152,7 @@
 * Algorithm/Code
 ** Whoel Porgram decompsiostion
    This is an outline/code of how the whole program will be. 
-** Bit Parsing/Data Strucutre
+** Bit Parsing/Data Strucutre :BIT:
    - As we are writing bits, we have to format the disk to be able to read and write bits.
    - SUPERBLOCK | indoebitmap | datablock bitmap | sequence of indoes | sequence of datablcoks = 1000
    - the sequence of indoes will ahve 3 sectors, due to each indoe being able to represtn 35 inodes.
@@ -348,7 +307,7 @@
 
    #+RESULTS:
 
-** File System
+** File System :FS:
    - FS_BOOT() :: Called when booting filesystem/after a FS_RESET()
      #+BEGIN_SRC plantuml  :file Plant/FS_BOOT.png
      @startuml
@@ -402,7 +361,7 @@
      [[file:Plant/FS_RESET.png]]
 
      
-** File Access
+** File Access :FILE:
    - int getDirPath(string path) :: Helper function, used to get the directory given a path.
      - Ouptut :: inode number of where it is, or -1 if it's not found.
       #+BEGIN_SRC plantuml  :file Plant/getDirPath.png
@@ -652,7 +611,7 @@
      #+RESULTS:
      [[file:Plant/FileDelete.png]]
 
-** Directory 
+** Directory  :DIR:
    - Dir_Create(string path) :: Create directory at path
      #+BEGIN_SRC plantuml  :file Plant/DirCreate.png
      if(indoe count and datablcok count is not >0)
@@ -745,7 +704,7 @@
       #+RESULTS:
       [[file:Plant/DirUnlink.png]]
 
-** Disk
+** Disk :DISK:
    
    - DISK_INIT() :: Set all the data in the disk to be 0
      #+BEGIN_SRC plantuml  :file Plant/DIskInit.png
@@ -855,3 +814,57 @@
    - File_Write() error message for partial write is t o set oErrMsg to E_PARTIAL_FILE_WRITE, yet when you go read up on the actual function, you'll see it already sets osErrMsg to either E_NO_SPACE for not enough space on the disk to write, or E_FILE_TOO_BIG if it exceed max file size. So wouldn't E_PARTIAL_FILE_WRITE overwrite the other two errors, or what?
    - Is there a max number of files/directories within a direcotry?
    - Can first half of a directory be in 1 datablock, with the second half being in datablock 
+
+* Specifications 
+** System Decomposistion  
+*** Data
+    - External Disk :: The disk to store things onto.
+    - Working Disk :: The disk represnting ram, where you temporary store data onto.
+    - Buffer :: A stream of bits, used ot reprsent data.
+    - Open Files :: A list of files/file descriptors that are currently open.
+*** Parameters
+**** Disk    
+    - Buffer SIze :: 512 Bytes.
+    - Inode Count :: Number of indoes within a sector. 3 within each sector
+    - Sector Size :: 512 Bytes
+    - Sector Num :: 1000  num.
+**** Files/Open Files
+    - MaxOpenFiles ::   Max open files is 10, but there's a paremeter here
+    - Max Path Length :: 256 characters
+    - Directory Name/Inode location :: 16 bytes for the name, 4 bytes for the inode
+    - Types of characters in file name :: case senstive letters, numbers and dots.
+    - Max number of files/dreictories ::  100
+    - Max number of files within a directory :: $\frac{\text{sectorSize}-16}{4}$
+*** Sets of function
+    Assume global data is always available.
+     Return 0 if successful.
+**** File System
+     - FS_BOOT() :: Check if external disk is made and if not, make it. Copy it to wrokign disk. If external disk exist BUT it's superblcok si wrong, osErrMsg=E_FILE_BOOT
+     - FS_SYNC() :: Copys the working disk to the external disk. 
+     - FS_RESET() :: Call FS_SYNC(), than make file system unavaible till FS_BOOT(). If the system already is unavaible, return E_FILE_RESET osErrMsg
+     - Access file system when not available :: osErrMsg is E_INVALID_ACCESS_ATTEMPT.
+**** File Access
+     - File_Create(string path)  :: create a file to the path. if this fails, due to there already being a file in the path, return with the E_FILE_CREATE errorr
+     - File_Open(string path) :: Put that file in the open file table
+     - File_Read(int fd, string buffer, int size)
+**** Direcotry
+**** Disk
+** Glossary/Notes 
+*** Glossary   
+
+   - SuperBlock :: Block of data used as metadata. In this project, it'll be in Block 0.
+     
+   - Sector :: A [Sector_SIZE]*512, made up of a bitmap.
+   - Disk :: A set of NUM_SECTORS * 1000 of sectors
+   - inode Block :: a Block of data that has metadata of the file. 
+     + Size of the file
+     + type of the file (normal/dicteory)
+     + which data blcoks are allociated ot ehre.
+   - Data Blocks :: Same size as a disk sector Part of the disk is dedicated to data block, with each data block being one to one with a file.
+   - Path lookup Process :: Go to root node (should be at 0), and check it's
+     
+*** Psudocode
+   - Disk :: Each disk is made up of an array of sectors, of size SECTOR_SIZE*512, and there's NUM_OF_SECTORS*1000
+     - Each
+   - Open file table :: The open file table has a maxium of 10 files, and for each file, it has a pointer, indicating it's current posistion
+     + Each read/write invokes seek, which shifts the direction *postivily*. Once it hits the end of the file lenght, it should stop.
