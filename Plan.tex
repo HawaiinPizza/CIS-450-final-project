@@ -1,0 +1,61 @@
+% Created 2020-04-05 Sun 22:12
+% Intended LaTeX compiler: pdflatex
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{graphicx}
+\usepackage{grffile}
+\usepackage{longtable}
+\usepackage{wrapfig}
+\usepackage{rotating}
+\usepackage[normalem]{ulem}
+\usepackage{amsmath}
+\usepackage{textcomp}
+\usepackage{amssymb}
+\usepackage{capt-of}
+\usepackage{hyperref}
+\date{\today}
+\title{}
+\hypersetup{
+ pdfauthor={},
+ pdftitle={},
+ pdfkeywords={},
+ pdfsubject={},
+ pdfcreator={Emacs 26.3 (Org mode 9.3.6)}, 
+ pdflang={English}}
+\begin{document}
+
+\tableofcontents
+
+\section{S1: Parsing bitmap represntation of the data}
+\label{sec:org5f0527b}
+Funcationlity releating to reading/writing to external disk.
+\begin{description}
+\item{F1} Read the external disk, and set that up as the workign disk.
+\begin{description}
+\item{I} File that consisent a stream of formated bits.
+\item{O} Set up the disk data structure
+\item{S1} Read external disk from file
+\begin{itemize}
+\item Each sector is represtned as a new line.
+\item The sector sequence. Repeat sectors 2 and 3.
+\begin{enumerate}
+\item Super block
+\item inodeCount
+\item Set of data blcoks, each allociated to each inode.
+\end{enumerate}
+\item superblock structure
+The whole sector is just a bitset, that is the super number.
+\item inode Strucutre
+\begin{itemize}
+\item Since multiple indoes are within a single sector, we have to divide by the number of bits.
+\begin{itemize}
+\item \(NumberInodes(1 +  \log_2(\text{WOW}) + \log_2(125 * SectorNum))\) This is the general amount of bits used to reprsent each indoe
+\item{1} The type of inode it is (file/directory)
+\item{\(\log_2(512*SectorSize)\)} The size of the datablock.
+\end{itemize}
+\end{itemize}
+\end{itemize}
+\end{description}
+\end{description}
+\end{document}

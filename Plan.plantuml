@@ -1,0 +1,337 @@
+@startuml
+ :Remove FS_RESET Lock; 
+ if (ExtDisk is created) then (yes)
+    if(SuperBlock == magic number) then (yes)
+	    :WorkDisk=ExtDisk;
+    else (no)
+	    :osErrMsg=E_FILE_BOOT
+	    return -1;
+    endif
+
+ else (no)
+    :ExtDisk=DefultDisk
+    return 0;
+endif
+
+@enduml
+
+@startuml
+   :WorkDisk=ExtDisk
+   return 0;
+   @enduml
+
+@startuml
+   if(lock is already in place) then (yes)
+	   :osErrMsg = E_FILE_RESET
+	   return -1;
+	   :in parent function osErrMsg = E_INVALID_ACCESS_ATTEMPT
+	   return -1;
+   else (no)
+	   :Place lock on system;
+   endif
+   :return 0;
+   @enduml
+
+@startuml
+:Go to root inode, which should be the 0th inode;
+:From the 0th inode, go to root direcotry;
+:Assume path is whole dirname.
+  while( read each dir in dirname) is (exist in current directory)
+	  :Get list of dir names in current direcotry;
+	  if(dir matches with a directory in current dirceotry) then (no)
+		  :return  -1;
+		  stop
+	  else (yes)
+		  :"CD" (aka just repeat the process for inode, but with that direcotry's node);
+	  endif
+  endwhile(finished dirname)
+  :return inode Path;
+  stop
+
+
+  @enduml
+
+@startuml
+:Go to root inode, which should be the 0th inode;
+:From the 0th inode, go to root direcotry;
+:Split path to dirname and basename (if it ends with a /, it's a directory. Else, it's a file);
+  while( read each dir in dirname) is (exist in current directory)
+	  :Get list of dir names in current direcotry;
+	  if(dir matches with a directory in current dirceotry) then (no)
+		  :return  -1;
+		  stop
+	  else (yes)
+		  :"CD" (aka just repeat the process for inode, but with that direcotry's node);
+	  endif
+  endwhile(finished dirname)
+  if(basename is in current direcotry)
+	  :return inode of basename;
+  else
+	  :return -1;
+  endif
+  stop
+
+
+  @enduml
+
+if(count of free datablocks is > 0 && count of free indoes is >0) then (yes)
+	:int inode=getDirPath(path);
+	if(inode == -1) then (true)
+	    :return "E_FILE_CREATE" -1;
+			    stop
+	else
+		:Go to directory specifeid in inode;
+		if(basename file already in directory) then (true)
+		    :return "E_FILE_CREATE" -1;
+			    stop
+		else
+			if(directory has not hit the 25 file limit) then (true)
+			    :Create new inode, allociated at a free datablock;
+			    :return 0;
+			    stop
+			else
+			    :return "E_FILE_CREATE" -1;
+			    stop
+			endif
+
+		endif
+	endif
+else
+	:return "E_FILE_CREATE" -1;
+			    stop
+endif
+
+:int inode=getFilePath(path);
+if(inode == -1) then (true)
+    :return "E_NO_SUCH_FILE" -1;
+    stop
+else
+    :basename=file descriped by path;
+
+	if(fileOpenTable does not have basename)
+	    :return -1 "E_FILE_ALREADY_OPEN";
+	    stop
+	else
+	    if(fileOpenTable coutn is not 10 or more) then (true)
+		    :Append inode to open file table;
+		    :return file descriptor, whcih sit he count of open file table;
+		    stop
+	    else
+		:return "E_TOO_MANY_OPEN_FILES" -1;
+	    endif
+	    stop
+	endif
+endif
+@enduml
+
+@startuml
+   if(fd is not in open file table)
+	   :return -1 "E_READ_BAD_FD";
+	   stop
+   else
+	   :file=openfiletable[fd];
+	   while (i <- 0 to size*8, to account for byte to bit conversion AND file still hasn't reach of file) then (true)
+		   :buffer+=file.getBit[i+file.pos()];
+
+	   endwhile
+	   :file.seek(fd, size);
+	   :return size;
+	   stop
+
+   endif
+   @enduml
+
+@startuml
+start
+   if(fd is not in open file table)
+	   :return -1 "E_WRITE_BAD_FD";
+	   stop
+   elseif (size != buffer size)
+	   :return -1 "E_SIZE_BUFFER_MISMATCH";
+	   stop
+   else
+	   :file=openfiletable[fd];
+	   while (i <- 0 to size*8, to account for byte to bit conversion AND file still hasn't reach of file) then (true))
+		   if(write requires a new datablock, but there's no free datablcok) then (yes)
+			   :return -1 E_NO_SPACE;
+			   stop
+		   elseif (file has reached max file size of 10 datablocks)
+			   :return -1 E_FILE_TOO_BIG;
+			   stop
+		   else
+			   :file.setBit(buffer.getBit[i],i+file.pos());
+		   endif
+
+	   endwhile
+	   :file.seek(fd, size);
+	   :return size;
+	   stop
+
+   endif
+   @enduml
+
+@startuml
+start
+   if(fd is not in open file table)
+	   :return -1 "E_SEEK_BAD_FD";
+	   stop
+   elseif (size is greater than file size or it's negative)
+	   :return -1 "E_SEEK_OUT_OF_BOUNDS";
+	   stop
+   else
+	   :openFileTable[fd].setPos(offset);
+	   :return fd;
+	   stop
+
+   endif
+   @enduml
+
+start
+   if(fd is not in open file table)
+	   :return -1 "E_CLOSE_BAD_FD";
+	   stop
+   else
+	   :remove from openfileTable fd;
+	   :return 0;
+	   stop
+
+   endif
+   @enduml
+
+@startuml
+start
+   if(fd is not in open file table)
+	   :return -1 "E_FILE_IN_USE";
+	   stop
+   else
+	   :inode=getPath(path);
+	   if(indoe equals) then (-1)
+		   :return -1 "E_NO_SUCH_FILE";
+		   stop
+	   else (postive)
+		   :set all bits in allcoaited datablcoks to 0;
+		   :Set allcoaited inode to 0;
+		   :return 0;
+		   stop
+	   endif
+
+   endif
+   @enduml
+
+if(indoe count and datablcok count is not >0)
+   :return E_DIR_CREATE;
+endif
+if(getDirPath(path)) then (is -1)
+   if(getDirPath(path.parent)) then (is -1)
+	   :return E_DIR_CREATE;
+	   stop
+   else ( is postive)
+	   :create new direcotry inode
+	   create new directory datablock, allociate inode to that.
+	   dir.path is the first 15 characters + end of file delimeter
+	   append idnoe to parent directory;
+	       note left
+		   This will always set the dirname to 16 bytes.
+		   If need to throw an ecpetion for it, append one here.
+	       endnote
+	   stop
+   endif
+else(is postive)
+   :return E_DIR_CREATE;
+   stop
+endif
+
+if(indoe count and datablcok count is not >0)
+   :return E_DIR_CREATE;
+endif
+if(getDirPath(path)) then (is -1)
+	   :return E_DIR_NO_EXISTT;
+	   stop
+   else ( is postive)
+	   if(size>= Dir_Size(path)) then (yes)
+		   while(dir in directory) is (not done)
+			   :buffer+=dir.type
+			   buffer+=dir.path;
+			   note left
+				   This automatically assumes that the path is 16 characters.
+				   If see fit, this can be changed,
+				   and path could throw an excpetion if greater than 15 characters.
+			   endnote
+		   endwhile
+		   stop
+	   else(no)
+		   :return  E_BUFFER_TOO_SMALL;
+		   stop
+	   endif
+endif
+@enduml
+
+@startuml
+	   :inode=getDirPath(path);
+	   if(indoe equals) then (-1)
+		   :return -1 "E_DIR_NON_EXIST";
+		   stop
+	   else (postive)
+		  if(Dir_Size(path)!=0)
+		      :return -1 "E_DIR_NON_EMPTY";
+		      stop
+		  else
+			  if(path=="/")
+			      :return -1 "E_DEL_ROOT_DIR";
+			      stop
+			  else
+				  :set inode in inodebitmap as free.
+				  set all datablocks allociated to it to be 0;
+				  stop
+
+			  endif
+		  endif
+	   endif
+	   @enduml
+
+@startuml
+   while(foreach sector in disk)
+	   :sector.set(0);
+   endwhile
+   :superblock(magic key)=disk[0];
+   :setInodeBit=disk[1];
+   :setDataBit=disk[2];
+   :disk.DirCreate("/");
+   note  left: This is run before FS_BOOT()
+   @enduml
+
+@startuml
+   while(for i in range(0,1000))
+	   :extDisk[i]=workDisk[i];
+   endwhile
+   @enduml
+
+@startuml
+   while(for i in range(0,1000))
+	   :workDisk[i]=extDisk[i];
+   endwhile
+   @enduml
+
+@startuml
+    if(buffer.size() != 512 bytes/4096 bits || buffer==NULL || sector<0 || sector >1000) then (true)
+	    :return E_WRITE_INVALID_PARM -1;
+	    stop
+    else  (false)
+	    :disk.sector[sector].set(buffer)
+	    return 0;
+	    stop
+
+    endif
+    @enduml
+
+@startuml
+    if(buffer.size() != 512 bytes/4096 bits || buffer==NULL || sector<0 || sector >1000) then (true)
+	    :return E_READ_INVALID_PARM -1;
+	    stop
+    else  (false)
+	    :buffer=disk.sector[sector];
+	    :return 0;
+	    stop
+
+    endif
+    @enduml

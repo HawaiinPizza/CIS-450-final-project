@@ -1,0 +1,66 @@
+#    -*- mode: org -*-
+
+
+Archived entries from file /home/zaki/Shool/OpSysms/Ass/P3/Plan.org
+
+
+* S1: Parsing bitmap represntation of the data
+  :PROPERTIES:
+  :ARCHIVE_TIME: 2020-04-09 Thu 20:33
+  :ARCHIVE_FILE: ~/Shool/OpSysms/Ass/P3/Plan.org
+  :ARCHIVE_OLPATH: Specifications/System Decomposistion/Sets of function
+  :ARCHIVE_CATEGORY: Plan
+  :END:
+     
+  Funcationlity releating to reading/writing to external disk.
+  - F1 :: Read the external disk, and set that up as the workign disk.
+    - I :: File that consisent a stream of formated bits. 
+      - O :: Set up the disk data structures
+    - S1 :: Read external disk from file
+      - Each sector is represtned as a new line.
+      - The sector sequence. Repeat sectors 2 and 3.
+	1. Super block :: just a number
+	2. inode
+	3. Set of data blcoks, each allociated to each inode.
+      - superblock structure
+	The whole sector is just a bitset, that is the super number.
+      - inode Strucutre :: metadata of the datablocks
+	- Since multiple indoes are within a single sector, we have to divide by the number of bits.
+	  - $\text{NumberInodes}(1 +  \log_2(\text{Max bytes a flie could have or Max datablocks associated to a file } * 512) + \log_2(125 * \text{SectorNum}))$ This is the general amount of bits used to reprsent each indoe
+	  - 1 :: The type of inode it is (file/directory)
+	  - $\log_2(MaxDataBlocks*512) :: The size of the datablocks.
+	  - $\log_2(125*SectorNum) :: Datablocks assoicated with this.
+	- At start up, substring the bits and spliit up to 3 parts: type of bits, size of allociated datablocks, and which datablcoks are assoicated iwth this.
+	- Create inode struct, with this data.
+      - datablock :: This is the actual data in a file. It's split up into two types.
+	- File :: $\log_2(Sectorsize-16) + 16$
+	  - File name  :: 16 bytes, but have to be converetd into letters, dots and numbers.
+	  - Data in the file :: $\log_2(SectorSize-16)$. This is all the data in the acutal datablock.
+	- Direcotry ::    $\floor{\frac{\text{sectorSize}}{20}} + \text{Reminder bytes}=\text{Sector Size}*\text{Blcoks allociated}$ bytes
+	  - Directory Name :: 16 bytes
+	  - Directories :: 4 bytes
+	  - Parse guide :: Every 20 bytes is it's own direcotry, but  once the reminding bytes are less than 20 bytes, than the reminder is just all 0s.
+  - F2 :: Save workign disk onto system.
+    - Go through each sector, and conver it to a bitstream
+    - Than, write that bistream to a file.
+
+	       
+	   
+
+* Read/Write bitmap represtnation [0/5]
+  :PROPERTIES:
+  :ARCHIVE_TIME: 2020-04-09 Thu 20:35
+  :ARCHIVE_FILE: ~/Shool/OpSysms/Ass/P3/Plan.org
+  :ARCHIVE_OLPATH: Totest list
+  :ARCHIVE_CATEGORY: Plan
+  :END:
+   - INPUT :: Data strucutres in a disk | Seqeunce of bits
+   - EO :: Write out superblock, than a sequence of indoes and datablocks, with eachsector seperated by newline. | read the bits and set them to appoperaite bitstream
+   - [ ] Write Inode Represtnation :: Write out inode represenation.
+   - [ ] Read inode represtnation :: Read out the sequnce of inodes
+      
+   - [ ] Write datablocks represntation 
+   - [ ] Read datablocks file system.
+      
+   - [ ] Write out a filesystem
+   - [ ] read  a filesystem

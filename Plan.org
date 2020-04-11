@@ -1,4 +1,5 @@
 #+LATEX_HEADER : \usepackage{amsmath}
+- [ ] Make sure bitmaps gets changed  in the create functiosn for filecreate/dircreate, and file unlink/dir unlink
 * Totest list
 ** Bitmaniplation     [0/2] :BIT:
 *** TODO Inode :INODE: [0/2]
@@ -360,7 +361,6 @@
      #+RESULTS:
      [[file:Plant/FS_RESET.png]]
 
-     
 ** File Access :FILE:
    - int getDirPath(string path) :: Helper function, used to get the directory given a path.
      - Ouptut :: inode number of where it is, or -1 if it's not found.

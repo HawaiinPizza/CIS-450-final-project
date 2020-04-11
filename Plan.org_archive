@@ -1,0 +1,191 @@
+#    -*- mode: org -*-
+
+
+Archived entries from file /home/zaki/Shool/OpSysms/Ass/P3/Plan.org
+
+
+* S1: Parsing bitmap represntation of the data
+  :PROPERTIES:
+  :ARCHIVE_TIME: 2020-04-09 Thu 20:33
+  :ARCHIVE_FILE: ~/Shool/OpSysms/Ass/P3/Plan.org
+  :ARCHIVE_OLPATH: Specifications/System Decomposistion/Sets of function
+  :ARCHIVE_CATEGORY: Plan
+  :END:
+     
+  Funcationlity releating to reading/writing to external disk.
+  - F1 :: Read the external disk, and set that up as the workign disk.
+    - I :: File that consisent a stream of formated bits. 
+      - O :: Set up the disk data structures
+    - S1 :: Read external disk from file
+      - Each sector is represtned as a new line.
+      - The sector sequence. Repeat sectors 2 and 3.
+	1. Super block :: just a number
+	2. inode
+	3. Set of data blcoks, each allociated to each inode.
+      - superblock structure
+	The whole sector is just a bitset, that is the super number.
+      - inode Strucutre :: metadata of the datablocks
+	- Since multiple indoes are within a single sector, we have to divide by the number of bits.
+	  - $\text{NumberInodes}(1 +  \log_2(\text{Max bytes a flie could have or Max datablocks associated to a file } * 512) + \log_2(125 * \text{SectorNum}))$ This is the general amount of bits used to reprsent each indoe
+	  - 1 :: The type of inode it is (file/directory)
+	  - $\log_2(MaxDataBlocks*512) :: The size of the datablocks.
+	  - $\log_2(125*SectorNum) :: Datablocks assoicated with this.
+	- At start up, substring the bits and spliit up to 3 parts: type of bits, size of allociated datablocks, and which datablcoks are assoicated iwth this.
+	- Create inode struct, with this data.
+      - datablock :: This is the actual data in a file. It's split up into two types.
+	- File :: $\log_2(Sectorsize-16) + 16$
+	  - File name  :: 16 bytes, but have to be converetd into letters, dots and numbers.
+	  - Data in the file :: $\log_2(SectorSize-16)$. This is all the data in the acutal datablock.
+	- Direcotry ::    $\floor{\frac{\text{sectorSize}}{20}} + \text{Reminder bytes}=\text{Sector Size}*\text{Blcoks allociated}$ bytes
+	  - Directory Name :: 16 bytes
+	  - Directories :: 4 bytes
+	  - Parse guide :: Every 20 bytes is it's own direcotry, but  once the reminding bytes are less than 20 bytes, than the reminder is just all 0s.
+  - F2 :: Save workign disk onto system.
+    - Go through each sector, and conver it to a bitstream
+    - Than, write that bistream to a file.
+
+	       
+	   
+
+* Read/Write bitmap represtnation [0/5]
+  :PROPERTIES:
+  :ARCHIVE_TIME: 2020-04-09 Thu 20:35
+  :ARCHIVE_FILE: ~/Shool/OpSysms/Ass/P3/Plan.org
+  :ARCHIVE_OLPATH: Totest list
+  :ARCHIVE_CATEGORY: Plan
+  :END:
+   - INPUT :: Data strucutres in a disk | Seqeunce of bits
+   - EO :: Write out superblock, than a sequence of indoes and datablocks, with eachsector seperated by newline. | read the bits and set them to appoperaite bitstream
+   - [ ] Write Inode Represtnation :: Write out inode represenation.
+   - [ ] Read inode represtnation :: Read out the sequnce of inodes
+      
+   - [ ] Write datablocks represntation 
+   - [ ] Read datablocks file system.
+      
+   - [ ] Write out a filesystem
+   - [ ] read  a filesystem
+
+* S1 Parsing bitmap Represntation
+  :PROPERTIES:
+  :ARCHIVE_TIME: 2020-04-09 Thu 22:16
+  :ARCHIVE_FILE: ~/Shool/OpSysms/Ass/P3/Plan.org
+  :ARCHIVE_OLPATH: Algorithm/Code
+  :ARCHIVE_CATEGORY: Plan
+  :END:
+** Inode sturcutre   
+    I node is responsible for the meta data of a 1-10 datablocks. Often, these are used to indicate a new file/directory is in the disk system.
+    
+    isFile jsut denotes whether this is a file or direcotry.
+    Size is just the bit represtnation of the size.
+    Blcoks is teh bitmap represtnation of the sectors in the disk, with a 0 meaning not allcoiated, 1 meaning it's alloicated.
+    
+    
+#+NAME: inodeStruct
+#+HEADER: :includes "<iostream> <cmath> <vector> <climits> <bitset> <cstring>"
+#+BEGIN_SRC C++   :var inodeCount=15 
+#define SIZE 512
+#define NUM 1000
+     using namespace std;
+
+    class inode{
+	    private: 
+		bool isFile;
+		const uint SizeMax = SIZE*8;
+		const uint BlocksMax = NUM;
+		uint Size=0;
+		bitset<NUM> allBlocks;
+	
+
+		double log2(uint num){return log10(num)/log10(2);}
+
+
+
+	    public:
+		inode(){
+		    isFile=true;
+		    allBlocks=5;
+		}
+
+		void writeInode(){
+		    //Assume Sector size is 512 bytes, with the sector number being 1000.
+		    {
+		    int Size=1 + (int)ceil(log(SizeMax)) + (int)ceil(log2(BlocksMax));
+		    bool Bitmap[Size];
+		    cout << Size << std::endl <<'\t' << 
+			 1 <<'\t' <<
+			 ceil(log2((SizeMax))) <<'\t' <<
+			 ceil(log2((BlocksMax))) <<std::endl; 		
+			 }
+
+
+		    //Get bit representation of Size
+		    //Since the maxium of inodes is 512*10 datablocks, so the maxium size is 4096 is 12 bits.
+		    {
+		    bitset<SIZE> temp(Size);
+		    cout << temp.to_ulong() << endl;
+		    }
+		    
+		    
+
+
+
+		    //Get bit representation of Blocks
+		    {
+		    cout << allBlocks.to_ulong() << endl;
+		    }
+
+
+
+
+		}
+		bool setSectorSize(uint Size){
+		    if(Size>=SizeMax)
+			    return false;
+		    this->Size=Size;
+		    return true;
+
+		}
+		bool setBlocks(uint Blocks[], int size){
+		    return true;
+
+		}
+		void printMe(){ std::cout <<
+			isFile <<'\t' <<
+			SizeMax <<'\t' <<
+			BlocksMax << '\t' <<
+			Size << '\t' <<
+			std::endl;
+		}
+    };
+
+
+
+
+
+#+END_SRC
+
+#+RESULTS: inodeStruct
+
+
+
+
+
+
+
+
+* TODO Correct parameters and read disk     
+  :PROPERTIES:
+  :ARCHIVE_TIME: 2020-04-10 Fri 11:59
+  :ARCHIVE_FILE: ~/Shool/OpSysms/Ass/P3/Plan.org
+  :ARCHIVE_OLPATH: Totest list/Setting up the drives/File system scope
+  :ARCHIVE_CATEGORY: Plan
+  :ARCHIVE_TODO: TODO
+  :END:
+  - INPUT :: Paremters of the system.
+    + Number of sectors
+    + Size of each sector
+    + Number of Inodes within each sector
+  - Function :: Check the paremetsr, and if correct, read disk
+  - [ ] Make sure SectorSize/SectorNum is nonzero :: Invalid size/num exception;
+  - [ ] Make sure SectorNum does not exceed $\frac{2^{\text{Sector Size/Number of Inodes within a Sector}}}{\text{Sector Size} \ *\ 1024E3}$ :: Number of sectors exceed Sector Size/number of inodes iwthin each sector
+  - [ ]  :: 
