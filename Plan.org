@@ -1,41 +1,28 @@
 #+LATEX_HEADER : \usepackage{amsmath}
 - [ ] Make sure bitmaps gets changed  in the create functiosn for filecreate/dircreate, and file unlink/dir unlink
-* Totest list
-** Bitmaniplation     [0/2] :BIT:
-*** TODO Inode :INODE: [0/2]
+* Totest list [1/4]
+** DONE Bitmaniplation     [2/2] :BIT:
+*** DONE Inode :INODE: [2/2]
     
-    | Input              | Expected Output                                 | Actual Output |
-    |--------------------+-------------------------------------------------+---------------|
-    | Stream of 114 bits | Create an inode object, by the spefied 114 bits |               |
-    | Inode object       | write as a stream of 114 bits                   |               |
-    - [ ] WriteInode :: Covnert inode to 114 bit stream, an return this.
-    - [ ] ReadInode :: Convert 114 bit stream to inode, adn return it.
-*** TODO Directory :DIR: [0/2]
-    | Input               | Expected Output                                    | Actual Output |
-    |---------------------+----------------------------------------------------+---------------|
-    | Stream of 4096 bits | Create an direcotry object, with the specifcations |               |
-    | Directory object    | write as a stream of 4096 bits                     |               |
-    - [ ] WriteDir :: Covnert directory to 4096 bit stream, an return this.
-    - [ ] ReadDir :: Convert 4096 bit stream to directory, adn return it.
-** Setting up the drives  [0/2]
+    - [X] WriteInode :: Covnert inode to 114 bit stream, an return this.
+    - [X] ReadInode :: Convert 114 bit stream to inode, adn return it.
+*** DONE Directory :DIR: [2/2]
+    - [X] WriteDir :: Covnert directory to 4096 bit stream, an return this.
+    - [X] ReadDir :: Convert 4096 bit stream to directory, adn return it.
+** TODO Setting up the drives  [0/2]
 *** TODO File system scope   :FS:
     Error MEssages are sent to osErrMsg
-**** TODO FS_Boot [0/3]   
+**** DONE FS_Boot [3/3]   
      - INPUT :: External Disk Image/Lack of disk image
      - EX-OUTPUT :: Create disk if successful/mount disk. E_FILE_BOOT if failure
      - AC-OUTPUT ::
-       | Input                                        | Expected Output                              | Acutal Output |
-       |----------------------------------------------+----------------------------------------------+---------------|
-       | No external disk                             | Create a external disk, than rerun FS_BOOT() |               |
-       | Exeternal disk with correct magical number   | cloen external disk to working disk          |               |
-       | Exeternal disk with incorrect magical number | retrun E_FILE_BOOT                           |               |
        
-     - [ ] Success NoDisk :: The external disk does not exist, creates it
+     - [X] Success NoDisk :: The external disk does not exist, creates it
       
-     - [ ] Success Disk :: The external disk does  exist, clone it to wroking test and verify
-     - [ ] Failure Disk :: The external disk does  exist, clone it to wroking test and verify, but fails, restuling in E_FILE_BOOT
+     - [X] Success Disk :: The external disk does  exist, clone it to wroking test and verify
+     - [X] Failure Disk :: The external disk does  exist, clone it to wroking test and verify, but fails, restuling in E_FILE_BOOT
        This may happen with the superBlock. We can set the superblock to a number, and when botting, if superblock's number isn't what the number is supposed to be, assume the file system is corrupted. An example is if you expect 2 in superblcok, but it's 3, than OOF it's corrupted.
-**** TODO FS_Sync
+**** DONE FS_Sync
      - INPUT :: Working Disk Image and External Disk Image
      - EX-OUTPUT :: Copy Working Disk Image to External Disk Image 
      - AC-OUTPUT ::
@@ -72,7 +59,7 @@
      - [ ] Buffer is nonNull :: If not, than return E_READ_INVALID_PARAM
      - [ ] Sector paramter is out of boudns :: retrun E_READ_INVALID_PARM
      - [ ] Sector has data being read from to it :: Write the Sector to Buffer.
-** Setting up Directories and files [0/2]
+** TODO Setting up Directories and files [0/2]
 *** TODO getFilePath(string path) and getDirPath(string path)
     - Input :: string path
     - Expected Output :: given path, get the inode assoicated with it | -1 if that path is not found with the correct type
@@ -131,7 +118,7 @@
     - [ ] File_Write(int fd, string fuffer, int size) Failure no space left :: While writing, if you find there's no more space in teh disk, return E_NO_SPACE
     - [ ] File_Write(int fd, string fuffer, int size) Failure maximum file size :: While writing, if you find there's the file takes up more than 10 data blcoks, return E_FILE_TOO_BIG
       
-** Seek and unLink [0/1]
+** TODO Seek and unLink [0/1]
 *** TODO File_Seek and Dir/File_UnLink [0/10]  :FILE:DIR: 
     Error -> osErrMsg
     - Input ::  string file | strign file | string path
@@ -323,8 +310,8 @@
      #+BEGIN_SRC plantuml  :file Plant/FS_BOOT.png
      @startuml
      :Remove FS_RESET Lock; 
-     if (ExtDisk is created) then (yes)
-	if(Su
+     if (ExtDisk already exist) then (yes)
+	if(Magic number is correct)
 		:WorkDisk=ExtDisk;
 	else (no)
 		:osErrMsg=E_FILE_BOOT
@@ -345,7 +332,7 @@
    - FS_Sync :: Copys the working disk to external disk
      #+BEGIN_SRC plantuml  :file Plant/FS_SYNC.png
      @startuml
-	:WorkDisk=ExtDisk
+	:ExtDisk=WorkDisk
 	return 0;
 	@enduml
      #+END_SRC
@@ -825,6 +812,9 @@
    - Is there a max number of files/directories within a direcotry?
    - Can first half of a directory be in 1 datablock, with the second half being in datablock 
 
+** Part 3     
+   - How do you *create* an external disk?
+   - For File system oepration, where 
 * Specifications 
 ** System Decomposistion  
 *** Data

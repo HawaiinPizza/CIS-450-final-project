@@ -9,18 +9,16 @@
 #include <climits>
 #include <bitset>
 #include <cassert>
-#include "Main.h"
+#include "FS.h"
 using namespace std;
 /*}}}*/
 
-#define SectorSize 512/*{{{*/
-#define SectorNum 1000
-#define inodeCount 35
-#define inodeOffset 6
 
 
-/*}}}*/
 
 int main(){
-     
+	//F(FS_Boot());
+	//F(FS_Boot());
+	
+
 }
