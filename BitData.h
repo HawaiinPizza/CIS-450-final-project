@@ -74,6 +74,16 @@ string diskErrMsg="";
 		bool isFile;
 		uint size;
 		uint alloc[10];
+		inode(){
+		}
+
+		inode(bool _isFile, uint _size, uint *_alloc){
+
+			isFile=_isFile;
+			size=_size;
+			forloop(0,10)
+				alloc[i]=_alloc[i];
+		}
 	};
 	bitset<114> readInodeSect(Sector sect, int count){
 			bitset<114> retBit;

@@ -119,45 +119,94 @@ int mainTest2(){ // NOise testing
 	}
 	return 0;
 }
+
+
+// This funciton is not expanedable yet.
+bool dirCreate(inode &node, string Name,  int posDir,   int posInode, Sector &sect ){ // Creates an empty directory
+	dir Dir;
+	forloop(0,14){
+		Dir.Name[i]=Name[i];
+	}
+	Dir.Name[15]='\0';
+	Dir.inodePlace=posDir;
+
+	// Create datablock dictionary
+	bitset<dirSize> dirBit=writeDir(Dir);
+	writeDirSect(sect, posDir, dirBit);
+	
+	node.alloc[0]=posDir; 
+	
+
+	//This is creating the root folder. Later on, we will make it with DirCreate("/")
+	string inodeString=writeBitDataInode(node).to_string();
+	bitset<SectorSize*8> inodeBit(inodeString);
+
+	writeInodeSect(sect, posInode, inodeString);
+	return true;
+}
+
 int main(){
 	FS_Boot();
-	getDirPath("/");
-	getDirPath("/A");
-	getDirPath("/A/");
-	getDirPath("/A/B/");
-	getDirPath("/A/B/C");
-	getDirPath("/A/B/D");
-	getDirPath("/A/B/E");
-	getDirPath("/A/B/F");
-	getDirPath("/A/B/G");
-	getDirPath("/A/B/H");
-
-	getDirPath("/A/B/C/1");
-	getDirPath("/A/B/C/2");
-	getDirPath("/A/B/C/3");
-	getDirPath("/A/B/C/4");
-	getDirPath("/A/B/C/5");
-
-	getDirPath("/A/B/D/1");
-	getDirPath("/A/B/D/2");
-	getDirPath("/A/B/D/3");
-	getDirPath("/A/B/D/4");
-	getDirPath("/A/B/D/5");
-
-	getDirPath("/A/B/E/1");
-	getDirPath("/A/B/E/2");
-	getDirPath("/A/B/E/3");
-	getDirPath("/A/B/E/4");
-	getDirPath("/A/B/E/5");
-
-	getDirPath("/A/B/F/1");
-	getDirPath("/A/B/F/2");
-	getDirPath("/A/B/F/3");
-	getDirPath("/A/B/F/4");
-	getDirPath("/A/B/F/5");
+	uint *Arr=new uint [10]; Arr[0]=1;
+	inode Root(false, 0, Arr); Arr[0]=2;
+	inode Test1(false, 1, Arr); Arr[0]=3;
+	inode Test2(false, 2, Arr);Arr[0]=4;
+	inode Test3(false, 3, Arr);Arr[0]=5;
+	Sector test;
+	dirCreate(Root, "/", 0, 3,  test);
+	dirCreate(Test1, "/J", 1, 4,  test);
+	dirCreate(Test2, "/B", 2, 5,  test);
+	dirCreate(Test3, "/B/A", 3, 6,  test);
+	dir Div1=readDir(readDirSect(test, Root.alloc[0]).to_string());
+	dir Div2=readDir(readDirSect(test, Test1.alloc[0]).to_string());
+	dir Div3=readDir(readDirSect(test, Test2.alloc[0]).to_string());
+	dir Div4=readDir(readDirSect(test, Test3.alloc[0]).to_string());
+	cout << Div1.Name << '\t' << Div1.inodePlace << endl;
+	cout << Div2.Name << '\t' << Div2.inodePlace << endl;
+	cout << Div3.Name << '\t' << Div3.inodePlace << endl;
+	cout << Div4.Name << '\t' << Div4.inodePlace << endl;
 
 
 
-	/*
-	*/
-	}
+
+
+
+	/* getDirPath testing
+		getDirPath("/");
+		getDirPath("/A");
+		getDirPath("/A/");
+		getDirPath("/A/B/");
+		getDirPath("/A/B/C");
+		getDirPath("/A/B/D");
+		getDirPath("/A/B/E");
+		getDirPath("/A/B/F");
+		getDirPath("/A/B/G");
+		getDirPath("/A/B/H");
+
+		getDirPath("/A/B/C/1");
+		getDirPath("/A/B/C/2");
+		getDirPath("/A/B/C/3");
+		getDirPath("/A/B/C/4");
+		getDirPath("/A/B/C/5");
+
+		getDirPath("/A/B/D/1");
+		getDirPath("/A/B/D/2");
+		getDirPath("/A/B/D/3");
+		getDirPath("/A/B/D/4");
+		getDirPath("/A/B/D/5");
+
+		getDirPath("/A/B/E/1");
+		getDirPath("/A/B/E/2");
+		getDirPath("/A/B/E/3");
+		getDirPath("/A/B/E/4");
+		getDirPath("/A/B/E/5");
+
+		getDirPath("/A/B/F/1");
+		getDirPath("/A/B/F/2");
+		getDirPath("/A/B/F/3");
+		getDirPath("/A/B/F/4");
+		getDirPath("/A/B/F/5");
+		*/
+
+
+}

@@ -44,7 +44,6 @@ int Disk_Init(disk(Disk) ){ // Setup the disk
 
 	string inodeString=writeBitDataInode(Root).to_string();
 	bitset<SectorSize*8> inodeBit(inodeString);
-	int x=0;
 
 	writeInodeSect(Disk[3], 0, inodeString);
 
