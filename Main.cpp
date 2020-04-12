@@ -15,58 +15,80 @@
 using namespace std;
 
 
+#define siz 10000
+#define set 219
 
-void read(bitset<20> test, int count){
-	if(range(count, 0, 5)){
-		int start=count*3;
-		int stop=start+3;
-		bitset<3> retBit;
-		forloop(start,stop) {
-			retBit[i-start]=test[i];
+	void read(bitset<siz> test, int count){
+		if(range(count, 0, siz/set)){
+			int start=count*set;
+			int stop=start+set;
+			bitset<set> retBit;
+			forloop(start,stop) {
+				retBit[i-start]=test[i];
+			}
+			cout << start <<":" << (stop-1) << '\t' << retBit << endl;
 		}
-		cout << start <<":" << (stop-1) << '\t' << retBit << endl;
-	}
-	else{
-	}
-}
-
-
-void write(bitset<20> &test, int count, string buffer){
-	if(range(count, 0, 5)){
-		int start=count*3;
-		int stop=start+3;
-		bitset<3> writeBit(buffer);
-		forloop(start,stop) {
-			test[i]=writeBit[i-start];
+		else{
 		}
 	}
-	else{
 
 
+	void write(bitset<siz> &test, int count, string buffer){
+		if(range(count, 0, siz/set)){
+			int start=count*set;
+			int stop=start+set;
+			bitset<set> writeBit(buffer);
+			forloop(start,stop) {
+				test[i]=writeBit[i-start];
+			}
+		}
+		else{
+
+
+		}
 	}
-}
 
 int main(){
-//	FS_Boot();
-	int size=20;
-	int set=3;
-	bitset<20> test1("11000111000111000111");
-	forloop(0,7){
+	char on='1';
+	char off;
+	ifelse(on=='1', off='0', off='1');
+	string testStr;
+	forloop(0, siz%set){
+		testStr+="0";
+	}
+	forloop(0,siz){
+		ifelse((i/set)%2==0, testStr+=on, testStr+=off);
+	}
+	cout << "%:" << siz%set << '\t' <<  '\t';//  << testStr << ;;
+	cout << endl;
+	bitset<siz> test1(testStr);
+	forloop(0,siz/set){
 		read(test1, i);
 	}
 
 	cout << endl;
-	forloop(0,7){
-		if(i%2==0)
-			write(test1, i, "000");
-		else
-			write(test1, i, "111");
+	cout << on << '\t' << off << endl;
+	forloop(0,siz/set){
+
+		if(i%2==0){
+			string z="";
+			forloop(0, set){
+				z+=on;
+			}
+			write(test1, i,z);
+		}
+		else{
+			string z="";
+			forloop(0, set){
+				z+=off;
+			}
+			write(test1, i, z);
+		}
 	}
 
-	forloop(0,7){
+	forloop(0,siz/set){
 		read(test1, i);
 	}
 
-
-
 }
+//	FS_Boot();

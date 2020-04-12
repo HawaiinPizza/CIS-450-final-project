@@ -50,6 +50,13 @@ string diskErrMsg="";
 #define backloop(x,y) \
 	for(int i=y; i>x; i--) \
 
+#define ifelse(cond,x,y)\
+	if(cond)\
+		x; \
+	else\
+		y; \
+	
+	
 
 bool range(int val, int x, int y){
 	if(val>=x && val<=y)
