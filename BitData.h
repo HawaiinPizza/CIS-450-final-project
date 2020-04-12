@@ -85,7 +85,7 @@ string diskErrMsg="";
 				alloc[i]=_alloc[i];
 		}
 	};
-	bitset<114> readInodeSect(Sector sect, int count){
+	bitset<114> readInodeSect(const Sector sect, int count){
 			bitset<114> retBit;
 			if(range(count, 0, SectorBit/114)){
 				int start=count*SectorBit;

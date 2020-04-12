@@ -122,49 +122,52 @@ int mainTest2(){ // NOise testing
 
 
 // This funciton is not expanedable yet.
-bool dirCreate(inode &node, string Name,  int posDir,   int posInode, Sector &sect ){ // Creates an empty directory
+bool dirCreate(inode &node, string Name, int Sect, disk(Disk)){ // Creates an empty directory. ALSO, Disk should
+
+	int posDir;
+	int posInode;
 	dir Dir;
-	forloop(0,14){
-		Dir.Name[i]=Name[i];
+	{ // Settign the posDir and posInode Values
+		forloop(0, 35){ // Finding first empty inode TODO make sure to expand this, so we check 3 sectors, not just the first 1.
+			if(readInodeSect(Disk[0], i)!=0){
+				cout << i << '\t' << readInodeSect(Disk[0], i) << endl;
+			}
+		}
 	}
-	Dir.Name[15]='\0';
-	Dir.inodePlace=posDir;
 
-	// Create datablock dictionary
-	bitset<dirSize> dirBit=writeDir(Dir);
-	writeDirSect(sect, posDir, dirBit);
+	/* { // Setting Dir Values */
+	/* 	forloop(0,14){ */
+	/* 		Dir.Name[i]=Name[i]; */
+	/* 	} */
+	/* 	Dir.Name[15]='\0'; */
+	/* 	Dir.inodePlace=posDir; */
+	/* } */
+
+	/* // Create datablock dictionary */
+	/* bitset<dirSize> dirBit=writeDir(Dir); */
+	/* writeDirSect(sect, posDir, dirBit); */
 	
-	node.alloc[0]=posDir; 
+	/* node.alloc[0]=posDir; */ 
 	
 
-	//This is creating the root folder. Later on, we will make it with DirCreate("/")
-	string inodeString=writeBitDataInode(node).to_string();
-	bitset<SectorSize*8> inodeBit(inodeString);
+	/* //This is creating the root folder. Later on, we will make it with DirCreate("/") */
+	/* string inodeString=writeBitDataInode(node).to_string(); */
+	/* bitset<SectorSize*8> inodeBit(inodeString); */
 
-	writeInodeSect(sect, posInode, inodeString);
+	/* writeInodeSect(sect, posInode, inodeString); */
 	return true;
 }
 
 int main(){
-	FS_Boot();
-	uint *Arr=new uint [10]; Arr[0]=1;
-	inode Root(false, 0, Arr); Arr[0]=2;
-	inode Test1(false, 1, Arr); Arr[0]=3;
-	inode Test2(false, 2, Arr);Arr[0]=4;
-	inode Test3(false, 3, Arr);Arr[0]=5;
-	Sector test;
-	dirCreate(Root, "/", 0, 3,  test);
-	dirCreate(Test1, "/J", 1, 4,  test);
-	dirCreate(Test2, "/B", 2, 5,  test);
-	dirCreate(Test3, "/B/A", 3, 6,  test);
-	dir Div1=readDir(readDirSect(test, Root.alloc[0]).to_string());
-	dir Div2=readDir(readDirSect(test, Test1.alloc[0]).to_string());
-	dir Div3=readDir(readDirSect(test, Test2.alloc[0]).to_string());
-	dir Div4=readDir(readDirSect(test, Test3.alloc[0]).to_string());
-	cout << Div1.Name << '\t' << Div1.inodePlace << endl;
-	cout << Div2.Name << '\t' << Div2.inodePlace << endl;
-	cout << Div3.Name << '\t' << Div3.inodePlace << endl;
-	cout << Div4.Name << '\t' << Div4.inodePlace << endl;
+	bitset<SectorBit> TestDrive[SectorNum];
+	/* disk(TestDrive2); */
+	/* uint *Arr=new uint [10]; */
+	/* inode Root(false, 1, Arr); */
+	/* dirCreate(Root, "/", 0, TestDrive); */
+	cout << "Arr does not have = new int[10]\t" << readInodeSect(TestDrive[0], 1) << endl;
+	/* cout << readInodeSect(TestDrive2[0], 1) << endl; */
+	int *Arr=new int[10];
+	cout << "Arr does  have = new int[10]\t" << readInodeSect(TestDrive[0], 1) << endl;
 
 
 
