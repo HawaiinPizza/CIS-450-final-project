@@ -29,6 +29,9 @@
 		x; \
 	else\
 		y; \
+
+#define foreach(x) \
+	for(auto i : x)
 	
 	
 

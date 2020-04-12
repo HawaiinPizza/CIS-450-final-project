@@ -126,4 +126,10 @@ int main(){
 	getDirPath("/A/");
 	getDirPath("/A/B/");
 	getDirPath("/A/B/C");
+	getDirPath("/A/B/D");
+	getDirPath("/A/B/E");
+	getDirPath("/A/B/F");
+	getDirPath("/A/B/G");
+	/*
+	*/
 	}
