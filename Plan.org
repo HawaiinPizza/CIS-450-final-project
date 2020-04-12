@@ -1,6 +1,6 @@
 #+LATEX_HEADER : \usepackage{amsmath}
 - [ ] Make sure bitmaps gets changed  in the create functiosn for filecreate/dircreate, and file unlink/dir unlink
-* Totest list [1/4]
+* Totest list [2/4]
 ** DONE Bitmaniplation     [2/2] :BIT:
 *** DONE Inode :INODE: [2/2]
     
@@ -9,7 +9,7 @@
 *** DONE Directory :DIR: [2/2]
     - [X] WriteDir :: Covnert directory to 4096 bit stream, an return this.
     - [X] ReadDir :: Convert 4096 bit stream to directory, adn return it.
-** TODO Setting up the drives  [1/2]
+** DONE Setting up the drives  [2/2]
 *** DONE File system scope :FS:
     Error MEssages are sent to osErrMsg
 **** DONE FS_Boot [3/3]   
@@ -823,7 +823,8 @@
    - Method signature chagnes, change I have to pass the disk. Is that valid?
    - Also, which disk does disk_write and disk_read write to? I assumed working
 * Changes     
-  - Wrote teh read/write by Inode/dir funcitons, which allow for bit writing in the drivej
+  - Wrote teh read/write by Inode/dir funcitons, which allow for bit writing in the drive
+  - Took into account that bitsets arrays read string from right ot left, not left to right.
 * Specifications 
 ** System Decomposistion  
 *** Data

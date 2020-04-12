@@ -28,24 +28,29 @@ int Disk_Init(disk(Disk) ){ // Setup the disk
 	Root.size=SectorSize;
 	inodeSet(&Root, 0, 1); // How to set inodes
 
+	dir RootDir;
+	RootDir.Name[0]='/';
+	RootDir.Name[1]='\0';
+	RootDir.inodePlace=0;
+
+	// Create datablock dictionary
+	bitset<dirSize> dirBit=writeDir(RootDir);
+	dir test=readDir(dirBit.to_string());
+
+	writeDirSect(WorkDisk[inodeOffset], 0, dirBit);
+	
+
 	//This is creating the root folder. Later on, we will make it with DirCreate("/")
 
 	string inodeString=writeBitDataInode(Root).to_string();
 	bitset<SectorSize*8> inodeBit(inodeString);
-	int x=34;
-	inodeSetStr(Disk[3], x, inodeString);
-	if(inodeSubStr(Disk[3], x) != inodeString ){
-		cout << inodeSubStr(Disk[3], x) << endl << endl << inodeString << endl << endl;
-		for(int i=0; i<35; i++){
-			cout << i << '\t' << inodeSubStr(Disk[3], i) <<endl << endl;
-		}
+	int x=0;
 
-	}
+	writeInodeSect(Disk[3], 0, inodeString);
 
 
 
 	return 0;
-
 }
 
 // Save and load functions
@@ -82,7 +87,6 @@ int Disk_Read( string &buffer, int sector){ // I did not check for buffer being 
 		return -1;
 	}
 	else{
-		cout << "NO";
 		bitset<SectorBit> Read(buffer);
 		Read=WorkDisk[sector];
 		buffer=Read.to_string();

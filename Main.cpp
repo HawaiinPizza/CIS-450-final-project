@@ -12,6 +12,7 @@
 #include "BitData.h"
 #include "FS.h"
 #include "Disk.h"
+#include "Dir.h"
 using namespace std;
 
 
@@ -92,6 +93,7 @@ int mainTest1(){
 	forloop(0,siz/set){
 		read(test1, i);
 	}
+	return 0;
 }
 
 int mainTest2(){ // NOise testing
@@ -118,6 +120,10 @@ int mainTest2(){ // NOise testing
 	return 0;
 }
 int main(){
-	mainTest2();
-//	FS_Boot();
+	FS_Boot();
+	getDirPath("/");
+	getDirPath("/A");
+	getDirPath("/A/");
+	getDirPath("/A/B/");
+	getDirPath("/A/B/C");
 	}
