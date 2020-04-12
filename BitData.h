@@ -45,6 +45,7 @@ bool range(int val, int x, int y){
 
 // Macro used to ease declearing feckign disk
 #define Sector std::bitset<SectorSize*8> 
+
 #define disk(x) std::bitset<SectorSize*8> x[SectorNum]
 
 
@@ -77,19 +78,18 @@ string diskErrMsg="";
 		inode(){
 		}
 
-		inode(bool _isFile, uint _size, uint *_alloc){
+		inode(bool _isFile, uint _size){
 
 			isFile=_isFile;
 			size=_size;
-			forloop(0,10)
-				alloc[i]=_alloc[i];
 		}
 	};
 	bitset<114> readInodeSect(const Sector sect, int count){
 			bitset<114> retBit;
 			if(range(count, 0, SectorBit/114)){
-				int start=count*SectorBit;
+				int start=count*inodeSize;
 				int stop=start+114;
+				cout << start << '\t' << stop << endl;
 				forloop(start,stop) {
 					retBit[i-start]=sect[i];
 				}

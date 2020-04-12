@@ -122,17 +122,26 @@ int mainTest2(){ // NOise testing
 
 
 // This funciton is not expanedable yet.
-bool dirCreate(inode &node, string Name, int Sect, disk(Disk)){ // Creates an empty directory. ALSO, Disk should
+//bool dirCreate(inode &node, string Name, Sector sect){ // Creates an empty directory. ALSO, Disk should
+bool dirCreate(Sector &sect){ // Creates an empty directory. ALSO, Disk should
 
 	int posDir;
 	int posInode;
 	dir Dir;
+	if(sect!=0){
+		cout << "HUH\n";
+	}
+	else
+		cout << "It is 0 stupid\n";
 	{ // Settign the posDir and posInode Values
 		forloop(0, 35){ // Finding first empty inode TODO make sure to expand this, so we check 3 sectors, not just the first 1.
-			if(readInodeSect(Disk[0], i)!=0){
-				cout << i << '\t' << readInodeSect(Disk[0], i) << endl;
+			if(readInodeSect(sect, i)!=0){
+				cout <<  readInodeSect(sect, i) << '\t' << i << endl;
 			}
 		}
+		inode temp=readBitDataInode(readInodeSect(sect,1).to_string());
+		cout << temp.isFile  << '\t' << temp.size << endl;
+
 	}
 
 	/* { // Setting Dir Values */
@@ -159,15 +168,15 @@ bool dirCreate(inode &node, string Name, int Sect, disk(Disk)){ // Creates an em
 }
 
 int main(){
-	bitset<SectorBit> TestDrive[SectorNum];
-	cout << "In a bitset (an array of bits)  of 4096 bits, I partiation them into " << dirSize << " with one section of importance is " << dirSize*2 << " to " << dirSize*3 << endl;
-	cout << "uint Arr[10] Before\t\t\t " << readInodeSect(TestDrive[0], 1) << endl;
-	uint Arr[10];
-	cout << "uint Arr[10] After\t\t\t " << readInodeSect(TestDrive[0], 1) << endl;
+	Sector TestDrive(0);
+	if(TestDrive!=0)
+		cout << "HUH";
+	inode Root(false, 8);
+	if(TestDrive!=0)
+		cout << "HUH";
 
-	cout << "uint *NewArr = new uint[10] Before\t " << readInodeSect(TestDrive[0], 1) << endl;
-	uint *NewArr=new uint[10];
-	cout << "uint *NewArr] = new uint[10] After\t " << readInodeSect(TestDrive[0], 1) << endl;
+
+	dirCreate(TestDrive);
 
 
 
