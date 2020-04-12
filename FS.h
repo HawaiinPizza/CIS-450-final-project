@@ -1,14 +1,18 @@
+#ifndef FS_H
+#define FS_H
+
 #include <iostream>/*{{{*/
 #include <cmath>
 #include <vector>
 #include <climits>
 #include <bitset>
 #include <cassert>
+#define MagicNum 18
+#define SBNum 18
+#include "Disk.h"
 
 // Global data
 bool FS_Lock=true;
-#define MagicNum 18
-#define SBNum 18
 /*}}}*/
 
 
@@ -38,6 +42,8 @@ int FS_Boot(){
 	}
 	// External is not made. As such, set the sueprblock to a number.
 	ExtDisk[0]=SBNum;
+	Disk_Init(ExtDisk);
+	Disk_Init(WorkDisk);
 	return 0;
 } /*}}}*/
 
@@ -66,3 +72,6 @@ string FS_Check(){
 		temp="No Lock"+osErrMsg;;
 	return temp;
 }
+
+
+#endif

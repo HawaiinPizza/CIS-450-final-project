@@ -1,9 +1,13 @@
-#include <iostream>/*{{{*/
+#ifndef DK_H
+#define DK_H
+/*{{{*/
+#include <iostream>
 #include <cmath>
 #include <vector>
 #include <climits>
 #include <bitset>
 #include <cassert>
+#include "FS.h"
 /*}}}*/
 
 
@@ -27,21 +31,10 @@ int Disk_Init(disk(Disk) ){ // Setup the disk
 	//This is creating the root folder. Later on, we will make it with DirCreate("/")
 	string inodeString=writeBitDataInode(Root).to_string();
 	bitset<SectorSize*8> inodeBit(inodeString);
-	string send="";
-	for(int i=0; i<35; i++){
-		send+=writeBitDataInode(Root).to_string();
-	}
-	bitset<4096> hard(send);
-	Disk[3]=hard;
-
-	for(int i=0; i<35; i++){
-		assert(inodeString==inodeSubStr(Disk[3],i));
-	}
-	cout << "SUCCESS";
-
-
-
+	Disk[3]=inodeBit;
 	
 	return 0;
 
 }
+
+#endif

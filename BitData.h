@@ -1,14 +1,5 @@
-/*{{{*/ //Using
-
-#include <iostream>
-#include <cmath>
-#include <vector>
-#include <climits>
-#include <bitset>
-#include <cassert>
-using namespace std;
-/*}}}*/
-
+#ifndef Bit_H
+#define Bit_H
 /* Data and macros {{{*/
 #define SectorSize 512
 #define SectorNum 1000
@@ -21,6 +12,19 @@ using namespace std;
 // Macro used to ease declearing feckign disk
 #define Sector std::bitset<SectorSize*8> 
 #define disk(x) std::bitset<SectorSize*8> x[SectorNum]
+//}}}
+
+/*{{{*/ //Using
+
+#include <iostream>
+#include <cmath>
+#include <vector>
+#include <climits>
+#include <bitset>
+#include <cassert>
+using namespace std;
+/*}}}*/
+
 //The Disk
 disk(ExtDisk); 
 disk(WorkDisk);
@@ -225,3 +229,6 @@ void dirReadWRiteTest(){/*{{{*/
 
 
 // }}}
+//
+//
+#endif

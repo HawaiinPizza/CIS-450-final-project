@@ -20,11 +20,6 @@ using namespace std;
 
 
 int main(){
-	try{
-		Disk_Init(ExtDisk);
-	}
-	catch (exception temp){
-		exit(-1);
-	}
+	FS_Boot();
 
 }
