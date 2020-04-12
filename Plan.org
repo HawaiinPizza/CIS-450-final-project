@@ -9,8 +9,8 @@
 *** DONE Directory :DIR: [2/2]
     - [X] WriteDir :: Covnert directory to 4096 bit stream, an return this.
     - [X] ReadDir :: Convert 4096 bit stream to directory, adn return it.
-** TODO Setting up the drives  [0/2]
-*** TODO File system scope   :FS:
+** TODO Setting up the drives  [1/2]
+*** DONE File system scope :FS:
     Error MEssages are sent to osErrMsg
 **** DONE FS_Boot [3/3]   
      - INPUT :: External Disk Image/Lack of disk image
@@ -26,13 +26,13 @@
      - INPUT :: Working Disk Image and External Disk Image
      - EX-OUTPUT :: Copy Working Disk Image to External Disk Image 
      - AC-OUTPUT ::
-**** TODO FS_Reset [0/3]
+**** DONE FS_Reset [3/3]
      - INPUT :: ExDisk and WorkDisk
      - EX-OUTPUT :: File System is unavaible to access till FS_Boot
      - AC-OUTPUT ::
-     - [ ] File System is unavaible to write till fs_BOOT :: The file system is unable to be access til FS_Boot is claled. Any attmpt to do so will result in E_INVALID_ACCESS_ATTEMPT
-     - [ ] Attmpt to access filesystem before/after FS_Reset ::  Access Stuff/E_INVALID_ACCESS_ATTEMPT
-     - [ ] Attmpt to access filestyem before/after FS_Boot ::  E_INVALID_ACCESS_ATTEMPT/Access Stuff
+     - [X] File System is unavaible to write till fs_BOOT :: The file system is unable to be access til FS_Boot is claled. Any attmpt to do so will result in E_INVALID_ACCESS_ATTEMPT
+     - [X] Attmpt to access filesystem before/after FS_Reset ::  Access Stuff/E_INVALID_ACCESS_ATTEMPT
+     - [X] Attmpt to access filestyem before/after FS_Boot ::  E_INVALID_ACCESS_ATTEMPT/Access Stuff
 *** TODO Disk Scope      :DS:
     Error MEssages are sent to diskErrMsg
 **** TODO DISK_SETUP and Save [0/3]

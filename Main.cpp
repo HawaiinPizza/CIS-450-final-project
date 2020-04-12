@@ -17,8 +17,11 @@ using namespace std;
 
 
 int main(){
-	//F(FS_Boot());
-	//F(FS_Boot());
-	
+
+	cout << FS_Reset() << endl;
+	cout << FS_Check() << endl;
+	cout << FS_Boot() << endl;
+	cout << FS_Reset() << endl;
+	cout << FS_Check() << endl;
 
 }
