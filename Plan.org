@@ -506,7 +506,6 @@
    - File_Write(int fd, string buffer, int size IN BYTES) :: Write from buffer to the file. NOTE SIZE HAS TO BE CONSISNET. If it's not, stop the program
      #+BEGIN_SRC plantuml  :file Plant/FileWrite.png
      @startuml
-     start
 	if(fd is not in open file table)
 		:return -1 "E_WRITE_BAD_FD";
 		stop
@@ -515,7 +514,7 @@
 		stop
 	else
 		:file=openfiletable[fd];
-		while (i <- 0 to size*8, to account for byte to bit conversion AND file still hasn't reach of file) then (true))
+		while (i <- 0 to size*8, to account for byte to bit conversion AND file still hasn't reach of file) is true)
 			if(write requires a new datablock, but there's no free datablcok) then (yes)
 				:return -1 E_NO_SPACE;
 				stop

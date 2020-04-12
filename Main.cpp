@@ -18,8 +18,13 @@ using namespace std;
 
 
 
-int main(){
-	Disk_Init(ExtDisk);
 
+int main(){
+	try{
+		Disk_Init(ExtDisk);
+	}
+	catch (exception temp){
+		exit(-1);
+	}
 
 }
