@@ -33,9 +33,9 @@
      - [X] File System is unavaible to write till fs_BOOT :: The file system is unable to be access til FS_Boot is claled. Any attmpt to do so will result in E_INVALID_ACCESS_ATTEMPT
      - [X] Attmpt to access filesystem before/after FS_Reset ::  Access Stuff/E_INVALID_ACCESS_ATTEMPT
      - [X] Attmpt to access filestyem before/after FS_Boot ::  E_INVALID_ACCESS_ATTEMPT/Access Stuff
-*** TODO Disk Scope      :DS:
+*** DONE Disk Scope      :DS:  [3/3]
     Error MEssages are sent to diskErrMsg
-**** TODO DISK_SETUP and Save [2/3]
+**** DONE DISK_SETUP and Save [3/3]
      These are the settuping up, and saving/loading disks.
      - INPUT :: Working and External Disk
      - EX-OUTPUT :: Be able to load up, 
@@ -45,23 +45,23 @@
        - [X] and you create he superblcok and the root direcotry
        - [X] Called during FS_Boot
      - [X] int Disk_Load :: When booting a Disk, you send External Disk -> working Disk. Called during FS_Boot
-     - [ ] int Disk_Save :: Called by FS_Sync, send Working Disk -> External Disk.
-**** TODO DISK Write [0/2]
+     - [X] int Disk_Save :: Called by FS_Sync, send Working Disk -> External Disk.
+**** DONE DISK Write [4/4]
      - INPUT :: int Sector and String Buffer
      - EX-OUTPUT :: Write to Sector the Buffer
      - AC_OUTPUT :: 
-  - [ ] Buffer is of SIZE_SEctor :: If not, than return E_WRITE_INVALID_PARAM
-  - [ ] Buffer is nonNull :: If not, than return E_WRITE_INVALID_PARAM
-  - [ ] Sector paramter is out of boudns :: retrun E_WRITE_INVALID_PARM
-  - [ ] Sector has data being written to it :: Write the Buffer to Sector.
-**** TODO DISK Read [0/4]
+  - [X] Buffer is of SIZE_SEctor :: If not, than return E_WRITE_INVALID_PARAM
+  - [X] Buffer is nonNull :: If not, than return E_WRITE_INVALID_PARAM
+  - [X] Sector paramter is out of boudns :: retrun E_WRITE_INVALID_PARM
+  - [X] Sector has data being written to it :: Write the Buffer to Sector.
+**** DONE DISK Read [4/4]
      - INPUT :: int Sector and String Buffer
      - EX-OUTPUT :: Write to Buffer from Sector
      - AC_OUTPUT :: 
-     - [ ] Buffer is of SIZE_SEctor :: If not, than return E_READ_INVALID_PARAM
-     - [ ] Buffer is nonNull :: If not, than return E_READ_INVALID_PARAM
-     - [ ] Sector paramter is out of boudns :: retrun E_READ_INVALID_PARM
-     - [ ] Sector has data being read from to it :: Write the Sector to Buffer.
+     - [X] Buffer is of SIZE_SEctor :: If not, than return E_READ_INVALID_PARAM
+     - [X] Buffer is nonNull :: If not, than return E_READ_INVALID_PARAM
+     - [X] Sector paramter is out of boudns :: retrun E_READ_INVALID_PARM
+     - [X] Sector has data being read from to it :: Write the Sector to Buffer.
 ** TODO Setting up Directories and files [0/2]
 *** TODO getFilePath(string path) and getDirPath(string path)
     - Input :: string path
@@ -742,6 +742,7 @@
       while(for i in range(0,1000))
 	      :workDisk[i]=extDisk[i];
       endwhile
+      stop
       @enduml
    #+END_SRC
 
@@ -752,7 +753,7 @@
 
     #+BEGIN_SRC plantuml  :file Plant/DiskWrite.png
     @startuml
-	if(buffer.size() != 512 bytes/4096 bits || buffer==NULL || sector<0 || sector >1000) then (true)
+	if(buffer.size() != 512 bytes/4096 bits || buffer==NULL || sector<0 || sector >=1000) then (true)
 		:return E_WRITE_INVALID_PARM -1;
 		stop
 	else  (false)
@@ -775,7 +776,7 @@
 
     #+BEGIN_SRC plantuml  :file Plant/DiskREAD.png
     @startuml
-	if(buffer.size() != 512 bytes/4096 bits || buffer==NULL || sector<0 || sector >1000) then (true)
+	if(buffer.size() != 512 bytes/4096 bits || buffer==NULL || sector<0 || sector >=1000) then (true)
 		:return E_READ_INVALID_PARM -1;
 		stop
 	else  (false)
@@ -817,7 +818,10 @@
 
 ** Part 3     
    - How do you *create* an external disk?
-   - For File system oepration, where 
+   - For File system oepration, where
+   - How can a buffer be null, cause you can't pass null strings in c++
+   - Method signature chagnes, change I have to pass the disk. Is that valid?
+   - Also, which disk does disk_write and disk_read write to? I assumed working
 * Specifications 
 ** System Decomposistion  
 *** Data

@@ -1,7 +1,7 @@
 #ifndef FS_H
 #define FS_H
 
-#include <iostream>/*{{{*/
+#include <iostream>
 #include <cmath>
 #include <vector>
 #include <climits>
@@ -13,14 +13,14 @@
 
 // Global data
 bool FS_Lock=true;
-/*}}}*/
 
 
 
 
 
 
-// FS_Boot() ExtDisk->Workign Disk or throw error if magic num differnt{{{
+
+// FS_Boot() ExtDisk->Workign Disk or throw error if magic num differnt
 // Removes external disk, and set up external disk.
 int FS_Boot(){
 	FS_Lock=false;
@@ -43,25 +43,25 @@ int FS_Boot(){
 	// External is not made. As such, set the sueprblock to a number.
 	ExtDisk[0]=SBNum;
 	Disk_Init(ExtDisk);
-	Disk_Load();
+	Disk_Save();
 	return 0;
-} /*}}}*/
+} 
 
 
-int FS_Sync(){ // Saves workign disk to extenral disk.{{{
+int FS_Sync(){ // Saves workign disk to extenral disk.
 	f;
 	for(int i=0; i<SectorNum; i++)
 		ExtDisk[i]=WorkDisk[i];
 	return 0;
 }
-/*}}}*/
 
 
-int FS_Reset(){ // {{{
+
+int FS_Reset(){ // 
 	f;	
 	FS_Lock=true;
 	return 0;
-}/*}}}*/
+}
 
 
 string FS_Check(){

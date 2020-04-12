@@ -3,7 +3,7 @@
 //    #+HEADER: :noweb yes :tangle Main.cpp   :colnames no :comments org
 // #+HEADER: :includes "<iostream> <cmath> <vector> <climits> <bitset>"
 
-#include <iostream>/*{{{*/
+#include <iostream>
 #include <cmath>
 #include <vector>
 #include <climits>
@@ -13,13 +13,14 @@
 #include "FS.h"
 #include "Disk.h"
 using namespace std;
-/*}}}*/
+
 
 
 
 
 
 int main(){
-	FS_Boot();
+//	FS_Boot();
+
 
 }
