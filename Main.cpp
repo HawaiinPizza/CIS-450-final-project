@@ -160,14 +160,14 @@ bool dirCreate(inode &node, string Name, int Sect, disk(Disk)){ // Creates an em
 
 int main(){
 	bitset<SectorBit> TestDrive[SectorNum];
-	/* disk(TestDrive2); */
-	/* uint *Arr=new uint [10]; */
-	/* inode Root(false, 1, Arr); */
-	/* dirCreate(Root, "/", 0, TestDrive); */
-	cout << "Arr does not have = new int[10]\t" << readInodeSect(TestDrive[0], 1) << endl;
-	/* cout << readInodeSect(TestDrive2[0], 1) << endl; */
-	int *Arr=new int[10];
-	cout << "Arr does  have = new int[10]\t" << readInodeSect(TestDrive[0], 1) << endl;
+	cout << "In a bitset (an array of bits)  of 4096 bits, I partiation them into " << dirSize << " with one section of importance is " << dirSize*2 << " to " << dirSize*3 << endl;
+	cout << "uint Arr[10] Before\t\t\t " << readInodeSect(TestDrive[0], 1) << endl;
+	uint Arr[10];
+	cout << "uint Arr[10] After\t\t\t " << readInodeSect(TestDrive[0], 1) << endl;
+
+	cout << "uint *NewArr = new uint[10] Before\t " << readInodeSect(TestDrive[0], 1) << endl;
+	uint *NewArr=new uint[10];
+	cout << "uint *NewArr] = new uint[10] After\t " << readInodeSect(TestDrive[0], 1) << endl;
 
 
 
