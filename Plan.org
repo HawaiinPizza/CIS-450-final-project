@@ -35,13 +35,16 @@
      - [X] Attmpt to access filestyem before/after FS_Boot ::  E_INVALID_ACCESS_ATTEMPT/Access Stuff
 *** TODO Disk Scope      :DS:
     Error MEssages are sent to diskErrMsg
-**** TODO DISK_SETUP and Save [0/3]
+**** TODO DISK_SETUP and Save [2/3]
      These are the settuping up, and saving/loading disks.
      - INPUT :: Working and External Disk
      - EX-OUTPUT :: Be able to load up, 
      - AC-OUTPUT ::
-     - [ ] int DISK_INIT() :: Run before disk ops take place. All sectors are all zeros, and you create he superblcok and the root direcotry. Called during FS_Boot
-     - [ ] int Disk_Load :: When booting a Disk, you send External Disk -> working Disk. Called during FS_Boot
+     - [X] int DISK_INIT() :: Run before disk ops take place. 
+       - [X] All sectors are all zeros
+       - [X] and you create he superblcok and the root direcotry
+       - [X] Called during FS_Boot
+     - [X] int Disk_Load :: When booting a Disk, you send External Disk -> working Disk. Called during FS_Boot
      - [ ] int Disk_Save :: Called by FS_Sync, send Working Disk -> External Disk.
 **** TODO DISK Write [0/2]
      - INPUT :: int Sector and String Buffer
@@ -726,6 +729,7 @@
 	while(for i in range(0,1000))
 		:extDisk[i]=workDisk[i];
 	endwhile
+	stop
 	@enduml
      #+END_SRC
 

@@ -43,7 +43,7 @@ int FS_Boot(){
 	// External is not made. As such, set the sueprblock to a number.
 	ExtDisk[0]=SBNum;
 	Disk_Init(ExtDisk);
-	Disk_Init(WorkDisk);
+	Disk_Load();
 	return 0;
 } /*}}}*/
 

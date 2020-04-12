@@ -11,7 +11,7 @@
 /*}}}*/
 
 
-int Disk_Init(disk(Disk) ){ // Setup the disk
+int Disk_Init(disk(Disk) ){ // Setup the disk{{{
 	// Set each sector 0
 	for(int i=0; i<SectorNum; i++){ 
 		Disk[i]=0;
@@ -35,6 +35,19 @@ int Disk_Init(disk(Disk) ){ // Setup the disk
 	
 	return 0;
 
+}/*}}}*/
+
+// Save and load functions{{{
+int Disk_Load(){ // workDisk->extDisk
+	for(int i=0; i<SectorNum; i++ )
+		ExtDisk[i]=WorkDisk[i];
+	return 0;
 }
+
+int Disk_Save(){ // extDisk->workDisk
+	for(int i=0; i<SectorNum; i++ )
+		WorkDisk[i]=ExtDisk[i];
+	return 0;
+}/*}}}*/
 
 #endif
