@@ -27,11 +27,14 @@ int Disk_Init(disk(Disk) ){ // Setup the disk
 	//This is creating the root folder. Later on, we will make it with DirCreate("/")
 	string inodeString=writeBitDataInode(Root).to_string();
 	bitset<SectorSize*8> inodeBit(inodeString);
-	Disk[3]=inodeBit;
+	string send="";
+	for(int i=0; i<35; i++){
+		send+=writeBitDataInode(Root).to_string();
+	}
+	Disk[3]=send;
 
 	{//Testing it. Remove afterwards
 		cout << Root.size << '\t' << Root.isFile << '\t' << Root.alloc[0] << endl;
-
 
 
 		string test=inodeSubStr(Disk[3], 1);
