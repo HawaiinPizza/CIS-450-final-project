@@ -822,6 +822,8 @@
    - How can a buffer be null, cause you can't pass null strings in c++
    - Method signature chagnes, change I have to pass the disk. Is that valid?
    - Also, which disk does disk_write and disk_read write to? I assumed working
+* Changes     
+  - Wrote teh read/write by Inode/dir funcitons, which allow for bit writing in the drivej
 * Specifications 
 ** System Decomposistion  
 *** Data

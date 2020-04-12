@@ -15,9 +15,12 @@
 using namespace std;
 
 
-#define siz 10000
-#define set 219
+#define siz 50
+#define set 13
 
+// Read and write are here for histroical purposes. They are take a size (how many inodes/directories can you fit in a sector) and set (aka how long is a inode/directory) and count (which spot in sector do you want to change" and maniplates them.
+//
+// THE KEY ASSUMPATION IS NOISE: there's also bits left over. their posistion is from 0->siz%set
 	void read(bitset<siz> test, int count){
 		if(range(count, 0, siz/set)){
 			int start=count*set;
@@ -48,13 +51,13 @@ using namespace std;
 		}
 	}
 
-int main(){
+int mainTest1(){
 	char on='1';
 	char off;
 	ifelse(on=='1', off='0', off='1');
 	string testStr;
-	forloop(0, siz%set){
-		testStr+="0";
+	forloop(0, siz%set){ // Useless/nosie
+		testStr+="1";
 	}
 	forloop(0,siz){
 		ifelse((i/set)%2==0, testStr+=on, testStr+=off);
@@ -89,6 +92,32 @@ int main(){
 	forloop(0,siz/set){
 		read(test1, i);
 	}
-
 }
+
+int mainTest2(){ // NOise testing
+	char on='1';
+	char off;
+	ifelse(on=='1', off='0', off='1');
+	string testStr;
+	forloop(0, siz%set){ // Useless/nosie
+		testStr+=on;
+	}
+	forloop(0,siz){
+		ifelse((i/set)%2==0, testStr+=on, testStr+=off);
+	}
+	cout << "%:" << siz%set << '\t' <<  '\t';//  << testStr << ;;
+	cout << endl;
+	bitset<siz> test1(testStr);
+	forloop(0, siz){
+		if(range(i, 0, siz%set ))
+			cout << "Noise\t";
+		else
+			cout << "Value\t";
+		cout << i << '\t' << test1[i] << endl;
+	}
+	return 0;
+}
+int main(){
+	mainTest2();
 //	FS_Boot();
+	}
