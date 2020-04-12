@@ -40,7 +40,6 @@ void write(bitset<20> &test, int count, string buffer){
 			test[i]=writeBit[i-start];
 		}
 	}
-
 	else{
 	}
 }
