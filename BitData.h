@@ -8,6 +8,7 @@
 #define inodeOffset 6
 #define inodeSize 114
 #define dirSize 132
+#define dirCount 31
 // f stands for File system check. This is just a one liner, that returns -1 if any thing happens. 
 #define f                         \
 	do {                                       \
@@ -88,8 +89,7 @@ string diskErrMsg="";
 			bitset<114> retBit;
 			if(range(count, 0, SectorBit/114)){
 				int start=count*inodeSize;
-				int stop=start+114;
-				cout << start << '\t' << stop << endl;
+				int stop=start+inodeSize;
 				forloop(start,stop) {
 					retBit[i-start]=sect[i];
 				}

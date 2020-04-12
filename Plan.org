@@ -122,7 +122,7 @@
     - [ ] File_Write(int fd, string fuffer, int size) Failure maximum file size :: While writing, if you find there's the file takes up more than 10 data blcoks, return E_FILE_TOO_BIG
       
 ** TODO Seek and unLink [0/1]
-*** TODO File_Seek and Dir/File_UnLink [0/10]  :FILE:DIR: 
+*** TODO File_Seek and Dir/File_UnLink [0/10] :FILE:DIR: 
     Error -> osErrMsg
     - Input ::  string file | strign file | string path
     - Expected Ouput ::   new location of file poitner. | file/dir is deleted
@@ -139,6 +139,9 @@
     - [ ] File_Seek(int fd, int offset) :: File's posstiion is chnaged by the offset
     - [ ] File_Seek(int fd, int offset) Out of bounds :: Offset is negative/exceeds file size. Return E_SEEK_OUT_OF_BOUNDS
     - [ ] File_Seek(int fd, int offset) bad fd :: File isn't open. Return out of bounds
+** TODO Finsihing it up/Refctoring      
+   - [ ] rename read/write functions in datastruct
+   - [ ] pre/post conditions for everything
 
 * Algorithm/Code
 ** Whoel Porgram decompsiostion
