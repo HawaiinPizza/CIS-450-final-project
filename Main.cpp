@@ -130,6 +130,34 @@ int main(){
 	getDirPath("/A/B/E");
 	getDirPath("/A/B/F");
 	getDirPath("/A/B/G");
+	getDirPath("/A/B/H");
+
+	getDirPath("/A/B/C/1");
+	getDirPath("/A/B/C/2");
+	getDirPath("/A/B/C/3");
+	getDirPath("/A/B/C/4");
+	getDirPath("/A/B/C/5");
+
+	getDirPath("/A/B/D/1");
+	getDirPath("/A/B/D/2");
+	getDirPath("/A/B/D/3");
+	getDirPath("/A/B/D/4");
+	getDirPath("/A/B/D/5");
+
+	getDirPath("/A/B/E/1");
+	getDirPath("/A/B/E/2");
+	getDirPath("/A/B/E/3");
+	getDirPath("/A/B/E/4");
+	getDirPath("/A/B/E/5");
+
+	getDirPath("/A/B/F/1");
+	getDirPath("/A/B/F/2");
+	getDirPath("/A/B/F/3");
+	getDirPath("/A/B/F/4");
+	getDirPath("/A/B/F/5");
+
+
+
 	/*
 	*/
 	}
