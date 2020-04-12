@@ -1,0 +1,51 @@
+!_TAG_FILE_FORMAT	2	/extended format; --format=1 will not append ;" to lines/
+!_TAG_FILE_SORTED	1	/0=unsorted, 1=sorted, 2=foldcase/
+!_TAG_PROGRAM_AUTHOR	Darren Hiebert	/dhiebert@users.sourceforge.net/
+!_TAG_PROGRAM_NAME	Exuberant Ctags	//
+!_TAG_PROGRAM_URL	http://ctags.sourceforge.net	/official site/
+!_TAG_PROGRAM_VERSION	5.8	//
+Bit_H	BitData.h	2;"	d
+DK_H	Disk.h	2;"	d
+Disk_Load	Disk.h	/^int Disk_Load(){ \/\/ workDisk->extDisk$/;"	f
+Disk_Read	Disk.h	/^int Disk_Read( string &buffer, int sector){ \/\/ I did not check for buffer being null. IDK what to do in that scenario. $/;"	f
+Disk_Save	Disk.h	/^int Disk_Save(){ \/\/ extDisk->workDisk$/;"	f
+Disk_Write	Disk.h	/^int Disk_Write( string &buffer, int sector){ \/\/ I did not check for buffer being null. IDK what to do in that scenario. $/;"	f
+FS_Boot	FS.h	/^int FS_Boot(){$/;"	f
+FS_Check	FS.h	/^string FS_Check(){$/;"	f
+FS_H	FS.h	2;"	d
+FS_Lock	FS.h	/^bool FS_Lock=true;$/;"	v
+FS_Reset	FS.h	/^int FS_Reset(){ \/\/ $/;"	f
+FS_Sync	FS.h	/^int FS_Sync(){ \/\/ Saves workign disk to extenral disk.$/;"	f
+MagicNum	FS.h	10;"	d
+Name	BitData.h	/^	char Name[16];$/;"	m	struct:dir
+SBNum	FS.h	11;"	d
+Sector	BitData.h	14;"	d
+SectorBit	BitData.h	5;"	d
+SectorNum	BitData.h	6;"	d
+SectorSize	BitData.h	4;"	d
+WorkDisk	BitData.h	/^disk(WorkDisk);$/;"	v
+alloc	BitData.h	/^	uint alloc[10];$/;"	m	struct:inode
+dir	BitData.h	/^struct dir{$/;"	s
+dirReadWRiteTest	BitData.h	/^void dirReadWRiteTest(){$/;"	f
+dirSize	BitData.h	10;"	d
+disk	BitData.h	15;"	d
+disk	Disk.h	/^int Disk_Init(disk(Disk) ){ \/\/ Setup the disk$/;"	f
+diskErrMsg	BitData.h	/^string diskErrMsg="";$/;"	v
+f	BitData.h	38;"	d
+inode	BitData.h	/^struct inode{$/;"	s
+inodeCount	BitData.h	7;"	d
+inodeOffset	BitData.h	8;"	d
+inodePlace	BitData.h	/^	uint long inodePlace;$/;"	m	struct:dir
+inodeReadWriteTest	BitData.h	/^void inodeReadWriteTest(){ \/\/{{{$/;"	f
+inodeSet	BitData.h	/^void inodeSet(inode *Node, int pos, int val){$/;"	f
+inodeSetStr	BitData.h	/^void inodeSetStr(Sector &sect, int Count, string buffer){ \/\/\/{{{$/;"	f
+inodeSize	BitData.h	9;"	d
+inodeSubStr	BitData.h	/^string inodeSubStr(Sector sect, int Count){ \/\/\/{{{$/;"	f
+isFile	BitData.h	/^	bool isFile;$/;"	m	struct:inode
+main	Main.cpp	/^int main(){$/;"	f
+osErrMsg	BitData.h	/^string osErrMsg="";$/;"	v
+readBitDataInode	BitData.h	/^inode readBitDataInode(string BitStream){\/\/ Type \/\/ Size \/\/ 10*10 of which bits are allociated to it. {{{$/;"	f
+readDir	BitData.h	/^dir readDir(string BitStream){$/;"	f
+size	BitData.h	/^	uint size;$/;"	m	struct:inode
+writeBitDataInode	BitData.h	/^bitset<114> writeBitDataInode(inode Inode){\/\/Retrun 114 bits$/;"	f
+writeDir	BitData.h	/^bitset<132> writeDir(dir Dir){$/;"	f
