@@ -43,8 +43,19 @@ string diskErrMsg="";
 		} \
 	} while (0) \
 
+// For loop macro
+#define forloop(x,y) \
+	for(int i=x; i<y; i++) \
+
+#define backloop(x,y) \
+	for(int i=y; i>x; i--) \
 
 
+bool range(int val, int x, int y){
+	if(val>=x && val<=y)
+		return true;
+	return false;
+}
 
 struct inode{
 	bool isFile;
