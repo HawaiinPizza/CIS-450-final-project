@@ -31,17 +31,14 @@ int Disk_Init(disk(Disk) ){ // Setup the disk
 	for(int i=0; i<35; i++){
 		send+=writeBitDataInode(Root).to_string();
 	}
-	Disk[3]=send;
+	bitset<4096> hard(send);
+	Disk[3]=hard;
 
-	{//Testing it. Remove afterwards
-		cout << Root.size << '\t' << Root.isFile << '\t' << Root.alloc[0] << endl;
-
-
-		string test=inodeSubStr(Disk[3], 1);
-		Root=readBitDataInode(test);
-		cout << Root.size << '\t' << Root.isFile << '\t' << Root.alloc[0] << endl;
-
+	for(int i=0; i<35; i++){
+		assert(inodeString==inodeSubStr(Disk[3],i));
 	}
+	cout << "SUCCESS";
+
 
 
 	
