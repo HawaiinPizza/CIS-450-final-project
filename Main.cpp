@@ -9,7 +9,9 @@
 #include <climits>
 #include <bitset>
 #include <cassert>
+#include "BitData.h"
 #include "FS.h"
+#include "Disk.h"
 using namespace std;
 /*}}}*/
 
@@ -17,11 +19,7 @@ using namespace std;
 
 
 int main(){
+	Disk_Init(ExtDisk);
 
-	cout << FS_Reset() << endl;
-	cout << FS_Check() << endl;
-	cout << FS_Boot() << endl;
-	cout << FS_Reset() << endl;
-	cout << FS_Check() << endl;
 
 }
