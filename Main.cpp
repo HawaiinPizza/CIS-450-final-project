@@ -110,43 +110,49 @@ int mainTest2(){ // NOise testing
 
 
 int main(){
-	FS_Boot();
+	/* FS_Boot(); */
 
 	//Creating directories manually
-	inode RootInode	(0,3,	0);
-	inode AInode	(0,1, 	1);
-	inode BInode	(0,0,	2);
-	inode A1Inode	(0,0,	3);
+	inode RootInode	(0,0,	0);
+	/* inode AInode	(0,1, 	1); */
+	/* inode BInode	(0,0,	2); */
+	/* inode A1Inode	(0,0,	3); */
 
 	dir RootDir("/", 0);
-	dir ADir("A", 1);
-	dir BDir("B", 2);
-	dir A1Dir("1", 3);
+	/* dir ADir("A", 1); */
+	/* dir BDir("B", 2); */
+	/* dir A1Dir("1", 3); */
 
 	writeInodeSectInode(WorkDisk[3], 0, RootInode);
-
 	writeDirSectDir(WorkDisk[6+RootInode.alloc[0]], 0, RootDir);
 
-	cout << DirCreate("/A") << endl;
-	cout << DirCreate("/B") << endl;
+	cout << "A\t" << DirCreate("/A") << endl;
+	cout << "B\t" << DirCreate("/B") << endl;
 	cout << DirCreate("/C") << endl;
 	cout << DirCreate("/D") << endl;
 
 
-	cout << DirCreate("/A/1") << endl;
-	cout << DirCreate("/A/2") << endl;
-	/* cout << DirCreate("/A/3") << endl; */
-	/* cout << DirCreate("/A/4") << endl; */
+	cout << "CHILD1\t" << DirCreate("/A/1") << endl;
+	cout << "CHILD2\t" << DirCreate("/A/2") << endl;
+	cout << DirCreate("/A/3") << endl;
+	cout << DirCreate("/A/4") << endl;
 
 	/* cout  << DirCreate("/B/1") << endl; */
 	/* cout  << DirCreate("/B/2") << endl; */
 	/* cout  << DirCreate("/B/3") << endl; */
 	/* cout  << DirCreate("/B/4") << endl; */
 
-	/* forloop(0, 32){ */
-	/* 	dir Dir=readDirSectDir(WorkDisk[6], i); */ 
-	/* 	cout << Dir.Name << endl; */
-	/* } */
+	forloop2(6, 1000){
+		forloop(0, 32){
+			auto a=readDirSect(WorkDisk[j], i);
+			cout << j << '\t' << i << '\t';
+			if(a!=0){
+				dir Dir=readDirSectDir(WorkDisk[j], i); 
+				cout << Dir.Name;
+			}
+			cout << endl;
+		}
+	}
 
 	return 0;
 

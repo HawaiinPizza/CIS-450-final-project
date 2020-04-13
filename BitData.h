@@ -294,16 +294,13 @@ string diskErrMsg="";
 struct pos{
 	int Sect;
 	int Count;
-	int Alloc;
 	pos(){
 		Sect=-1;
 		Count=-1;
-		Alloc-1;
 	}
 	pos(int _Sect, int _Count){
 		Sect=_Sect;
 		Count=_Count;
-		Alloc=Sect*35+Count;
 	}
 };
 
@@ -391,11 +388,14 @@ inode getInode(string path){
 pos getFreeInode(){
 	pos posInode;
 	bool STOP=false;
-	for(int i=0; i<3 && !STOP; i++){ // Finding the first free inode space
+	for(int i=3; i<6 && !STOP; i++){ // Finding the first free inode space
 		forloop2(0,34){
 			if(readInodeSectBit(WorkDisk[i], j)==0){
 				posInode=pos(i,j);
 				STOP=true;
+			}
+			else{
+				cout << readInodeSectInode(WorkDisk[i], j).size << endl;
 			}
 			if(posInode.Count!=-1){ // Stop looking, since we already found one.
 				break;
@@ -424,11 +424,11 @@ pos getFirDir(int _sect){ // _sect is the sector where the directory si in.
 	for(int i=0; i<10; i++){ // Finding the space for the parent dictionary
 		forloop2(0,dirCount){
 			bitset<dirSize> bitStream( readDirSect(WorkDisk[_sect], j));
-			cout << bitStream << endl;
 			if(bitStream==0){ // INCLUDE CHECK THAT IF THIS DIR RUNS OUT OF SPACE, YOU APPEND A NEW SPACE
 				/* int _sect=3+b.inodePlace/35; */
 				/* int _place=b.inodePlace%35; */
-				posParDir=pos(_sect,j);
+				cout << _sect << '\t' << j << "\t Values to node\n";
+				posParDir=pos(_sect, j );
 			}
 			if(posParDir.Count!=-1) // Stop looking, since we already found one.
 				break;

@@ -35,8 +35,8 @@ int DirCreate(string path){
 
 			posInode=getFreeInode();
 			posDir=getFreeDataBlock();
-			cout << 6 + parent.alloc[0] << "\tPROBLEM HERE" << endl;
 			posParDir=getFirDir( 6+parent.alloc[0]); // TODO Might be reason of problem
+
 
 
 			if(posDir.Count!=-1 && posInode.Count!=-1 && posParDir.Count!=-1){ // This means there is free space for a new direcotry
@@ -45,20 +45,30 @@ int DirCreate(string path){
 				writeDirSectDir(WorkDisk[posParDir.Sect], posParDir.Count, NewDir );
 				writeDirSectDir(WorkDisk[posDir.Sect], posDir.Count, NewDir );
 				dir parDir=readDirSectDir(WorkDisk[posParDir.Sect], posParDir.Count);
-				child.alloc[0]=posInode.Alloc;
+				int Alloc=(posDir.Sect);
+				child.alloc[0]=Alloc; //CAUSE OF BUG
 				child.size=0;
 				writeInodeSectInode(WorkDisk[posInode.Sect], posInode.Count, child);
 
 				// Update size
 				parent.size++;
-				forloop(3,6){
+				bool stop=false;
+				for(int i=3; i<6 && !stop; i++){
 					forloop2(0,35){
 						if(parent.alloc[0]==readInodeSectInode(WorkDisk[i],j).alloc[0]){
 							writeInodeSectInode(WorkDisk[i],j, parent);
+							stop=true;
+							break;
 
 						}
 					}
 				}
+				cout << "Child info\t" << child.size << '\t' << child.alloc[0] << endl;
+				cout << "Parent info\t" << parent.size << '\t' << parent.alloc[0] << endl;
+				cout << "pos table\t" << "Sect\t" << "Count" << endl;
+				cout << "pos of inode\t" << posInode.Sect << '\t' << posInode.Count << '\t' << Alloc << endl;
+				cout << "pos of dir\t" 	 << posDir.Sect << '\t' << posDir.Count << endl;
+				cout << "pos of par dir\t" << posParDir.Sect << '\t' << posParDir.Count << endl;
 				
 
 				/* cout << readInodeSectBit(WorkDisk[posInode.Sect], posInode.Count); */
