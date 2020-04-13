@@ -27,6 +27,7 @@ int DirCreate(string path){
 		}
 		else{ // Can make dirctioanry.
 			child.isFile=false;
+			child.size=0;
 
 			dir Dir;
 			pos posDir;
@@ -48,7 +49,6 @@ int DirCreate(string path){
 				dir parDir=readDirSectDir(WorkDisk[posParDir.Sect], posParDir.Count);
 				int Alloc=(posDir.Sect);
 				child.alloc[0]=Alloc; //CAUSE OF BUG
-				child.size=0;
 				writeInodeSectInode(WorkDisk[posInode.Sect], posInode.Count, child);
 				/* cout << "ACTUALLY WROTE\t" << readInodeSectInode(WorkDisk[posInode.Sect], posInode.Count).alloc[0] << endl; */ 
 
@@ -65,10 +65,10 @@ int DirCreate(string path){
 						}
 					}
 				}
-				/* cout << "Child info\t" << child.size << '\t' << child.alloc[0] << endl; */
+				cout << "Child info\t" << child.size << '\t' << child.alloc[0] << endl;
 				/* cout << "Parent info\t" << parent.size << '\t' << parent.alloc[0] << endl; */
 				/* cout << "pos table\t" << "Sect\t" << "Count" << endl; */
-				/* cout << "pos of inode\t" << posInode.Sect << '\t' << posInode.Count << '\t' << Alloc << endl; */
+				cout << "pos of inode\t" << posInode.Sect << '\t' << posInode.Count << '\t' << Alloc << endl;
 				/* cout << "pos of dir\t" 	 << posDir.Sect << '\t' << posDir.Count << endl; */
 				/* cout << "pos of par dir\t" << posParDir.Sect << '\t' << posParDir.Count << endl; */
 				
@@ -100,7 +100,7 @@ int DirCreate(string path){
 
 int DirSize(string path){ // Get the size of the dctionary
 	inode inodepath=getInode(path);
-	if (inodepath.size == inode().size){ // Child alreayd exist
+	if (inodepath.size == inode().size){ // indoe does not exist
 		return -1; 
 	}
 	else{
@@ -117,7 +117,7 @@ int DirUnlink(string path){ //Remove a file.
 		return -1;
 	}
 	else if ( DirSize(path)!=0){ //Path is not empty. 
-		cout << "NOT EMPTY\t" << DirSize(path) << endl;
+		cout << "NOT EMPTY\t" << DirSize(path) << '\t' << delNode.alloc[0] << endl;
 		return -2;
 	}
 	else if ( delNode.alloc[0]==6){ // 6 is where the root directory is. TODO mkae this look easier to read for Stenier
@@ -147,13 +147,18 @@ int DirUnlink(string path){ //Remove a file.
 
 		//Now, we must find the parent dictionary file of del, and remove it
 		size_t found = path.find_last_of("/");
-		string child=path.substr(found);
-		forloop(0, 32){
+		string child=path.substr(found+1);
+		bool stop=false;
+		for(int i=0; i<32 && !stop; i++){
 			bitset<132>  dirBit(readDirSect(WorkDisk[parent.alloc[0]], i));
 			if(dirBit!=0){
 				dir Dir=getBitDir(dirBit);
 				if(Dir.Name==child){ // Found the cihld directory in parent
-					writeInodeSect(WorkDisk[parent.alloc[0]]  , i, "0");
+					cout << "I wonder what";
+					dirBit=0;
+					writeDirSect(WorkDisk[parent.alloc[0]]  , i, dirBit);
+					stop=true;
+					break;
 				}
 
 			}

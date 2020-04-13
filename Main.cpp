@@ -157,19 +157,37 @@ int main(){
 	cout  << DirCreate("/B/r") << endl;
 
 
-	cout  << DirCreate("/B/q/r2") << endl;
-	cout  << DirCreate("/B/q/r1") << endl;
-	cout  << DirCreate("/B/q/r3") << endl;
-	cout  << DirCreate("/B/q/r4") << endl;
-	cout  << DirCreate("/B/q/r5") << endl;
-	cout  << DirCreate("/B/q/r6") << endl;
-	cout  << DirCreate("/B/q/r7") << endl;
-	cout  << DirCreate("/B/q/r8") << endl;
+	cout  << DirCreate("/B/q/1") << endl;
+	cout  << DirCreate("/B/q/2") << endl;
+	cout  << DirCreate("/B/q/3") << endl;
+	cout  << DirCreate("/B/q/4") << endl;
+	cout  << DirCreate("/B/q/5") << endl;
+	cout  << DirCreate("/B/q/6") << endl;
+	cout  << DirCreate("/B/q/7") << endl;
+	cout  << DirCreate("/B/q/8") << endl;
 
-	print();
-	cout << "UNLINK\t" << DirUnlink("/C");
 
-	print();
+	cout  << "3rd level /B/q/1\t" << DirUnlink("/B/q/1") << endl;
+	cout  << "3rd level /B/q/2\t" << DirUnlink("/B/q/2") << endl;
+	cout  << "3rd level /B/q/3\t" << DirUnlink("/B/q/3") << endl;
+	cout  << "3rd level /B/q/4\t" << DirUnlink("/B/q/4") << endl;
+	cout  << "3rd level /B/q/4\t" << DirUnlink("/B/q/4") << endl;
+	cout  << "3rd level /B/q/4\t" << DirUnlink("/B/q/4") << endl;
+	cout  << "3rd level /B/q/4\t" << DirUnlink("/B/q/4") << endl;
+
+	cout  << "3rd level /B/q/5\t" << DirUnlink("/B/q/5") << endl;
+	cout  << "3rd level /B/q/6\t" << DirUnlink("/B/q/6") << endl;
+	cout  << "3rd level /B/q/7\t" << DirUnlink("/B/q/7") << endl;
+	cout  << "3rd level /B/q/8\t" << DirUnlink("/B/q/8") << endl;
+
+	cout  << "2nd level /B/q\t" << DirUnlink("/B/q") << endl;
+	cout  << "2nd level /B/w\t" << DirUnlink("/B/w") << endl;
+	cout  << "2nd level /B/e\t" << DirUnlink("/B/e") << endl;
+	cout  << "2nd level /B/r\t" << DirUnlink("/B/r") << endl;
+
+	cout  << "1st level /B/r\t" <<  DirUnlink("/B/r") << endl;
+
+//	print();
 
 	return 0;
 

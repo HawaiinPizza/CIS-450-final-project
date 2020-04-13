@@ -69,15 +69,25 @@ string diskErrMsg="";
 		uint alloc[10];
 		inode(){
 			size=-1;
+			isFile=true;
+			forloop(0, 10){
+				alloc[i]=-1;
+			}
 		}
 		inode(bool _isFile, uint _size){
 			isFile=_isFile;
 			size=_size;
+			forloop(0, 10){
+				alloc[i]=-1;
+			}
 		}
 		inode(bool _isFile, uint _size, uint alloc){
 			isFile=_isFile;
 			size=_size;
 			this->alloc[0]=alloc;
+			forloop(1, 10){
+				this->alloc[i]=-1;
+			}
 		}
 	};
 	void inodeSet(inode *Node, int pos, int val){
@@ -185,9 +195,17 @@ string diskErrMsg="";
 		uint long  inodePlace;
 		char endOf='\0';
 		dir(){
+			forloop(0,15){
+				Name[i]='\0';
+			}
+			Name[15]=endOf;
+			inodePlace=-1;
 		}
 		dir(string _Name, uint long _inodePlace){
-			forloop(0,14){
+			forloop(0,15){
+				Name[i]='\0';
+			}
+			for(int i=0; i<15 && _Name.length(); i++){
 				Name[i]=_Name[i];
 			}
 			Name[15]=endOf;
