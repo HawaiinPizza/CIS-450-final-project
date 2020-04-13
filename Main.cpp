@@ -226,11 +226,12 @@ int DirCreate(string path){ // Haven't implmented getDirpath
 	/* return 0; */
 }
 
-int getInode(string path){
+inode getInode(string path){
 
-	int inode=0;
 	bool isRoot=false;
-	vector<string> retStr;
+	queue<string> RetStr;
+	inode Ret;
+	RetStr.push("/");
 	{ // See if root and if not, get the next child
 		{
 			if(path[path.length()-1]!='/')
@@ -238,7 +239,7 @@ int getInode(string path){
 			string tempStr="";
 			for(int i=1; i<path.length(); i++){
 				if(path[i]=='/'){
-					retStr.push_back(tempStr);
+					RetStr.push(tempStr);
 					tempStr="";
 				}
 				else{
@@ -247,13 +248,62 @@ int getInode(string path){
 			}
 
 
-			if(retStr.size()==1){
+			if(RetStr.size()==1){
 				isRoot=true;
 			}
 		}
 	}
 
-	return -1;
+	// Getting the node here.
+	bool stop=false;
+	int Sect=6; //There is where root dictionary will be
+	while(!RetStr.empty() && !stop){
+		string find=RetStr.front(); RetStr.pop();
+		forloop(0, dirCount){ // This is code for finding something in root.
+			auto a= readDirSect(WorkDisk[Sect], i); 
+			if(a!=0){
+				dir b=getBitDir(a);
+				/* cout << find << ":" << b.Name << '\t'; */
+				if(b.Name==find && !RetStr.empty()) { // This isn't what we're looking for. Go to antoher stage
+					/* cout << "CLUE\t" ; */
+		/* 			newdir.inodePlace=(posInode.sect-3)*inodeCount +  posInode.count; */
+					int _sect=3+b.inodePlace/35;
+					int _place=b.inodePlace%35;
+					inode temp=readInodeSectInode(WorkDisk[_sect], _place);
+					/* cout << */ 
+					/* 	"inode\t" << b.inodePlace << '\t' << */
+					/* 	"SECT\t" << _sect << '\t' << */ 
+					/* 	"Place\t" << _place << '\t' << */
+					/* 	"Alloc\t" << temp.alloc[0] << '\t' */
+					/* 	<< endl; */
+
+						;
+					Sect=temp.alloc[0]+6;
+					break;
+
+				}
+				else if(b.Name == find && RetStr.empty()){
+						/* cout << "HUH\t" << find; */
+						stop=true;
+						int _sect=3+b.inodePlace/35;
+						int _place=b.inodePlace%35;
+						Ret=readInodeSectInode(WorkDisk[_sect], _place);
+						return Ret;
+
+						break;
+				}
+				/* else */
+				/* 	cout << "STILL SEARCHING FOR HER\t"; */ 
+
+				cout << endl;
+			}
+
+		}
+	}
+
+	cout << "No girl found\n" << endl;
+	// At this point we didn't find it
+	return inode(-1,-1,-1);
 }
 
 int main(){
@@ -305,47 +355,12 @@ int main(){
 
 	bool stop=false;
 	int Sect=6;
-	while(!breakUp.empty() && !stop){
-		string find=breakUp.front(); breakUp.pop();
-		forloop(0, dirCount){ // This is code for finding something in root.
-			auto a= readDirSect(WorkDisk[Sect], i); 
-			if(a!=0){
-				dir b=getBitDir(a);
-				cout << find << ":" << b.Name << '\t';
-				if(b.Name==find && !breakUp.empty()) { // This isn't what we're looking for. Go to antoher stage
-					cout << "CLUE\t" ;
-		/* 			newdir.inodePlace=(posInode.sect-3)*inodeCount +  posInode.count; */
-					int _sect=3+b.inodePlace/35;
-					int _place=b.inodePlace%35;
-					inode temp=readInodeSectInode(WorkDisk[_sect], _place);
-					cout << 
-						"inode\t" << b.inodePlace << '\t' <<
-						"SECT\t" << _sect << '\t' << 
-						"Place\t" << _place << '\t' <<
-						"Alloc\t" << temp.alloc[0] << '\t'
-						<< endl;
+	inode Ret;
 
-						;
-					Sect=temp.alloc[0]+6;
-					break;
-
-				}
-				else if(b.Name == find && breakUp.empty()){
-						cout << "HUH\t" << find;
-						stop=true;
-						break;
-				}
-				else
-					cout << "STILL SEARCHING FOR HER\t"; 
-
-				cout << endl;
-			}
-
-		}
-	}
-
-
-	cout << endl << "DONE" << endl;
+	inode test1=getInode("/");
+	inode test2=getInode("/A");
+	inode test3=getInode("/A/1");
+	
 
 
 	forloop( 6, 9){
