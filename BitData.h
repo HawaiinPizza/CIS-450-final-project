@@ -150,7 +150,7 @@ string diskErrMsg="";
 				return retBit;
 			}
 			else{
-				cout << count << "\tZAKI THIS ISOUT OF BOUNDS\n";
+				cout << "\nZAKI THIS ISOUT OF BOUNDS: " << count << "\n";
 				return retBit;
 			}
 	}
@@ -170,7 +170,7 @@ string diskErrMsg="";
 			}
 			else{
 				forloop(0,999)
-					cout << "ZAKI THIS ISOUT OF BOUNDS";
+				cout << "\nZAKI THIS ISOUT OF BOUNDS: " << count << "\n";
 				return;
 				}
 	}
@@ -256,7 +256,7 @@ string diskErrMsg="";
 					return retBit;
 				}
 				else{
-					cout << count << "\tZAKI THIS ISOUT OF BOUNDS\n";
+					cout << "\nZAKI THIS ISOUT OF BOUNDS: " << count << "\n";
 					return retBit;
 				}
 		}
@@ -270,7 +270,7 @@ string diskErrMsg="";
 				}
 				else{
 					forloop(0,999)
-						cout << "ZAKI THIS ISOUT OF BOUNDS";
+						cout << "\nZAKI THIS ISOUT OF BOUNDS: " << count << "\n";
 					return;
 					}
 		}

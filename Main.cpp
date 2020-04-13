@@ -113,10 +113,10 @@ int main(){
 	FS_Boot();
 
 	//Creating directories manually
-	inode RootInode	(0,10,	0);
-	inode AInode	(0,20, 	1);
-	inode BInode	(0,40,	2);
-	inode A1Inode	(0,80,	3);
+	inode RootInode	(0,3,	0);
+	inode AInode	(0,1, 	1);
+	inode BInode	(0,0,	2);
+	inode A1Inode	(0,0,	3);
 
 	dir RootDir("/", 0);
 	dir ADir("A", 1);
@@ -139,22 +139,13 @@ int main(){
 
 	writeDirSectDir(WorkDisk[7], 1, A1Dir);
 
-
-	inode test1=getInode("/");
-	inode test2=getInode("/A");
-	inode test3=getInode("/A/1");
-	inode test4=getInode("/A/D");
-	cout << test1.size << '\t' << test1.alloc[0] << endl;
-	cout << test2.size << '\t' << test2.alloc[0] << endl;
-	cout << test3.size << '\t' << test3.alloc[0] << endl;
-	cout << test4.size << '\t' << test4.alloc[0] << endl;
 	cout << endl;
 
 
+	cout << "SIZE\t" << DirSize("/A") << endl;
 	cout << "DIR -1\t" << DirCreate("/A/B/C/D")  << endl;
 	cout << "DIR -2 \t" << DirCreate("/A/B")  << endl;
 	cout << "DIR -2  \t" << DirCreate("/A/")  << endl;
-	cout << "SIZE\t" << DirSize("/A") << endl;
 	cout << "DIR 0\t" << DirCreate("/A/7") << endl ;
 	cout << "DIR -2\t" << DirCreate("/A/7") << endl ;
 	cout << "DIR 0\t" << DirCreate("/A/7/J") << endl ;
@@ -169,14 +160,12 @@ int main(){
 	cout << "DIR 0\t" << DirCreate("/A/h9j1id") << endl ;
 	cout << "SIZE\t" << DirSize("/A") << endl;
 
+	//cout << "DELETE\t" << DirUnlink("/A") << endl;
 
-	forloop(0, 32){
-		bitset<132> stream=readDirSect(WorkDisk[7], i);
-		if(stream!=0){
-			dir Dir=getBitDir(stream);
-			cout << Dir.Name << '\t' << Dir.inodePlace << endl;
-		}
-	}
+	cout << "DELETE\t" << DirUnlink("/A/1") << endl;
+
+
+
 
 
 

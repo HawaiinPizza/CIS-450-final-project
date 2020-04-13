@@ -53,7 +53,6 @@ int DirCreate(string path){
 		}
 		else{ // Can make dirctioanry.
 			child.isFile=false;
-			child.size=1;
 
 			dir Dir;
 			pos posDir;
@@ -74,6 +73,18 @@ int DirCreate(string path){
 				child.alloc[0]=posInode.Alloc;
 				child.size=0;
 				writeInodeSectInode(WorkDisk[posInode.Sect], posInode.Count, child);
+
+				// Update size
+				parent.size++;
+				forloop(3,6){
+					forloop2(0,35){
+						if(parent.alloc[0]==readInodeSectInode(WorkDisk[i],j).alloc[0]){
+							writeInodeSectInode(WorkDisk[i],j, parent);
+
+						}
+					}
+				}
+				
 
 				/* cout << readInodeSectBit(WorkDisk[posInode.Sect], posInode.Count); */
 				/* cout << "\nToo busy printin\n"; */
@@ -106,23 +117,63 @@ int DirSize(string path){ // Get the size of the dctionary
 		return -1; 
 	}
 	else{
-		int count =0;
-		forloop(0, 10){
-			forloop2(0, dirCount){
-				if ( readDirSect(WorkDisk[inodepath.alloc[i+6]], j)!=0 ) {
-					count++;
-					dir Dir=readDirSectDir(WorkDisk[inodepath.alloc[1+6]], j);
-					cout << "read\t" << Dir.Name << '\t' << inodepath.alloc[i+6] << '\t' << j    << endl;
-
-				}
-			}
-		}
-		return count;
+		return inodepath.size;
 	}
 
 }
 
-int DirUnlink(string path){ //
+int DirUnlink(string path){ //Remove a file.
+	inode delNode=getInode(path);
+	size_t found = path.find_last_of("/");
+	inode parent=getInode(path.substr(0,found));
+	if(delNode.size==-1){ // File does not exist
+		return -1;
+	}
+	else if ( DirSize(path)!=0){ //Path is not empty. 
+		cout << "NOT EMPTY\t" << DirSize(path) << endl;
+		return -2;
+	}
+	else if ( delNode.alloc[0]==6){ // 6 is where the root directory is. TODO mkae this look easier to read for Stenier
+		return -3;
+	}
+	else{ // Now we can delete it. Hurray. TODO make a getInode iwth possiton of the inode, so I don't have to ifnd it twice like a stupid
+		forloop(3,6){ // Deleting inode.
+			forloop2(0,35){
+				if(delNode.alloc[0]==readInodeSectInode(WorkDisk[i],j).alloc[0]){
+					writeInodeSect(WorkDisk[i], j, "0");
+				}
+			}
+		}
+		bitset<132> temp(0);
+		writeDirSect(WorkDisk[delNode.alloc[0]], 0,temp); // Deleting the acutal entry.
+
+		// Now we gotta decrease the parent' inode siz
+		parent.size--;
+		forloop(3,6){
+			forloop2(0,35){
+				if(parent.alloc[0]==readInodeSectInode(WorkDisk[i],j).alloc[0]){
+					writeInodeSectInode(WorkDisk[i],j, parent);
+				}
+			}
+		}
+
+		//Now, we must find the parent dictionary file of del, and remove it
+		size_t found = path.find_last_of("/");
+		string child=path.substr(found);
+		forloop(0, 32){
+			bitset<132>  dirBit(readDirSect(WorkDisk[parent.alloc[0]], i));
+			if(dirBit!=0){
+				dir Dir=getBitDir(dirBit);
+				if(Dir.Name==child){ // Found the cihld directory in parent
+					writeInodeSect(WorkDisk[parent.alloc[0]]  , i, "0");
+				}
+
+			}
+			
+
+		}
+	}
+
 }
 
 

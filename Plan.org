@@ -86,7 +86,7 @@
      - Expected Ouput :: Return in the number of entries and modifed buffer.
      - Actual Output ::
      - [ ] Return the number of bytes in a path with Dir_Size() :: These two functions work in tandem, and as such, have to play nice.
-     - [ ] DIR_SIZE() works :: Gets a size of the direcotry, and sets hte buffer to appoperaite size. Note that each entry in a direcotry is 20 bytes
+     - [X] DIR_SIZE() works :: Gets a size of the direcotry, and sets hte buffer to appoperaite size. Note that each entry in a direcotry is 20 bytes
      - [ ] DIR_READ Success :: The buffer is of appoperaite size, adn as such, you can write each inode to it.
      - [ ] DIR_READ Faiure Size too small :: The buffer is of too small size, return E_BUFFER_TOO_SMALL
      - [ ] DIR_READ Faiure Dir no eixst :: directory does not exist, return E_DIR_NO_EXIST
@@ -836,6 +836,8 @@
   - Create get free Datablock and inode plock
   - IPMORANT 2 :: It's kinda too late to use the bitmap, but just for finishing hte proejct, make sure the bitmap gets modifed
   - Add in dir_Size functaionilty.
+  - Add in a function to get the inode AND it's location
+  - Inlcude checks of datablock extending out of bounds
 ** Captain's log
 *** Monday, 4 days left
     - I created the get inode, and get free indoe, datablock and dictionary in parent, I am going to finish the dir functionality.
