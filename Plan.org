@@ -62,8 +62,8 @@
      - [X] Buffer is nonNull :: If not, than return E_READ_INVALID_PARAM
      - [X] Sector paramter is out of boudns :: retrun E_READ_INVALID_PARM
      - [X] Sector has data being read from to it :: Write the Sector to Buffer.
-** TODO Setting up Directories and files [0/2]
-*** TODO getFilePath(string path) and getDirPath(string path)
+** TODO Setting up Directories and files [1/3]
+*** DONE getFilePath(string path) and getDirPath(string path)
     - Input :: string path
     - Expected Output :: given path, get the inode assoicated with it | -1 if that path is not found with the correct type
     - AOutput :: 
@@ -829,6 +829,7 @@
   - Wrote teh read/write by Inode/dir funcitons, which allow for bit writing in the drive
   - Took into account that bitsets arrays read string from right ot left, not left to right.
   - IMPORTANT ::  within a directory, the first directory is the directory itself.
+  - Dir_Create :: Chagne to get parent's next free dictionary space
 * Specifications 
 ** System Decomposistion  
 *** Data

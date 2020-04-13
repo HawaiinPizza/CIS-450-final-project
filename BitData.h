@@ -67,6 +67,7 @@ string diskErrMsg="";
 		uint size;
 		uint alloc[10];
 		inode(){
+			size=-1;
 		}
 		inode(bool _isFile, uint _size){
 			isFile=_isFile;
@@ -149,8 +150,7 @@ string diskErrMsg="";
 				return retBit;
 			}
 			else{
-				forloop(0,999)
-					cout << "ZAKI THIS ISOUT OF BOUNDS";
+				cout << count << "\tZAKI THIS ISOUT OF BOUNDS\n";
 				return retBit;
 			}
 	}
@@ -256,8 +256,7 @@ string diskErrMsg="";
 					return retBit;
 				}
 				else{
-					forloop(0,999)
-						cout << "ZAKI THIS ISOUT OF BOUNDS";
+					cout << count << "\tZAKI THIS ISOUT OF BOUNDS\n";
 					return retBit;
 				}
 		}

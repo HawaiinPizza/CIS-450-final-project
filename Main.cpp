@@ -106,125 +106,48 @@ int mainTest2(){ // NOise testing
 	}
 	return 0;
 }
-	// This funciton is not expanedable yet.
-	/* bool dirCreate(inode &node, string Name, int iSect, int dSect,  disk(Disk)){ // Creates an empty directory. ALSO, Disk should */
-	/* 	dir Dir; */
-	/* 	int posDir; */
-	/* 	int posInode; */
-	/* 	{ // Setting data and finding first empty partion */
-	/* 		forloop(0,14){ */
-	/* 			Dir.Name[i]=Name[i]; */
-	/* 		} */
-	/* 		Dir.Name[15]='\0'; */
-	/* 		int temp=0; */
-	/* 		forloop(0,35){ // Update to iteratie through the 3 inode sectors */
-	/* 			if(readInodeSect(Disk[iSect],i)!=0){ */ 
-	/* 				temp=i; */
-	/* 				break; */
-	/* 			} */
-	/* 		} */
-	/* 		posInode=temp; */
-	/* 		Dir.inodePlace=posInode; */
-	/* 	} */
-	/* 	{// Create datablock dictionary */
-	/* 		int temp=0; */
-	/* 		forloop(0, dirSize){ // Update to iteratie through the 3 inode sectors */
-	/* 			if(readDirSect(Disk[dSect],i)!=0){ */
-	/* 				temp=i; */
-	/* 				break; */
-	/* 			} */
-	/* 		} */
-	/* 		posDir=temp; */
-	/* 		bitset<dirSize> dirBit=writeDir(Dir); */
-	/* 		cout << "\t\t" << dirBit << endl; */
-	/* 		writeDirSect(Disk[posDir], posDir, dirBit); */
-	/* 		node.alloc[0]=0; */ 
-	/* 	} */
-	/* 	{//This is creating the root folder. Later on, we will make it with DirCreate("/") */
-	/* 	string inodeString=writeBitDataInode(node).to_string(); */
-	/* 	bitset<SectorSize*8> inodeBit(inodeString); */
-	/* 	writeInodeSect(Disk[posInode], posInode, inodeString); */
-	/* 	return true; */
-	/* 	} */
-	/* } */
+// This funciton is not expanedable yet.
+/* bool dirCreate(inode &node, string Name, int iSect, int dSect,  disk(Disk)){ // Creates an empty directory. ALSO, Disk should */
+/* 	dir Dir; */
+/* 	int posDir; */
+/* 	int posInode; */
+/* 	{ // Setting data and finding first empty partion */
+/* 		forloop(0,14){ */
+/* 			Dir.Name[i]=Name[i]; */
+/* 		} */
+/* 		Dir.Name[15]='\0'; */
+/* 		int temp=0; */
+/* 		forloop(0,35){ // Update to iteratie through the 3 inode sectors */
+/* 			if(readInodeSect(Disk[iSect],i)!=0){ */ 
+/* 				temp=i; */
+/* 				break; */
+/* 			} */
+/* 		} */
+/* 		posInode=temp; */
+/* 		Dir.inodePlace=posInode; */
+/* 	} */
+/* 	{// Create datablock dictionary */
+/* 		int temp=0; */
+/* 		forloop(0, dirSize){ // Update to iteratie through the 3 inode sectors */
+/* 			if(readDirSect(Disk[dSect],i)!=0){ */
+/* 				temp=i; */
+/* 				break; */
+/* 			} */
+/* 		} */
+/* 		posDir=temp; */
+/* 		bitset<dirSize> dirBit=writeDir(Dir); */
+/* 		cout << "\t\t" << dirBit << endl; */
+/* 		writeDirSect(Disk[posDir], posDir, dirBit); */
+/* 		node.alloc[0]=0; */ 
+/* 	} */
+/* 	{//This is creating the root folder. Later on, we will make it with DirCreate("/") */
+/* 	string inodeString=writeBitDataInode(node).to_string(); */
+/* 	bitset<SectorSize*8> inodeBit(inodeString); */
+/* 	writeInodeSect(Disk[posInode], posInode, inodeString); */
+/* 	return true; */
+/* 	} */
+/* } */
 
-int DirCreate(string path){ // Haven't implmented getDirpath
-	/* struct pos{ */
-	/* 	uint count; */
-	/* 	uint sect; */
-
-	/* 	pos(int _count, int _sect){ */
-	/* 		count=_count; */
-	/* 		sect=_sect; */
-	/* 	} */
-	/* }; */
-
-	/* // Assume root node is made. */
-	
-	/* pos posDir(-1,-1); */
-	/* pos posInode(-1,-1); */
-	/* { // Get the next empty space */
-	/* 	// 0 is superblock, 1 is inode bitmap, 2 is dB bitmap, 3-6 are inode bitmap, and the rest is datablock. In case i change, this is why it's 3 and 6 */
-
-	/* 	//Finding hte next empty inode */
-	/* 	for(int i=3; i<6 && posInode.count==-1; i++){ */ 
-	/* 		forloop2(0, inodeCount){ */
-	/* 			if(readInodeSectBit(WorkDisk[i], j )==0){ */
-	/* 				posInode=pos(j,i); */
-	/* 				break; */
-	/* 			} */
-	/* 		} */
-	/* 	} */
-
-
-	/* 	//Finding hte next empty Dir */
-	/* 	for(int i=inodeOffset; i<SectorNum && posDir.count==-1; i++){ */
-	/* 		forloop2(0, dirCount){ */
-	/* 			if(readDirSect(WorkDisk[i], j )==0){ */
-	/* 				posDir=pos(j, i); */
-	/* 				break; */
-	/* 			} */
-	/* 		} */
-	/* 	} */
-	/* } */
-
-	/* //Determine if you create in root or have to go into folders. */
-	/* //Create a string vector/queue,  for this. */
-	/* //TODO include cehck if path is nonsensical */
-	/* bool isRoot=false; */
-
-
-	/* { // Find parent inode and append it. */
-
-	/* 	cout << "ROOT?\t" << isRoot << endl; */
-	/* 	if(posInode.count>=0 && posDir.count>=0){ // Create new dictionary, now we have 2 avaiable spaces */
-	/* 		cout << "Sect\t" << posInode.sect << " Count\t" << posInode.count << endl; */
-	/* 		cout << "Sect\t" << posDir.sect   << " Count\t" << posDir.count << endl; */
-
-	/* 	if(isRoot){// Parent is in root. Just create dictionary and inode */
-	/* 			dir newdir; */
-	/* 			forloop(0, 14){ */
-	/* 				newdir.Name[i]=path[i]; */
-	/* 			} */
-	/* 			newdir.inodePlace=(posInode.sect-3)*inodeCount +  posInode.count; */
-
-	/* 			forloop(0,dirCount){ // Checking in the folder, to make sure it's not already tehere */
-	/* 				dir Dir=readDirSectDir(WorkDisk[posDir.sect], i); */
-
-	/* 			} */
-	/* 			//inode FromRoot(0, 0, posInode.count ); */
-	/* 			//writeInodeSectInode(WorkDisk[posInode.sect], posInode.count, Root); */
-
-	/* 		} */
-	/* 	} */
-
-	/* 	else{ // There is no more space, so don't create a new inode */
-	/* 		cout << "NO MORE SPACE"; */
-	/* 	} */
-
-	/* } */
-	/* return 0; */
-}
 
 inode getInode(string path){
 
@@ -248,9 +171,6 @@ inode getInode(string path){
 			}
 
 
-			if(RetStr.size()==1){
-				isRoot=true;
-			}
 		}
 	}
 
@@ -266,7 +186,7 @@ inode getInode(string path){
 				/* cout << find << ":" << b.Name << '\t'; */
 				if(b.Name==find && !RetStr.empty()) { // This isn't what we're looking for. Go to antoher stage
 					/* cout << "CLUE\t" ; */
-		/* 			newdir.inodePlace=(posInode.sect-3)*inodeCount +  posInode.count; */
+					/* 			newdir.inodePlace=(posInode.sect-3)*inodeCount +  posInode.count; */
 					int _sect=3+b.inodePlace/35;
 					int _place=b.inodePlace%35;
 					inode temp=readInodeSectInode(WorkDisk[_sect], _place);
@@ -277,102 +197,284 @@ inode getInode(string path){
 					/* 	"Alloc\t" << temp.alloc[0] << '\t' */
 					/* 	<< endl; */
 
-						;
+					;
 					Sect=temp.alloc[0]+6;
 					break;
 
 				}
 				else if(b.Name == find && RetStr.empty()){
-						/* cout << "HUH\t" << find; */
-						stop=true;
-						int _sect=3+b.inodePlace/35;
-						int _place=b.inodePlace%35;
-						Ret=readInodeSectInode(WorkDisk[_sect], _place);
-						return Ret;
+					/* cout << "HUH\t" << find; */
+					stop=true;
+					int _sect=3+b.inodePlace/35;
+					int _place=b.inodePlace%35;
+					Ret=readInodeSectInode(WorkDisk[_sect], _place);
+					return Ret;
 
-						break;
+					break;
 				}
 				/* else */
 				/* 	cout << "STILL SEARCHING FOR HER\t"; */ 
 
-				cout << endl;
 			}
 
 		}
 	}
 
-	cout << "No girl found\n" << endl;
 	// At this point we didn't find it
-	return inode(-1,-1,-1);
+	return inode();
+}
+
+inode NOgetInode(string path){
+
+	bool isRoot=false;
+	queue<string> RetStr;
+	inode Ret;
+	RetStr.push("/");
+	string testStr="";
+	{ // See if root and if not, get the next child
+		{
+			if(path[path.length()-1]!='/')
+				path+='/';
+			string tempStr="";
+			for(int i=1; i<path.length(); i++){
+				if(path[i]=='/'){
+					RetStr.push(tempStr);
+					testStr+=tempStr;
+					tempStr=path[i];
+				}
+				else{
+					tempStr+=path[i];
+				}
+			}
+
+
+		}
+		cout << testStr << " THIS IS HOW IT LOOKS \n";
+	}
+
+	// Getting the node here.
+	bool stop=false;
+	int Sect=6; //There is where root dictionary will be
+	while(!RetStr.empty() && !stop){
+		string find=RetStr.front(); RetStr.pop();
+		cout << find << "NEW ONE\n";
+		forloop(0, dirCount){ // This is code for finding something in root.
+			auto a= readDirSect(WorkDisk[Sect], i); 
+			if(a!=0){
+				dir b=getBitDir(a);
+				//'cout << b.Name  << '\t' ;
+				cout << find << ':' << b.Name << ' ' << RetStr.size() << '\t';
+				if(b.Name==find && !RetStr.empty()) { // This isn't what we're looking for. Go to antoher stage
+					/* 			newdir.inodePlace=(posInode.sect-3)*inodeCount +  posInode.count; */
+					int _sect=3+b.inodePlace/35;
+					int _place=b.inodePlace%35;
+					inode temp=readInodeSectInode(WorkDisk[_sect], _place);
+						cout << 
+							"inode\t" << b.inodePlace << '\t' <<
+						"SECT\t" << _sect << '\t' << 
+						"Place\t" << _place << '\t' <<
+						"Alloc\t" << temp.alloc[0] << '\t'
+						<< endl;
+
+					;
+					Sect=temp.alloc[0]+6;
+					break;
+
+				}
+				else if(b.Name == find && RetStr.empty()){
+					cout << "FOUDN AND GOING TO RETURN :)" << endl;
+					stop=true;
+					int _sect=3+b.inodePlace/35;
+					int _place=b.inodePlace%35;
+					Ret=readInodeSectInode(WorkDisk[_sect], _place);
+					return Ret;
+
+					break;
+				}
+				cout << endl;
+
+			}
+
+		}
+	}
+
+	// At this point we didn't find it
+	return inode();
+}
+int DirCreate(string path){ // Haven't implmented getDirpath
+	inode child=getInode(path);
+	size_t found = path.find_last_of("/");
+	inode parent=getInode(path.substr(0,found));
+	if(parent.size==inode().size){ // Parent does not exist
+		return -1;
+	}
+	else{
+		if (child.size != inode().size){ // Child alreayd exist
+			return -2; 
+		}
+		else if (path.length()>256 ){ // Checking if path exceeds 256 characters
+			return -3;
+		}
+		else{ // Can make dirctioanry.
+			child.isFile=false;
+			child.size=1;
+			child.alloc[0];
+
+			dir Dir;
+			struct pos{
+				int Sect;
+				int Count;
+				int Alloc;
+				int Dlloc;
+				pos(){
+					Sect=-1;
+					Count=-1;
+					Alloc=Sect*35+Count;
+				}
+				pos(int _Sect, int _Count){
+					Sect=_Sect;
+					Count=_Count;
+					Alloc=Sect*35+Count;
+					Dlloc=(Sect-6)*31+Count;
+
+				}
+			};
+			pos posDir;
+			pos posParDir;
+			pos posInode;
+
+			bool STOP=false;
+			for(int i=0; i<3 && !STOP; i++){ // Finding the first free inode space
+				forloop2(0,34){
+					if(readInodeSectBit(WorkDisk[i], j)==0){
+						/* int _sect=3+b.inodePlace/35; */
+						/* int _place=b.inodePlace%35; */
+						posInode=pos(i,j);
+						STOP=true;
+					}
+					if(posInode.Count!=-1){ // Stop looking, since we already found one.
+						break;
+					}
+				}
+			}
+
+			STOP=false;
+			for(int i=6; i<SectorNum && !STOP; i++){ // Finding the first free dir space
+				if(WorkDisk[i]==0){
+					posDir=pos(i,0);
+					break;
+				}
+			}
+
+			for(int i=0; i<10; i++){ // Finding the space for the parent dictionary
+				int _sect=6+parent.alloc[i];
+				forloop2(0,dirCount){
+					bitset<dirSize> bitStream( readDirSect(WorkDisk[_sect], j));
+					if(bitStream==0){ // INCLUDE CHECK THAT IF THIS DIR RUNS OUT OF SPACE, YOU APPEND A NEW SPACE
+						/* int _sect=3+b.inodePlace/35; */
+						/* int _place=b.inodePlace%35; */
+						posParDir=pos(_sect,j);
+					}
+					if(posParDir.Count!=-1) // Stop looking, since we already found one.
+						break;
+				}
+				if(posParDir.Count!=-1) // Stop looking, since we already found one.
+					break;
+			}
+
+			if(posDir.Count!=-1 && posInode.Count!=-1 && posParDir.Count!=-1){ // This means there is free space for a new direcotry
+				string temp=path.substr(found+1);
+				dir NewDir(temp, 0);
+				writeDirSectDir(WorkDisk[posParDir.Sect], posParDir.Count, NewDir );
+				writeDirSectDir(WorkDisk[posDir.Sect], posDir.Count, NewDir );
+				dir parDir=readDirSectDir(WorkDisk[posParDir.Sect], posParDir.Count);
+				child.alloc[0]=posInode.Alloc;
+				child.size=0;
+				writeInodeSectInode(WorkDisk[posInode.Sect], posInode.Count, child);
+
+				/* cout << readInodeSectBit(WorkDisk[posInode.Sect], posInode.Count); */
+				/* cout << "\nToo busy printin\n"; */
+				/* cout << "ParentNode\t" << parent.size << '\t' << parent.alloc[0] << endl; */
+				/* cout << "Path\t" << path << '\t' << path.substr(0,found) << endl; */
+				/* cout << "Dir\t" << posDir.Count << '\t' << posDir.Sect << endl; */
+				/* cout << "ParDir\t" << posParDir.Count << '\t' << posParDir.Sect << endl; */
+				/* cout << "ChildNode\t" << child.size << '\t' << child.alloc[0] << endl; */
+				/* cout << "New Inode\t" << posInode.Sect << '\t' << posInode.Count << endl; */
+				/* cout << "New Dir\t" << parDir.Name << '\t' << parDir.inodePlace  << endl; */
+				/* cout << endl; */
+
+
+
+
+				return 0;
+			}
+			else // There is no more space for a new directory
+				return -4;
+
+
+		}
+
+	}
 }
 
 int main(){
 	FS_Boot();
 
 	//Creating directories manually
-	inode RootInode(0,2,0);
-	inode AInode(0,1, 1);
-	inode BInode(0,8,2);
-	inode A1Inode(0,9,3);
+	inode RootInode	(0,10,	0);
+	inode AInode	(0,20, 	1);
+	inode BInode	(0,40,	2);
+	inode A1Inode	(0,80,	3);
 
 	dir RootDir("/", 0);
 	dir ADir("A", 1);
 	dir BDir("B", 2);
 	dir A1Dir("1", 3);
-	
+
 	writeInodeSectInode(WorkDisk[3], 0, RootInode);
 	writeInodeSectInode(WorkDisk[3], 1, AInode);
 	writeInodeSectInode(WorkDisk[3], 2, BInode);
 	writeInodeSectInode(WorkDisk[3], 3, A1Inode);
 
-	writeDirSectDir(WorkDisk[6], 0, RootDir);
-	writeDirSectDir(WorkDisk[7], 0, ADir);
-	writeDirSectDir(WorkDisk[8], 0, BDir);
-	writeDirSectDir(WorkDisk[9], 0, A1Dir);
+	writeDirSectDir(WorkDisk[6+RootInode.alloc[0]], 0, RootDir);
+	writeDirSectDir(WorkDisk[6+BInode.alloc[0]], 0, BDir);
+	writeDirSectDir(WorkDisk[6+A1Inode.alloc[0]], 0, A1Dir);
+	writeDirSectDir(WorkDisk[6+AInode.alloc[0]], 0, ADir);
 
 	writeDirSectDir(WorkDisk[6], 1, ADir);
 	writeDirSectDir(WorkDisk[6], 2, BDir);
 
 
 	writeDirSectDir(WorkDisk[7], 1, A1Dir);
-	writeDirSectDir(WorkDisk[7], 2, A1Dir);
 
-	string find="/A";
-	forloop(0, dirCount){ // This is code for finding something in root.
-		auto a= readDirSect(WorkDisk[6], i); //Notice the 6. That is becasue it's where the root direcotry will be
-		if(a!=0){
-			dir b=getBitDir(a);
-			if(b.Name==find) {
-				cout << b.inodePlace << endl;
-			}
-		}
-	}
-
-	queue<string> breakUp;
-	//breakUp.push("/");
-	breakUp.push("A");
-	breakUp.push("1");
-
-	bool stop=false;
-	int Sect=6;
-	inode Ret;
 
 	inode test1=getInode("/");
 	inode test2=getInode("/A");
 	inode test3=getInode("/A/1");
-	
+	inode test4=getInode("/A/D");
+	cout << test1.size << '\t' << test1.alloc[0] << endl;
+	cout << test2.size << '\t' << test2.alloc[0] << endl;
+	cout << test3.size << '\t' << test3.alloc[0] << endl;
+	cout << test4.size << '\t' << test4.alloc[0] << endl;
+	cout << endl;
 
 
-	forloop( 6, 9){
-		forloop2(0,dirCount){
-			auto a= readDirSect(WorkDisk[i], j);
-			if(a!=0){
-				dir b=getBitDir(a);
-				cout << i << '\t' << j << '\t' << b.Name << endl;
-			}
+	/* cout << "DIR -1\t" << DirCreate("/A/B/C/D")  << endl; */
+	/* cout << "DIR -2 \t" << DirCreate("/A/B")  << endl; */
+	/* cout << "DIR -2  \t" << DirCreate("/A/")  << endl; */
+	cout << "DIR 0\t" << DirCreate("/A/7") << endl ;
+	cout << "DIR -2\t" << DirCreate("/A/7") << endl ;
+
+
+	forloop(0, 32){
+		bitset<132> stream=readDirSect(WorkDisk[7], i);
+		if(stream!=0){
+			dir Dir=getBitDir(stream);
+			cout << Dir.Name << '\t' << Dir.inodePlace << endl;
 		}
-		cout << endl;
 	}
+
+
 
 
 
