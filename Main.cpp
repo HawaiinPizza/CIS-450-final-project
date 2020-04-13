@@ -143,10 +143,10 @@ int main(){
 	/* cout  << DirCreate("/B/3") << endl; */
 	/* cout  << DirCreate("/B/4") << endl; */
 
-	forloop(0, 32){
-		dir Dir=readDirSectDir(WorkDisk[6], i); 
-		cout << Dir.Name << endl;
-	}
+	/* forloop(0, 32){ */
+	/* 	dir Dir=readDirSectDir(WorkDisk[6], i); */ 
+	/* 	cout << Dir.Name << endl; */
+	/* } */
 
 	return 0;
 

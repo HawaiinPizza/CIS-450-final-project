@@ -35,7 +35,8 @@ int DirCreate(string path){
 
 			posInode=getFreeInode();
 			posDir=getFreeDataBlock();
-			posParDir=getFirDir( 6+parent.alloc[0]);
+			cout << 6 + parent.alloc[0] << "\tPROBLEM HERE" << endl;
+			posParDir=getFirDir( 6+parent.alloc[0]); // TODO Might be reason of problem
 
 
 			if(posDir.Count!=-1 && posInode.Count!=-1 && posParDir.Count!=-1){ // This means there is free space for a new direcotry

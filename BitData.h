@@ -338,7 +338,7 @@ inode getInode(string path){
 	int Sect=6; //There is where root dictionary will be
 	while(!RetStr.empty() && !stop){
 		string find=RetStr.front(); RetStr.pop();
-		cout << "Gonna hit them with this\t" << find << endl;
+		/* cout << "Gonna hit them with this\t" << find << endl; */
 		forloop(0, dirCount){ // This is code for finding something in root.
 			auto a= readDirSect(WorkDisk[Sect], i); 
 			if(a!=0){
@@ -350,13 +350,13 @@ inode getInode(string path){
 					int _sect=3+b.inodePlace/35;
 					int _place=b.inodePlace%35;
 					inode temp=readInodeSectInode(WorkDisk[_sect], _place);
-					cout << 
+					/* cout << */ 
 					/* 	"inode\t" << b.inodePlace << '\t' << */
-						"SECT\t" << _sect << '\t'
+						/* "SECT\t" << _sect << '\t' */
 					/* 	"Place\t" << _place << '\t' << */
 					/* 	"Alloc\t" << temp.alloc[0] << '\t' << */
 					/* 	"Names\t" << b.Name << '\t' << find */
-						<< endl;
+						/* << endl; */
 
 					/* ; */
 					Sect=temp.alloc[0]+6;
@@ -423,7 +423,8 @@ pos getFirDir(int _sect){ // _sect is the sector where the directory si in.
 	pos posParDir;
 	for(int i=0; i<10; i++){ // Finding the space for the parent dictionary
 		forloop2(0,dirCount){
-			bitset<dirSize> bitStream( readDirSect(WorkDisk[_sect+i], j));
+			bitset<dirSize> bitStream( readDirSect(WorkDisk[_sect], j));
+			cout << bitStream << endl;
 			if(bitStream==0){ // INCLUDE CHECK THAT IF THIS DIR RUNS OUT OF SPACE, YOU APPEND A NEW SPACE
 				/* int _sect=3+b.inodePlace/35; */
 				/* int _place=b.inodePlace%35; */
