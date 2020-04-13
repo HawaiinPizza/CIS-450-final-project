@@ -372,7 +372,7 @@
       :Go to root inode, which should be the 0th inode;
       :From the 0th inode, go to root direcotry;
       :Assume path is whole dirname;
-	while( read each dir in dirname) then (exist in current directory)
+	while( read each dir in dirname) is (exist in current directory)
 		:Get list of dir names in current direcotry;
 		if(dir matches with a directory in current dirceotry) then (no)
 			:return  -1;
