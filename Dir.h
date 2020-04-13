@@ -35,7 +35,7 @@ int DirCreate(string path){
 
 			posInode=getFreeInode();
 			posDir=getFreeDataBlock();
-			posParDir=getFirDir( 6+parent.alloc[0]); // TODO Might be reason of problem
+			posParDir=getFirDir( parent.alloc[0]); // TODO Might be reason of problem
 
 
 

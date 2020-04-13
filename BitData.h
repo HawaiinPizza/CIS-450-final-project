@@ -356,7 +356,7 @@ inode getInode(string path){
 						/* << endl; */
 
 					/* ; */
-					Sect=temp.alloc[0]+6;
+					Sect=temp.alloc[0];
 					break;
 
 				}

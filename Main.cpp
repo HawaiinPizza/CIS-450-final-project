@@ -127,7 +127,7 @@ int main(){
 	/* FS_Boot(); */
 
 	//Creating directories manually
-	inode RootInode	(0,0,	0);
+	inode RootInode	(0,0,	6);
 	/* inode AInode	(0,1, 	1); */
 	/* inode BInode	(0,0,	2); */
 	/* inode A1Inode	(0,0,	3); */
@@ -138,7 +138,7 @@ int main(){
 	/* dir A1Dir("1", 3); */
 
 	writeInodeSectInode(WorkDisk[3], 0, RootInode);
-	writeDirSectDir(WorkDisk[6+RootInode.alloc[0]], 0, RootDir);
+	writeDirSectDir(WorkDisk[RootInode.alloc[0]], 0, RootDir);
 
 	cout << "A\t" << DirCreate("/A") << endl;
 	cout << "B\t" << DirCreate("/B") << endl;
@@ -155,6 +155,16 @@ int main(){
 	cout  << DirCreate("/B/w") << endl;
 	cout  << DirCreate("/B/e") << endl;
 	cout  << DirCreate("/B/r") << endl;
+
+
+	cout  << DirCreate("/B/q/r2") << endl;
+	cout  << DirCreate("/B/q/r1") << endl;
+	cout  << DirCreate("/B/q/r3") << endl;
+	cout  << DirCreate("/B/q/r4") << endl;
+	cout  << DirCreate("/B/q/r5") << endl;
+	cout  << DirCreate("/B/q/r6") << endl;
+	cout  << DirCreate("/B/q/r7") << endl;
+	cout  << DirCreate("/B/q/r8") << endl;
 
 	print();
 	return 0;
