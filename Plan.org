@@ -832,6 +832,7 @@
   - IMPORTANT ::  within a directory, the first directory is the directory itself.
   - Dir_Create :: Chagne to get parent's next free dictionary spacej
   - Also test Dir_create a little more JUST TO BE ON THE SAFFE SIDE
+  - Create get free Datablock and inode plock 
 * Specifications 
 ** System Decomposistion  
 *** Data

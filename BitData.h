@@ -288,5 +288,147 @@ string diskErrMsg="";
 	/* 	bitset<114> part1=getInodeBit(Write); */
 	/* 	writeInodeSect(sect, count, part1.to_string()); */
 	/* } */
+
+// getInoe and pos
+struct pos{
+	int Sect;
+	int Count;
+	int Alloc;
+	pos(){
+		Sect=-1;
+		Count=-1;
+		Alloc-1;
+	}
+	pos(int _Sect, int _Count){
+		Sect=_Sect;
+		Count=_Count;
+		Alloc=Sect*35+Count;
+	}
+};
+
+inode getInode(string path){
+
+	bool isRoot=false;
+	queue<string> RetStr;
+	inode Ret;
+	RetStr.push("/");
+	{ // See if root and if not, get the next child
+		{
+			if(path[path.length()-1]!='/')
+				path+='/';
+			string tempStr="";
+			for(int i=1; i<path.length(); i++){
+				if(path[i]=='/'){
+					RetStr.push(tempStr);
+					tempStr="";
+				}
+				else{
+					tempStr+=path[i];
+				}
+			}
+
+
+		}
+	}
+
+	// Getting the node here.
+	bool stop=false;
+	int Sect=6; //There is where root dictionary will be
+	while(!RetStr.empty() && !stop){
+		string find=RetStr.front(); RetStr.pop();
+		forloop(0, dirCount){ // This is code for finding something in root.
+			auto a= readDirSect(WorkDisk[Sect], i); 
+			if(a!=0){
+				dir b=getBitDir(a);
+				/* cout << find << ":" << b.Name << '\t'; */
+				if(b.Name==find && !RetStr.empty()) { // This isn't what we're looking for. Go to antoher stage
+					/* cout << "CLUE\t" ; */
+					/* 			newdir.inodePlace=(posInode.sect-3)*inodeCount +  posInode.count; */
+					int _sect=3+b.inodePlace/35;
+					int _place=b.inodePlace%35;
+					inode temp=readInodeSectInode(WorkDisk[_sect], _place);
+					/* cout << */ 
+					/* 	"inode\t" << b.inodePlace << '\t' << */
+					/* 	"SECT\t" << _sect << '\t' << */ 
+					/* 	"Place\t" << _place << '\t' << */
+					/* 	"Alloc\t" << temp.alloc[0] << '\t' */
+					/* 	<< endl; */
+
+					;
+					Sect=temp.alloc[0]+6;
+					break;
+
+				}
+				else if(b.Name == find && RetStr.empty()){
+					/* cout << "HUH\t" << find; */
+					stop=true;
+					int _sect=3+b.inodePlace/35;
+					int _place=b.inodePlace%35;
+					Ret=readInodeSectInode(WorkDisk[_sect], _place);
+					return Ret;
+
+					break;
+				}
+				/* else */
+				/* 	cout << "STILL SEARCHING FOR HER\t"; */ 
+
+			}
+
+		}
+	}
+
+	// At this point we didn't find it
+	return inode();
+}
+
+pos getFreeInode(){
+	pos posInode;
+	bool STOP=false;
+	for(int i=0; i<3 && !STOP; i++){ // Finding the first free inode space
+		forloop2(0,34){
+			if(readInodeSectBit(WorkDisk[i], j)==0){
+				posInode=pos(i,j);
+				STOP=true;
+			}
+			if(posInode.Count!=-1){ // Stop looking, since we already found one.
+				break;
+			}
+		}
+	}
+	return posInode;
+}
+
+
+pos getFreeDataBlock(){
+	pos posDir;
+	bool STOP=false;
+	for(int i=6; i<SectorNum && !STOP; i++){ // Finding the first free dir space
+		if(WorkDisk[i]==0){
+			posDir=pos(i,0);
+			break;
+		}
+	}
+	return posDir;
+}
+
+//int _sect=6+parent.alloc[i];
+pos getFirDir(int _sect){ // _sect is the sector where the directory si in.
+	pos posParDir;
+	for(int i=0; i<10; i++){ // Finding the space for the parent dictionary
+		forloop2(0,dirCount){
+			bitset<dirSize> bitStream( readDirSect(WorkDisk[_sect+i], j));
+			if(bitStream==0){ // INCLUDE CHECK THAT IF THIS DIR RUNS OUT OF SPACE, YOU APPEND A NEW SPACE
+				/* int _sect=3+b.inodePlace/35; */
+				/* int _place=b.inodePlace%35; */
+				posParDir=pos(_sect,j);
+			}
+			if(posParDir.Count!=-1) // Stop looking, since we already found one.
+				break;
+		}
+		if(posParDir.Count!=-1) // Stop looking, since we already found one.
+			break;
+	}
+	return posParDir;
+}
 #endif
 
