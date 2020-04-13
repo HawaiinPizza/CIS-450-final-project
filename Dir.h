@@ -42,7 +42,7 @@ int DirCreate(string path){
 			if(posDir.Count!=-1 && posInode.Count!=-1 && posParDir.Count!=-1){ // This means there is free space for a new direcotry
 				string temp=path.substr(found+1);
 				dir NewDir(temp, posInode.Count+(posInode.Sect-3)*35);
-				cout << "NINJA BOY\t" << NewDir.inodePlace;
+				/* cout << "NINJA BOY\t" << NewDir.inodePlace; */
 				writeDirSectDir(WorkDisk[posParDir.Sect], posParDir.Count, NewDir );
 				writeDirSectDir(WorkDisk[posDir.Sect], posDir.Count, NewDir );
 				dir parDir=readDirSectDir(WorkDisk[posParDir.Sect], posParDir.Count);
@@ -50,7 +50,7 @@ int DirCreate(string path){
 				child.alloc[0]=Alloc; //CAUSE OF BUG
 				child.size=0;
 				writeInodeSectInode(WorkDisk[posInode.Sect], posInode.Count, child);
-				cout << "ACTUALLY WROTE\t" << readInodeSectInode(WorkDisk[posInode.Sect], posInode.Count).alloc[0] << endl; 
+				/* cout << "ACTUALLY WROTE\t" << readInodeSectInode(WorkDisk[posInode.Sect], posInode.Count).alloc[0] << endl; */ 
 
 				// Update size
 				parent.size++;
@@ -65,12 +65,12 @@ int DirCreate(string path){
 						}
 					}
 				}
-				cout << "Child info\t" << child.size << '\t' << child.alloc[0] << endl;
-				cout << "Parent info\t" << parent.size << '\t' << parent.alloc[0] << endl;
-				cout << "pos table\t" << "Sect\t" << "Count" << endl;
-				cout << "pos of inode\t" << posInode.Sect << '\t' << posInode.Count << '\t' << Alloc << endl;
-				cout << "pos of dir\t" 	 << posDir.Sect << '\t' << posDir.Count << endl;
-				cout << "pos of par dir\t" << posParDir.Sect << '\t' << posParDir.Count << endl;
+				/* cout << "Child info\t" << child.size << '\t' << child.alloc[0] << endl; */
+				/* cout << "Parent info\t" << parent.size << '\t' << parent.alloc[0] << endl; */
+				/* cout << "pos table\t" << "Sect\t" << "Count" << endl; */
+				/* cout << "pos of inode\t" << posInode.Sect << '\t' << posInode.Count << '\t' << Alloc << endl; */
+				/* cout << "pos of dir\t" 	 << posDir.Sect << '\t' << posDir.Count << endl; */
+				/* cout << "pos of par dir\t" << posParDir.Sect << '\t' << posParDir.Count << endl; */
 				
 
 				/* cout << readInodeSectBit(WorkDisk[posInode.Sect], posInode.Count); */
@@ -124,6 +124,7 @@ int DirUnlink(string path){ //Remove a file.
 		return -3;
 	}
 	else{ // Now we can delete it. Hurray. TODO make a getInode iwth possiton of the inode, so I don't have to ifnd it twice like a stupid
+
 		forloop(3,6){ // Deleting inode.
 			forloop2(0,35){
 				if(delNode.alloc[0]==readInodeSectInode(WorkDisk[i],j).alloc[0]){
@@ -159,6 +160,7 @@ int DirUnlink(string path){ //Remove a file.
 			
 
 		}
+		return 0;
 	}
 
 }

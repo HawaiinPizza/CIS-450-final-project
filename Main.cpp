@@ -112,13 +112,13 @@ int mainTest2(){ // NOise testing
 	void print(){
 		forloop2(6, 1000){
 			forloop(0, 32){
-				cout << j << '\t' << i << '\t';
 				auto a=readDirSect(WorkDisk[j], i);
 				if(a!=0){
+					cout << j << '\t' << i << '\t';
 					dir Dir=readDirSectDir(WorkDisk[j], i); 
 					cout << Dir.Name;
-				}
 					cout << endl;
+				}
 			}
 		}
 
@@ -167,6 +167,10 @@ int main(){
 	cout  << DirCreate("/B/q/r8") << endl;
 
 	print();
+	cout << "UNLINK\t" << DirUnlink("/C");
+
+	print();
+
 	return 0;
 
 }

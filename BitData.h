@@ -365,10 +365,10 @@ inode getInode(string path){
 					int _sect=3+b.inodePlace/35;
 					int _place=b.inodePlace%35;
 					Ret=readInodeSectInode(WorkDisk[_sect], _place);
-					cout << "Find it my boy\t" <<
-						_sect << '\t' <<
-						_place << '\t' << 
-						endl;
+					/* cout << "Find it my boy\t" << */
+					/* 	_sect << '\t' << */
+					/* 	_place << '\t' << */ 
+					/* 	endl; */
 					return Ret;
 
 					break;
@@ -395,7 +395,7 @@ pos getFreeInode(){
 				STOP=true;
 			}
 			else{
-				cout << readInodeSectInode(WorkDisk[i], j).size << endl;
+				/* cout << readInodeSectInode(WorkDisk[i], j).size << endl; */
 			}
 			if(posInode.Count!=-1){ // Stop looking, since we already found one.
 				break;
@@ -427,7 +427,7 @@ pos getFirDir(int _sect){ // _sect is the sector where the directory si in.
 			if(bitStream==0){ // INCLUDE CHECK THAT IF THIS DIR RUNS OUT OF SPACE, YOU APPEND A NEW SPACE
 				/* int _sect=3+b.inodePlace/35; */
 				/* int _place=b.inodePlace%35; */
-				cout << _sect << '\t' << j << "\t Values to node\n";
+				/* cout << _sect << '\t' << j << "\t Values to node\n"; */
 				posParDir=pos(_sect, j );
 			}
 			if(posParDir.Count!=-1) // Stop looking, since we already found one.
