@@ -50,6 +50,7 @@ bool range(int val, int x, int y){
 #define disk(x) std::bitset<SectorSize*8> x[SectorNum]
 //Using
 #include <iostream>
+#include <queue>
 #include <cmath>
 #include <vector>
 #include <climits>
@@ -313,6 +314,7 @@ inode getInode(string path){
 	inode Ret;
 	RetStr.push("/");
 	{ // See if root and if not, get the next child
+		string _testStr="";
 		{
 			if(path[path.length()-1]!='/')
 				path+='/';
@@ -324,11 +326,11 @@ inode getInode(string path){
 				}
 				else{
 					tempStr+=path[i];
+					_testStr+=path[i];
 				}
 			}
-
-
 		}
+		//cout << _testStr << "\t FULL PATH" << endl;
 	}
 
 	// Getting the node here.
@@ -336,6 +338,7 @@ inode getInode(string path){
 	int Sect=6; //There is where root dictionary will be
 	while(!RetStr.empty() && !stop){
 		string find=RetStr.front(); RetStr.pop();
+		cout << "Gonna hit them with this\t" << find << endl;
 		forloop(0, dirCount){ // This is code for finding something in root.
 			auto a= readDirSect(WorkDisk[Sect], i); 
 			if(a!=0){
@@ -347,24 +350,28 @@ inode getInode(string path){
 					int _sect=3+b.inodePlace/35;
 					int _place=b.inodePlace%35;
 					inode temp=readInodeSectInode(WorkDisk[_sect], _place);
-					/* cout << */ 
+					cout << 
 					/* 	"inode\t" << b.inodePlace << '\t' << */
-					/* 	"SECT\t" << _sect << '\t' << */ 
+						"SECT\t" << _sect << '\t'
 					/* 	"Place\t" << _place << '\t' << */
-					/* 	"Alloc\t" << temp.alloc[0] << '\t' */
-					/* 	<< endl; */
+					/* 	"Alloc\t" << temp.alloc[0] << '\t' << */
+					/* 	"Names\t" << b.Name << '\t' << find */
+						<< endl;
 
-					;
+					/* ; */
 					Sect=temp.alloc[0]+6;
 					break;
 
 				}
 				else if(b.Name == find && RetStr.empty()){
-					/* cout << "HUH\t" << find; */
 					stop=true;
 					int _sect=3+b.inodePlace/35;
 					int _place=b.inodePlace%35;
 					Ret=readInodeSectInode(WorkDisk[_sect], _place);
+					cout << "Find it my boy\t" <<
+						_sect << '\t' <<
+						_place << '\t' << 
+						endl;
 					return Ret;
 
 					break;

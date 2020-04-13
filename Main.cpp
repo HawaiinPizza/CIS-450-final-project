@@ -124,52 +124,30 @@ int main(){
 	dir A1Dir("1", 3);
 
 	writeInodeSectInode(WorkDisk[3], 0, RootInode);
-	writeInodeSectInode(WorkDisk[3], 1, AInode);
-	writeInodeSectInode(WorkDisk[3], 2, BInode);
-	writeInodeSectInode(WorkDisk[3], 3, A1Inode);
 
 	writeDirSectDir(WorkDisk[6+RootInode.alloc[0]], 0, RootDir);
-	writeDirSectDir(WorkDisk[6+BInode.alloc[0]], 0, BDir);
-	writeDirSectDir(WorkDisk[6+A1Inode.alloc[0]], 0, A1Dir);
-	writeDirSectDir(WorkDisk[6+AInode.alloc[0]], 0, ADir);
 
-	writeDirSectDir(WorkDisk[6], 1, ADir);
-	writeDirSectDir(WorkDisk[6], 2, BDir);
-
-
-	writeDirSectDir(WorkDisk[7], 1, A1Dir);
-
-	cout << endl;
+	cout << DirCreate("/A") << endl;
+	cout << DirCreate("/B") << endl;
+	cout << DirCreate("/C") << endl;
+	cout << DirCreate("/D") << endl;
 
 
-	cout << "SIZE\t" << DirSize("/A") << endl;
-	cout << "DIR -1\t" << DirCreate("/A/B/C/D")  << endl;
-	cout << "DIR -2 \t" << DirCreate("/A/B")  << endl;
-	cout << "DIR -2  \t" << DirCreate("/A/")  << endl;
-	cout << "DIR 0\t" << DirCreate("/A/7") << endl ;
-	cout << "DIR -2\t" << DirCreate("/A/7") << endl ;
-	cout << "DIR 0\t" << DirCreate("/A/7/J") << endl ;
-	cout << "DIR 0\t" << DirCreate("/A/7/IO") << endl ;
-	cout << "DIR 0\t" << DirCreate("/A/7/ZXJCI") << endl ;
-	cout << "DIR 0\t" << DirCreate("/A/9") << endl ;
-	cout << "DIR 0\t" << DirCreate("/A/2") << endl ;
-	cout << "DIR 0\t" << DirCreate("/A/q") << endl ;
-	cout << "DIR 0\t" << DirCreate("/A/h") << endl ;
-	cout << "DIR -2\t" << DirCreate("/A/h") << endl ;
-	cout << "DIR 0\t" << DirCreate("/A/hojaid") << endl ;
-	cout << "DIR 0\t" << DirCreate("/A/h9j1id") << endl ;
-	cout << "SIZE\t" << DirSize("/A") << endl;
+	cout << DirCreate("/A/1") << endl;
+	cout << DirCreate("/A/2") << endl;
+	/* cout << DirCreate("/A/3") << endl; */
+	/* cout << DirCreate("/A/4") << endl; */
 
-	//cout << "DELETE\t" << DirUnlink("/A") << endl;
+	/* cout  << DirCreate("/B/1") << endl; */
+	/* cout  << DirCreate("/B/2") << endl; */
+	/* cout  << DirCreate("/B/3") << endl; */
+	/* cout  << DirCreate("/B/4") << endl; */
 
-	cout << "DELETE\t" << DirUnlink("/A/1") << endl;
+	forloop(0, 32){
+		dir Dir=readDirSectDir(WorkDisk[6], i); 
+		cout << Dir.Name << endl;
+	}
 
-
-
-
-
-
-
-
+	return 0;
 
 }
