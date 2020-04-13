@@ -459,11 +459,21 @@ int main(){
 	cout << endl;
 
 
-	/* cout << "DIR -1\t" << DirCreate("/A/B/C/D")  << endl; */
-	/* cout << "DIR -2 \t" << DirCreate("/A/B")  << endl; */
-	/* cout << "DIR -2  \t" << DirCreate("/A/")  << endl; */
+	cout << "DIR -1\t" << DirCreate("/A/B/C/D")  << endl;
+	cout << "DIR -2 \t" << DirCreate("/A/B")  << endl;
+	cout << "DIR -2  \t" << DirCreate("/A/")  << endl;
 	cout << "DIR 0\t" << DirCreate("/A/7") << endl ;
 	cout << "DIR -2\t" << DirCreate("/A/7") << endl ;
+	cout << "DIR -2\t" << DirCreate("/A/7/J") << endl ;
+	cout << "DIR -2\t" << DirCreate("/A/7/IO") << endl ;
+	cout << "DIR -2\t" << DirCreate("/A/7/ZXJCI") << endl ;
+	cout << "DIR -2\t" << DirCreate("/A/9") << endl ;
+	cout << "DIR -2\t" << DirCreate("/A/2") << endl ;
+	cout << "DIR -2\t" << DirCreate("/A/q") << endl ;
+	cout << "DIR -2\t" << DirCreate("/A/h") << endl ;
+	cout << "DIR -2\t" << DirCreate("/A/h") << endl ;
+	cout << "DIR -2\t" << DirCreate("/A/hojaid") << endl ;
+	cout << "DIR -2\t" << DirCreate("/A/h9j1id") << endl ;
 
 
 	forloop(0, 32){
