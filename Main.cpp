@@ -266,9 +266,9 @@ int main(){
 	inode A1Inode(0,9,3);
 
 	dir RootDir("/", 0);
-	dir ADir("/A", 1);
-	dir BDir("/B", 2);
-	dir A1Dir("/A/1", 3);
+	dir ADir("A", 1);
+	dir BDir("B", 2);
+	dir A1Dir("1", 3);
 	
 	writeInodeSectInode(WorkDisk[3], 0, RootInode);
 	writeInodeSectInode(WorkDisk[3], 1, AInode);
@@ -285,6 +285,7 @@ int main(){
 
 
 	writeDirSectDir(WorkDisk[7], 1, A1Dir);
+	writeDirSectDir(WorkDisk[7], 2, A1Dir);
 
 	string find="/A";
 	forloop(0, dirCount){ // This is code for finding something in root.
@@ -299,8 +300,8 @@ int main(){
 
 	queue<string> breakUp;
 	//breakUp.push("/");
-	breakUp.push("/A");
-	breakUp.push("/1");
+	breakUp.push("A");
+	breakUp.push("1");
 
 	bool stop=false;
 	int Sect=6;
@@ -310,19 +311,36 @@ int main(){
 			auto a= readDirSect(WorkDisk[Sect], i); 
 			if(a!=0){
 				dir b=getBitDir(a);
+				cout << find << ":" << b.Name << '\t';
 				if(b.Name==find && !breakUp.empty()) { // This isn't what we're looking for. Go to antoher stage
-					cout << "GOT A CLUE" << endl;
+					cout << "CLUE\t" ;
 		/* 			newdir.inodePlace=(posInode.sect-3)*inodeCount +  posInode.count; */
 					int _sect=3+b.inodePlace/35;
 					int _place=b.inodePlace%35;
 					inode temp=readInodeSectInode(WorkDisk[_sect], _place);
-					cout << b.inodePlace << '\t' << b.Name << '\t' <<  _sect << '\t' << _place << '\t' << temp.size << endl;
+					cout << 
+						"inode\t" << b.inodePlace << '\t' <<
+						"SECT\t" << _sect << '\t' << 
+						"Place\t" << _place << '\t' <<
+						"Alloc\t" << temp.alloc[0] << '\t'
+						<< endl;
+
+						;
+					Sect=temp.alloc[0]+6;
+					break;
 
 				}
 				else if(b.Name == find && breakUp.empty()){
-						cout << "HUH" << endl;
+						cout << "HUH\t" << find;
+						stop=true;
+						break;
 				}
+				else
+					cout << "STILL SEARCHING FOR HER\t"; 
+
+				cout << endl;
 			}
+
 		}
 	}
 
@@ -335,7 +353,7 @@ int main(){
 			auto a= readDirSect(WorkDisk[i], j);
 			if(a!=0){
 				dir b=getBitDir(a);
-				cout << b.Name << endl;
+				cout << i << '\t' << j << '\t' << b.Name << endl;
 			}
 		}
 		cout << endl;
