@@ -41,7 +41,8 @@ int DirCreate(string path){
 
 			if(posDir.Count!=-1 && posInode.Count!=-1 && posParDir.Count!=-1){ // This means there is free space for a new direcotry
 				string temp=path.substr(found+1);
-				dir NewDir(temp, 0);
+				dir NewDir(temp, posInode.Count+(posInode.Sect-3)*35);
+				cout << "NINJA BOY\t" << NewDir.inodePlace;
 				writeDirSectDir(WorkDisk[posParDir.Sect], posParDir.Count, NewDir );
 				writeDirSectDir(WorkDisk[posDir.Sect], posDir.Count, NewDir );
 				dir parDir=readDirSectDir(WorkDisk[posParDir.Sect], posParDir.Count);
@@ -49,6 +50,7 @@ int DirCreate(string path){
 				child.alloc[0]=Alloc; //CAUSE OF BUG
 				child.size=0;
 				writeInodeSectInode(WorkDisk[posInode.Sect], posInode.Count, child);
+				cout << "ACTUALLY WROTE\t" << readInodeSectInode(WorkDisk[posInode.Sect], posInode.Count).alloc[0] << endl; 
 
 				// Update size
 				parent.size++;

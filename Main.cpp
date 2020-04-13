@@ -109,6 +109,20 @@ int mainTest2(){ // NOise testing
 }
 
 
+	void print(){
+		forloop2(6, 1000){
+			forloop(0, 32){
+				cout << j << '\t' << i << '\t';
+				auto a=readDirSect(WorkDisk[j], i);
+				if(a!=0){
+					dir Dir=readDirSectDir(WorkDisk[j], i); 
+					cout << Dir.Name;
+				}
+					cout << endl;
+			}
+		}
+
+	}
 int main(){
 	/* FS_Boot(); */
 
@@ -132,28 +146,17 @@ int main(){
 	cout << DirCreate("/D") << endl;
 
 
-	cout << "CHILD1\t" << DirCreate("/A/1") << endl;
-	cout << "CHILD2\t" << DirCreate("/A/2") << endl;
-	cout << DirCreate("/A/3") << endl;
-	cout << DirCreate("/A/4") << endl;
+	cout << DirCreate("/A/a") << endl;
+	cout << DirCreate("/A/b") << endl;
+	cout << DirCreate("/A/c") << endl;
+	cout << DirCreate("/A/d") << endl;
 
-	/* cout  << DirCreate("/B/1") << endl; */
-	/* cout  << DirCreate("/B/2") << endl; */
-	/* cout  << DirCreate("/B/3") << endl; */
-	/* cout  << DirCreate("/B/4") << endl; */
+	cout  << DirCreate("/B/q") << endl;
+	cout  << DirCreate("/B/w") << endl;
+	cout  << DirCreate("/B/e") << endl;
+	cout  << DirCreate("/B/r") << endl;
 
-	forloop2(6, 1000){
-		forloop(0, 32){
-			auto a=readDirSect(WorkDisk[j], i);
-			cout << j << '\t' << i << '\t';
-			if(a!=0){
-				dir Dir=readDirSectDir(WorkDisk[j], i); 
-				cout << Dir.Name;
-			}
-			cout << endl;
-		}
-	}
-
+	print();
 	return 0;
 
 }
