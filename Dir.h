@@ -37,7 +37,7 @@ int getDirPath(string path){ // Given a path like /Dir1/Dir2/File, get hte inode
 }
 
 
-int DirCreate(string path){ // Haven't implmented getDirpath
+int DirCreate(string path){ 
 	inode child=getInode(path);
 	size_t found = path.find_last_of("/");
 	inode parent=getInode(path.substr(0,found));
@@ -100,6 +100,30 @@ int DirCreate(string path){ // Haven't implmented getDirpath
 	}
 }
 
+int DirSize(string path){ // Get the size of the dctionary
+	inode inodepath=getInode(path);
+	if (inodepath.size == inode().size){ // Child alreayd exist
+		return -1; 
+	}
+	else{
+		int count =0;
+		forloop(0, 10){
+			forloop2(0, dirCount){
+				if ( readDirSect(WorkDisk[inodepath.alloc[i+6]], j)!=0 ) {
+					count++;
+					dir Dir=readDirSectDir(WorkDisk[inodepath.alloc[1+6]], j);
+					cout << "read\t" << Dir.Name << '\t' << inodepath.alloc[i+6] << '\t' << j    << endl;
+
+				}
+			}
+		}
+		return count;
+	}
+
+}
+
+int DirUnlink(string path){ //
+}
 
 
 #endif

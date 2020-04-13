@@ -826,13 +826,22 @@
    - How can a buffer be null, cause you can't pass null strings in c++
    - Method signature chagnes, change I have to pass the disk. Is that valid?
    - Also, which disk does disk_write and disk_read write to? I assumed working
-* Changes     
+* Changes/Journal
+** Changes
   - Wrote teh read/write by Inode/dir funcitons, which allow for bit writing in the drive
   - Took into account that bitsets arrays read string from right ot left, not left to right.
   - IMPORTANT ::  within a directory, the first directory is the directory itself.
   - Dir_Create :: Chagne to get parent's next free dictionary spacej
   - Also test Dir_create a little more JUST TO BE ON THE SAFFE SIDE
-  - Create get free Datablock and inode plock 
+  - Create get free Datablock and inode plock
+  - IPMORANT 2 :: It's kinda too late to use the bitmap, but just for finishing hte proejct, make sure the bitmap gets modifed
+  - Add in dir_Size functaionilty.
+** Captain's log
+*** Monday, 4 days left
+    - I created the get inode, and get free indoe, datablock and dictionary in parent, I am going to finish the dir functionality.
+    - I forgot to use the bitmap. sad.  I am going to incldue a note saying i missed it
+    - SO far, I have alot of progress. In terms of Todo groups, I got only 3 left, nad teh hardest part is over.
+    - I FORGOT 
 * Specifications 
 ** System Decomposistion  
 *** Data
