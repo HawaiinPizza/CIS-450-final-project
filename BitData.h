@@ -118,6 +118,26 @@ string diskErrMsg="";
 		}
 		return Ret;
 	}
+
+	inode getBitInode(bitset<114> bit){// Type // Size // 10*10 of which bits are allociated to it. 
+		string BitStream=bit.to_string();
+		inode Ret;
+		{ // alloc decleartion
+			for(int i=0; i<10; i++){
+				bitset<10> temp(BitStream.substr(i*10, 10));
+				Ret.alloc[i]=temp.to_ulong();
+			}
+		}
+		{ // SIze decleartion
+			bitset<13> temp(BitStream.substr(100,13));
+			Ret.size=temp.to_ulong();
+		}
+		{// Type decleartion
+			bitset<1> temp(BitStream.substr(113,1));
+			Ret.isFile=temp.to_ulong();
+		}
+		return Ret;
+	}
 	bitset<114> readInodeSectBit(const Sector sect, int count){
 			bitset<114> retBit;
 			if(range(count, 0, SectorBit/114)){
@@ -161,8 +181,17 @@ string diskErrMsg="";
 //Dir
 	struct dir{
 		char Name[16];
-		uint long inodePlace;
+		uint long  inodePlace;
 		char endOf='\0';
+		dir(){
+		}
+		dir(string _Name, uint long _inodePlace){
+			forloop(0,14){
+				Name[i]=_Name[i];
+			}
+			Name[15]=endOf;
+			inodePlace=_inodePlace;
+		}
 	};
 	
 	//bit and dir converson
@@ -182,6 +211,23 @@ string diskErrMsg="";
 			}
 			return Ret;
 		}
+		dir getBitDir(bitset<dirSize> b){
+			string BitStream=b.to_string();
+			dir Ret;
+			{ // inodePlace decleariotn
+				bitset<4> inode(BitStream.substr(0,4));
+				uint long ret1=inode.to_ulong();
+				Ret.inodePlace=ret1;
+			}
+			{ // Name assigmetnation
+				for(int i=0; i<16; i++){
+					bitset<8> temp(BitStream.substr(4+i*8,8));
+					Ret.Name[i]=(char)temp.to_ulong();
+				}
+			}
+			return Ret;
+		}
+
 		//Expect dirSize bytes, or 16 characters of 8 bits, and 4 bits for size 
 		bitset<dirSize> getDirBit(dir Dir){
 			string RetStr="";

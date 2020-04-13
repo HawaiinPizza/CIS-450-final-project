@@ -828,6 +828,7 @@
 * Changes     
   - Wrote teh read/write by Inode/dir funcitons, which allow for bit writing in the drive
   - Took into account that bitsets arrays read string from right ot left, not left to right.
+  - IMPORTANT ::  within a directory, the first directory is the directory itself.
 * Specifications 
 ** System Decomposistion  
 *** Data
