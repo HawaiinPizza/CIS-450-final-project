@@ -169,12 +169,35 @@ int main(){
 	DirCreate("/B/q/6") ;
 	DirCreate("/B/q/7") ;
 	DirCreate("/B/q/8") ;
+	DirCreate("/B/q/9") ;
+	DirCreate("/B/q/10") ;
+	DirCreate("/B/q/11") ;
+	DirCreate("/B/q/12") ;
+	DirCreate("/B/q/13") ;
+	DirCreate("/B/q/14") ;
+	DirCreate("/B/q/15") ;
+	DirCreate("/B/q/16") ;
+	DirCreate("/B/q/17") ;
+	DirCreate("/B/q/18") ;
+	DirCreate("/B/q/19") ;
+	DirCreate("/B/q/20") ;
+	DirCreate("/B/q/21") ;
+	DirCreate("/B/q/22") ;
+	DirCreate("/B/q/23") ;
+	DirCreate("/B/q/24") ;
+	DirCreate("/B/q/25") ;
+	DirCreate("/B/q/26") ;
+	DirCreate("/B/q/27") ;
+	DirCreate("/B/q/28") ;
+	DirCreate("/B/q/29") ;
+	DirCreate("/B/q/30") ;
+	DirCreate("/B/q/31") ;
+	DirCreate("/B/q/32") ;
+	DirCreate("/B/q/32") ;
 
 
-	cout << endl;
-	int use=8;
-	uint _pos= readDirSectDir(WorkDisk[use], 0).inodePlace;
-	inode temp= readInodeSectInode(WorkDisk[3+_pos/35], _pos%35);
+
+	print();
 
 	/* cout  << "3rd level /B/q/1\t" << DirUnlink("/B/q/1") << endl; */
 	/* cout  << "3rd level /B/q/2\t" << DirUnlink("/B/q/2") << endl; */

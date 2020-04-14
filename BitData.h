@@ -442,7 +442,7 @@ pos getFreeDataBlock(){
 //int _sect=6+parent.alloc[i];
 pos getFirDir(int _sect){ // _sect is the sector where the directory si in.
 	pos posParDir;
-	for(int i=0; i<10; i++){ // Finding the space for the parent dictionary
+	for(int i=-1; i<9; i++){ // Finding the space for the parent dictionary
 		forloop2(0,dirCount){
 			bitset<dirSize> bitStream( readDirSect(WorkDisk[_sect], j));
 			if(bitStream==0){ // INCLUDE CHECK THAT IF THIS DIR RUNS OUT OF SPACE, YOU APPEND A NEW SPACE
@@ -455,15 +455,29 @@ pos getFirDir(int _sect){ // _sect is the sector where the directory si in.
 				break;
 		}
 
-		// Get parent dicitoanry (the first directory in the direcotry node)'s indoe
-		// get it's next alloc
-		// make that the _sect
-		uint _pos= readDirSectDir(WorkDisk[_sect], 0).inodePlace;
-		inode temp= readInodeSectInode(WorkDisk[3+_pos/35], _pos%35);
-		cout <<  readDirSectDir(WorkDisk[_sect], 0).Name << '\t' << temp.alloc[0] << '\t' << temp.alloc[1] << '\t' << _pos << '\t' << _pos%35 << ':' << _pos/35 <<'\t' << _sect << endl;
 		if(posParDir.Count!=-1) // Stop looking, since we already found one.
 			break;
 		else{
+			// Get parent dicitoanry (the first directory in the direcotry node)'s indoe
+			uint _pos= readDirSectDir(WorkDisk[_sect], 0).inodePlace;
+			inode temp= readInodeSectInode(WorkDisk[3+_pos/35], _pos%35);
+			/* cout <<  readDirSectDir(WorkDisk[_sect], 0).Name << '\t' << temp.alloc[0] << '\t' << temp.alloc[1] << '\t' << _pos << '\t' << _pos%35 << ':' << _pos/35 <<'\t' << _sect << endl; */
+
+
+			if(temp.alloc[i+1]==1023) { // Check the next one, and if it's not real, make a new locatoin for it.
+				bitset<dirSize> bitStream( readDirSect(WorkDisk[_sect], 0)); // This is where parent/name of direcotyr should be
+				posParDir=getFreeDataBlock();
+				// make new direcotry from it and write it.
+				writeDirSect(WorkDisk[posParDir.Sect], 0, bitStream);
+				temp.alloc[i+1]=posParDir.Sect;
+				writeInodeSectInode(WorkDisk[3+_pos/35], _pos%35, temp);
+				
+
+
+			}
+			else{
+				_sect=temp.alloc[i+1];
+			}
 		}
 	}
 	return posParDir;
