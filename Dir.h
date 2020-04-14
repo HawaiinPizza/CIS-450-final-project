@@ -44,16 +44,15 @@ int DirCreate(string path){
 
 			if(posDir.Count!=-1 && posInode.Count!=-1 && posParDir.Count!=-1){ // This means there is free space for a new direcotry
 				// Swap posDir and posParDir{
-				cout << path << endl;
 				string temp=path.substr(found+1);
 				dir NewDir(temp, posInode.Count+(posInode.Sect-3)*35);
-				/* cout << "NINJA BOY\t" << NewDir.inodePlace; */
 				if(posParDir.isPar==true){
-				{
-				pos _postemp=posDir;
-				posDir=posParDir;
-				posParDir=_postemp;
-				}
+					{
+					pos _postemp=posDir;
+					posDir=posParDir;
+					posParDir=_postemp;
+					}
+
 					dir ParentDir;
 					pos _temp = getInodePos(path.substr(0,found));
 
@@ -80,7 +79,6 @@ int DirCreate(string path){
 				int Alloc=(posDir.Sect);
 				child.alloc[0]=Alloc; //CAUSE OF BUG
 				writeInodeSectInode(WorkDisk[posInode.Sect], posInode.Count, child);
-				/* cout << "ACTUALLY WROTE\t" << readInodeSectInode(WorkDisk[posInode.Sect], posInode.Count).alloc[0] << endl; */ 
 
 				// Update size
 				parent.size++;
@@ -171,7 +169,12 @@ int DirUnlink(string path){ //Remove a file.
 			}
 		}
 		bitset<dirSize> temp(0);
-		writeDirSect(WorkDisk[delNode.alloc[0]], 0,temp); // Deleting the acutal entry.
+		for(int i=0; i<10; i++){
+			if(delNode.alloc[i]!=1023)
+				writeDirSect(WorkDisk[delNode.alloc[i]], 0,temp); // Deleting the acutal entry.
+			else
+				break;
+		}
 
 		// Now we gotta decrease the parent' inode siz
 		parent.size--;

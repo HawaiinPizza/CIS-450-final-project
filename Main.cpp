@@ -204,17 +204,17 @@ int main(){
 	DirCreate("/B/q/w") ;
 	DirCreate("/B/q/x") ;
 	DirCreate("/B/q/y") ;
-	cout << "I KNOW YOUR VOICE\t";
-	cout << getInode("/B/q/a1").alloc[0] << '\t';
-	cout << getInode("/B/q/a1").alloc[1] << endl;
 
 	DirCreate("/B/q/a1") ;
 
 	DirCreate("/B/q/b1") ;
 
-	cout << endl;
-	print();
 
+	print();
+	cout << "\nI AM WAR\n";
+
+	DirUnlink("/B/q/b1");
+	print();
 	/* DirCreate("/B/q/c1") ; */
 	/* DirCreate("/B/q/d1") ; */
 	/* DirCreate("/B/q/e1") ; */

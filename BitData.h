@@ -559,8 +559,6 @@ pos getFirDir(int _sect){ // _sect is the sector where the directory si in.
 				temp.alloc[i+1]=posParDir.Sect;
 
 				writeInodeSectInode(WorkDisk[_posInode.Sect], _posInode.Count, temp);
-				cout << "Writeshit\t\t" << readInodeSectInode(WorkDisk[_posInode.Sect], _posInode.Count).alloc[0] << " indoe\t" << readInodeSectInode(WorkDisk[_posInode.Sect], _posInode.Count).alloc[1] ;
-				cout << _pos << '\t'  << posParDir.Sect << '\t' << posParDir.Count << '\t' << _posInode.Sect << '\t' << _posInode.Count <<  endl;
 				posParDir.isPar=true;
 				i=10;
 				
