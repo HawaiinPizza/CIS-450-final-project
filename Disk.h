@@ -8,6 +8,7 @@
 #include <bitset>
 #include <cassert>
 #include "FS.h"
+#include "BitData.h"
 
 
 

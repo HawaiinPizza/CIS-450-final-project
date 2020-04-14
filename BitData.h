@@ -7,8 +7,8 @@
 #define inodeCount 35
 #define inodeOffset 6
 #define inodeSize 114
-#define dirSize 132
-#define dirCount 31
+#define dirSize 160
+#define dirCount 25
 // f stands for File system check. This is just a one liner, that returns -1 if any thing happens. 
 #define f                         \
 	do {                                       \
@@ -193,20 +193,23 @@ string diskErrMsg="";
 	struct dir{
 		char Name[16];
 		uint long  inodePlace;
-		char endOf='\0';
+		const char endOf='\0';
 		dir(){
 			forloop(0,15){
-				Name[i]='\0';
+				Name[i]=endOf;
 			}
-			Name[15]=endOf;
 			inodePlace=-1;
 		}
 		dir(string _Name, uint long _inodePlace){
 			forloop(0,15){
-				Name[i]='\0';
+				Name[i]=endOf;
 			}
-			for(int i=0; i<15 && _Name.length(); i++){
-				Name[i]=_Name[i];
+			for(int i=0; i<15 ; i++){
+
+				if(i<_Name.length())
+					Name[i]=_Name[i];
+				Name[i]=endOf;
+
 			}
 			Name[15]=endOf;
 			inodePlace=_inodePlace;
@@ -218,7 +221,7 @@ string diskErrMsg="";
 		dir getBitDir(string BitStream){
 			dir Ret;
 			{ // inodePlace decleariotn
-				bitset<4> inode(BitStream.substr(0,4));
+				bitset<32> inode(BitStream.substr(0,32));
 				uint long ret1=inode.to_ulong();
 				Ret.inodePlace=ret1;
 			}
@@ -234,7 +237,7 @@ string diskErrMsg="";
 			string BitStream=b.to_string();
 			dir Ret;
 			{ // inodePlace decleariotn
-				bitset<4> inode(BitStream.substr(0,4));
+				bitset<32> inode(BitStream.substr(0,32));
 				uint long ret1=inode.to_ulong();
 				Ret.inodePlace=ret1;
 			}
@@ -251,13 +254,15 @@ string diskErrMsg="";
 		bitset<dirSize> getDirBit(dir Dir){
 			string RetStr="";
 			{ // inodePlace decleariotn
-				bitset<4> inode(Dir.inodePlace);
+				bitset<4*8> inode(Dir.inodePlace);
+				cout << "FUC\t" << Dir.inodePlace << '\t' << inode.to_ulong() << endl;
 				RetStr+=inode.to_string();
 			}
 			{ // Name assigmetnation
 				for(int i=0; i<16; i++){
 					bitset<8> temp(Dir.Name[i]);
 					RetStr+=temp.to_string();
+					cout << Dir.Name[i] << endl;
 				}
 			}
 			bitset<dirSize> Ret(RetStr);
@@ -275,7 +280,7 @@ string diskErrMsg="";
 					return retBit;
 				}
 				else{
-					cout << "\nZAKI THIS ISOUT OF BOUNDS: " << count << "\n";
+					cout << "\nDIR READ ZAKI THIS ISOUT OF BOUNDS: " << count << '\t' << dirCount << '\t' << SectorBit/dirSize << "\n";
 					return retBit;
 				}
 		}
@@ -288,8 +293,7 @@ string diskErrMsg="";
 					}
 				}
 				else{
-					forloop(0,999)
-						cout << "\nZAKI THIS ISOUT OF BOUNDS: " << count << "\n";
+					cout << "\nDIR WRITE ZAKI THIS ISOUT OF BOUNDS: " << count << "\n";
 					return;
 					}
 		}
@@ -359,6 +363,7 @@ inode getInode(string path){
 			if(a!=0){
 				dir b=getBitDir(a);
 				/* cout << find << ":" << b.Name << '\t'; */
+
 				if(b.Name==find && !RetStr.empty()) { // This isn't what we're looking for. Go to antoher stage
 					/* cout << "CLUE\t" ; */
 					/* 			newdir.inodePlace=(posInode.sect-3)*inodeCount +  posInode.count; */

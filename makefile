@@ -1,4 +1,3 @@
 all:
-	g++ Main.cpp -o run
+	g++ Main.cpp -g  -o run
 	-./run 
-	rm run

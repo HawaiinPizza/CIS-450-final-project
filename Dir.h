@@ -132,7 +132,7 @@ int DirUnlink(string path){ //Remove a file.
 				}
 			}
 		}
-		bitset<132> temp(0);
+		bitset<dirSize> temp(0);
 		writeDirSect(WorkDisk[delNode.alloc[0]], 0,temp); // Deleting the acutal entry.
 
 		// Now we gotta decrease the parent' inode siz
@@ -149,8 +149,8 @@ int DirUnlink(string path){ //Remove a file.
 		size_t found = path.find_last_of("/");
 		string child=path.substr(found+1);
 		bool stop=false;
-		for(int i=0; i<32 && !stop; i++){
-			bitset<132>  dirBit(readDirSect(WorkDisk[parent.alloc[0]], i));
+		for(int i=0; i<dirCount && !stop; i++){
+			bitset<dirSize>  dirBit(readDirSect(WorkDisk[parent.alloc[0]], i));
 			if(dirBit!=0){
 				dir Dir=getBitDir(dirBit);
 				if(Dir.Name==child){ // Found the cihld directory in parent
