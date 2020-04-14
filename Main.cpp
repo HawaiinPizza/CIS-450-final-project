@@ -167,11 +167,53 @@ int main(){
 	DirCreate("/B") ;
 	DirCreate("/C") ;
 	DirCreate("/D") ;
+	DirCreate("/E") ;
+	DirCreate("/F") ;
+	DirCreate("/G") ;
+	DirCreate("/H") ;
+	DirCreate("/I") ;
+	DirCreate("/K") ;
 
-	File_Create("/A/a");
 
-	cout << getInode("A/a").isFile << endl;
-	cout << getInode("/A/").isFile << endl;
+	File_Create("/A/1");
+	File_Create("/A/10");
+	File_Create("/A/2");
+	File_Create("/A/3");
+	File_Create("/A/4");
+	File_Create("/A/5");
+	File_Create("/A/6");
+	File_Create("/A/7");
+	File_Create("/A/8");
+	File_Create("/A/9");
+	File_Create("/B/1");
+	File_Create("/B/2");
+
+	cout << File_Open("/A/1") << endl;
+	cout << File_Open("/A/2") << endl;
+	cout << File_Open("/A/3") << endl;
+	cout << File_Open("/A/4") << endl;
+
+
+	forloop(0,10){
+		if(openFileTable.isValid[i])
+			cout << openFileTable.OpenFile[i].name << endl;
+	}
+
+	cout << File_Close(0) << endl;
+
+	forloop(0,10){
+		if(openFileTable.isValid[i])
+			cout << openFileTable.OpenFile[i].name << endl;
+	}
+	cout << "SIZE\t" << openFileTable.size << endl;
+
+	string _temp="1111";
+	cout << File_Write(2, _temp, _temp.size()) << endl;
+	string _pothole;
+	_pothole.resize(4096);
+	cout << File_Read(2, _pothole, _pothole.size()) << endl;
+
+	cout << _pothole << endl;
 
 
 	return 0;

@@ -12,11 +12,21 @@
 struct file{
 	pos Loc;
 	string buffer;
+	string name;
 	int Seek=0;
 
-	file(pos _Loc, string _buffer){
+	file(pos _Loc, string _buffer, string _name){
 		Loc=_Loc;
 		buffer=_buffer;
+		name=_name;
+	}
+
+	file(){
+		bitset<4096> tempBuf(0);
+		Loc=pos(-1,-1);
+		name="?";
+		buffer=tempBuf.to_string();
+		Seek=-1;
 	}
 
 	string read(int _Seek, int& status){
@@ -24,18 +34,22 @@ struct file{
 			status=-1;
 		else{
 			string temp = buffer.substr(Seek, _Seek);
+			cout << temp << endl;
 			Seek=_Seek;
 			return temp;
 		}
 	}
 
-	string write(int _Seek, int& status){
+	string write(int _Seek, int& status, string& _buffer){
 		if(_Seek>buffer.length() || _Seek<=0)
 			status=-1;
 		else{
-			string temp = buffer.substr(Seek, _Seek);
+			// Lmao TODO make sure this writes to both openFile AND file locaiotn
+			forloop(Seek, _Seek){
+				buffer[i]=_buffer[i];
+			}
 			Seek=_Seek;
-			return temp;
+			return buffer;
 		}
 	}
 
@@ -51,9 +65,19 @@ struct file{
 
 struct openFile{
 	file OpenFile[10];
+	bool isValid[10];
 	int size=0;
+
+	openFile(){
+		forloop(0,10){
+			OpenFile[i]=file();
+			isValid[i]=false;
+		}
+	}
+
 	int read(int fd, string &buffer, int Seek){
-		if(fd>size) // NOt in open file table
+
+		if(!isValid[fd]) // NOt in open file table
 			return -1;
 		else{
 			int status=0;
@@ -63,19 +87,49 @@ struct openFile{
 	}
 
 	int write(int fd, string &buffer, int Seek){
-		if(fd>size) // NOt in open file table
+		if(!isValid[fd]) // NOt in open file table
 			return -1;
 		else{
 			int status=0;
-			OpenFile[fd].write(Seek, status);
+			OpenFile[fd].write(Seek, status, buffer);
 			return status;
 		}
+	}
+
+	int addFileOpen(file File){
+		OpenFile[size]=File;
+		forloop(0,10){
+			if(!isValid[i]){
+				isValid[i]=true;
+				size++;
+				return i;
+				break;
+			}
+		}
+		size++;
+	}
+
+	void rmFileOpen(int fd){
+		isValid[fd]=false;
+		OpenFile[fd]=file();
+		size--;
+	}
+
+
+
+	bool isFileOpened(string name){
+		forloop(0, size){
+			if(OpenFile[i].name==name) // Make sure name is all of it, not just the basename
+				return true;
+		}
+		return false;
 	}
 
 
 };
 
 
+openFile openFileTable;
 
 int File_Create(string path){ 
 	inode child=getInode(path);
@@ -94,7 +148,6 @@ int File_Create(string path){
 		else if( WorkDisk[1].to_ulong()>=100) // There are 100 or over files/direcotires already
 			return -5;
 		else{ // Can make dirctioanry.
-			child.isFile=false;
 			child.size=0;
 
 			dir Dir;
@@ -115,8 +168,8 @@ int File_Create(string path){
 				string temp=path.substr(found+1);
 				dir NewDir(temp, posInode.Count+(posInode.Sect-3)*35);
 				if(posParDir.isPar==true){
-						cout << "ERROR ERROR YOU CANT HAVE MORE THAN 24 directories/files in one!\n";
-						return -6;
+					cout << "ERROR ERROR YOU CANT HAVE MORE THAN 24 directories/files in one!\n";
+					return -6;
 				}
 				else{
 					writeDirSectDir(WorkDisk[posParDir.Sect], posParDir.Count, NewDir );
@@ -185,22 +238,63 @@ int File_Create(string path){
 	}
 
 int File_Open(string path){
+	inode fileNode=getInode(path);
+	if(fileNode.alloc[0]==1023 || fileNode.alloc[0]==-1 || fileNode.isFile==false){
+		return -1;
+	}
+	else{
+		if( openFileTable.isFileOpened(path) ) // FIle is already opened
+			return -2;
+		else if ( openFileTable.size>=10)
+			return -3;
+		else{
+			// Setup file
+			file File;
+			pos Temp;
+			Temp.Sect=fileNode.alloc[0];
+			Temp.Count=0;
+			for(int i=0; i<10 && !( fileNode.alloc[i]==1023 ||  fileNode.alloc[i]==-1); i++){
+				file _File(Temp, WorkDisk[Temp.Sect].to_string(), path  ) ;
+				int temp=openFileTable.addFileOpen(_File);
+				return temp;
+
+
+			}
+
+
+		}
+
+
+
+	}
+
 }
 
 int File_Close(int fd){
+	if(openFileTable.size<=fd) // Fd not here.
+		return -1;
+	else{
+		openFileTable.rmFileOpen(fd);
+	}
+	return 0;
 }
 
 
 int File_Read(int fd, string &buffer, int size){
+	openFileTable.read(fd, buffer, size);
+	return 0;
 }
 
 
 int File_Write(int fd, string &buffer, int size){
+	openFileTable.write(fd, buffer, size);
+	return 0;
 }
 
 
 int File_Unlink(string path){
+	return 0;
 }
- 
+
 
 #endif
