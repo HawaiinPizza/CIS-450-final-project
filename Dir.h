@@ -37,17 +37,45 @@ int DirCreate(string path){
 			pos posInode;
 
 			posInode=getFreeInode();
-			posDir=getFreeDataBlock();
+			posDir=getFreeDataBlock(true);
 			posParDir=getFirDir( parent.alloc[0]); 
 
 
 
 			if(posDir.Count!=-1 && posInode.Count!=-1 && posParDir.Count!=-1){ // This means there is free space for a new direcotry
+				// Swap posDir and posParDir{
+				cout << path << endl;
 				string temp=path.substr(found+1);
 				dir NewDir(temp, posInode.Count+(posInode.Sect-3)*35);
 				/* cout << "NINJA BOY\t" << NewDir.inodePlace; */
-				writeDirSectDir(WorkDisk[posParDir.Sect], posParDir.Count, NewDir );
-				writeDirSectDir(WorkDisk[posDir.Sect], posDir.Count, NewDir );
+				if(posParDir.isPar==true){
+				{
+				pos _postemp=posDir;
+				posDir=posParDir;
+				posParDir=_postemp;
+				}
+					dir ParentDir;
+					pos _temp = getInodePos(path.substr(0,found));
+
+					ParentDir.inodePlace=(_temp.Sect-3)*35+_temp.Count;
+					string test2=path.substr(0, found);
+
+					found = test2.find_last_of("/");
+
+					forloop(0, 14){
+						ParentDir.Name[i]=test2.substr(found+1)[i];
+					}
+
+
+
+					writeDirSectDir(WorkDisk[posParDir.Sect], posParDir.Count, ParentDir );
+					writeDirSectDir(WorkDisk[posParDir.Sect], posParDir.Count+1, NewDir );
+					writeDirSectDir(WorkDisk[posDir.Sect], posDir.Count, NewDir );
+				}
+				else{
+					writeDirSectDir(WorkDisk[posParDir.Sect], posParDir.Count, NewDir );
+					writeDirSectDir(WorkDisk[posDir.Sect], posDir.Count, NewDir );
+				}
 				dir parDir=readDirSectDir(WorkDisk[posParDir.Sect], posParDir.Count);
 				int Alloc=(posDir.Sect);
 				child.alloc[0]=Alloc; //CAUSE OF BUG
@@ -81,7 +109,7 @@ int DirCreate(string path){
 				/* cout << "pos of inode\t" << posInode.Sect << '\t' << posInode.Count << '\t' << Alloc << endl; */
 				/* cout << "pos of dir\t" 	 << posDir.Sect << '\t' << posDir.Count << endl; */
 				/* cout << "pos of par dir\t" << posParDir.Sect << '\t' << posParDir.Count << endl; */
-				
+
 
 				/* cout << readInodeSectBit(WorkDisk[posInode.Sect], posInode.Count); */
 				/* cout << "\nToo busy printin\n"; */
@@ -172,7 +200,7 @@ int DirUnlink(string path){ //Remove a file.
 				}
 
 			}
-			
+
 
 		}
 		uint _bitmapSize=WorkDisk[1].to_ulong();

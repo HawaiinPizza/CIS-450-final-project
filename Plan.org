@@ -848,6 +848,7 @@
     - I forgot to use the bitmap. sad.  I am going to incldue a note saying i missed it
     - SO far, I have alot of progress. In terms of Todo groups, I got only 3 left, nad teh hardest part is over.
     - I set naem to 4 bits, not 4 bytes. OOF. TOok about an hour to fix. :()
+    - The Bear Problem :: The code is so coupled/confsuing, taht changing 1 thing chagnes many.
 * Specifications 
 ** System Decomposistion  
 *** Data

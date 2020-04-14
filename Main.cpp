@@ -123,6 +123,23 @@ int mainTest2(){ // NOise testing
 		}
 
 	}
+
+	void inodePrint(){
+		forloop(3, 6){
+			forloop2(0, inodeCount){
+				auto a=readInodeSectBit(WorkDisk[i], j);
+				if(a!=0){
+					cout << i << '\t' << j << '\t';
+					inode node=getBitInode(a);
+					cout << node.alloc[0] << '\t' << node.alloc[1];
+					cout << endl;
+				}
+
+			}
+		}
+	}
+
+
 int main(){
 	/* FS_Boot(); */
 
@@ -187,25 +204,31 @@ int main(){
 	DirCreate("/B/q/w") ;
 	DirCreate("/B/q/x") ;
 	DirCreate("/B/q/y") ;
+	cout << "I KNOW YOUR VOICE\t";
+	cout << getInode("/B/q/a1").alloc[0] << '\t';
+	cout << getInode("/B/q/a1").alloc[1] << endl;
+
 	DirCreate("/B/q/a1") ;
+
 	DirCreate("/B/q/b1") ;
-	DirCreate("/B/q/c1") ;
-	DirCreate("/B/q/d1") ;
-	DirCreate("/B/q/e1") ;
-	DirCreate("/B/q/f1") ;
-	DirCreate("/B/q/g1") ;
 
-
-
-	_DirRead("/");
-	_DirRead("/A");
-	_DirRead("/B");
-	_DirRead("/B/q");
-
-	inode temp=getInode("/B/q");
 	cout << endl;
-	cout << temp.alloc[1] << endl;
 	print();
+
+	/* DirCreate("/B/q/c1") ; */
+	/* DirCreate("/B/q/d1") ; */
+	/* DirCreate("/B/q/e1") ; */
+	/* DirCreate("/B/q/f1") ; */
+	/* DirCreate("/B/q/g1") ; */
+
+
+
+	/* 	_DirRead("/"); */
+	/* 	_DirRead("/A"); */
+	/* 	_DirRead("/B"); */
+	/* 	_DirRead("/B/q"); */
+	;
+	/* print(); */
 
 	/* cout  << "3rd level /B/q/1\t" << DirUnlink("/B/q/1") << endl; */
 	/* cout  << "3rd level /B/q/2\t" << DirUnlink("/B/q/2") << endl; */
