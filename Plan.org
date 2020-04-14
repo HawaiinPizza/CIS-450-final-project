@@ -93,7 +93,7 @@
      - [X] DIR_READ Faiure Size too small :: The buffer is of too small size, return E_BUFFER_TOO_SMALL
      - [X] DIR_READ Faiure Dir no eixst :: directory does not exist, return E_DIR_NO_EXIST
 *** TODO Files [0/2] :FILE:
-**** TODO Create/Open and Close [8/10]
+**** TODO Create/Open and Close [10/10]
     Errors go to osErrMsg
     - INPUT :: string File
     - Expected Output :: Create a file |  File Descriptor [0,$\infty$] to a file  |    close the file.
@@ -108,18 +108,18 @@
     - [X] File_Open Fialure alreadyOpen :: File already is opened. return E_FILE_ALREADY_OPEN
     - [X] File_Open Fialure too many open files :: File does  exist, but there's too many open files. return E_TOO_MANY_OPEN_FILES
       
-    - [ ]  File_CLose(int fd) Success :: Close file in open file table, with fd.
-    - [ ]  File_CLose(int fd) Failure :: File is not in open file table, return E_CLOSE_BAD_FD
+    - [X]  File_CLose(int fd) Success :: Close file in open file table, with fd.
+    - [X]  File_CLose(int fd) Failure :: File is not in open file table, return E_CLOSE_BAD_FD
 **** TODO File Read, write  
     - INPUT :: string File
     - Expected Output :: Number of bytes in a file read from file | size of write 
     - AO-OUTPUT ::
       
-    - [ ] File_Read(int fd, string fuffer, int size) Success   :: check Open file, go to current posistion in file, than read from current possiton to size/end of file. Than have current file posistion
-    - [ ] File_Read(int fd, string fuffer, int size) Failure not open  :: File is not in open file table, and thus, return E_READ_BAD_FD.
+    - [X] File_Read(int fd, string fuffer, int size) Success   :: check Open file, go to current posistion in file, than read from current possiton to size/end of file. Than have current file posistion
+    - [X] File_Read(int fd, string fuffer, int size) Failure not open  :: File is not in open file table, and thus, return E_READ_BAD_FD.
       
-    - [ ] File_Write(int fd, string fuffer, int size) Success ::  Write to a file from buffer, from teh buffer. Current file offset shold be by size.
-    - [ ] File_Write(int fd, string fuffer, int size) Failure not open  ::  Write to a file from buffer, from teh buffer. Current file offset shold be by size. Return E_WRITE_BAD_FD
+    - [X] File_Write(int fd, string fuffer, int size) Success ::  Write to a file from buffer, from teh buffer. Current file offset shold be by size.
+    - [X] File_Write(int fd, string fuffer, int size) Failure not open  ::  Write to a file from buffer, from teh buffer. Current file offset shold be by size. Return E_WRITE_BAD_FD
     - [ ] File_Write(int fd, string fuffer, int size) Failure no space left :: While writing, if you find there's no more space in teh disk, return E_NO_SPACE
     - [ ] File_Write(int fd, string fuffer, int size) Failure maximum file size :: While writing, if you find there's the file takes up more than 10 data blcoks, return E_FILE_TOO_BIG
 **** TODO File Seek      

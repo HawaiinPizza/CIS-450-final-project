@@ -201,6 +201,9 @@ int main(){
 	_pothole.resize(5);
 
 	cout << File_Read(0, _pothole, _pothole.size()) << endl;
+	_pothole.resize(7);
+	cout << File_Read(0, _pothole, _pothole.size()) << endl;
+	cout << File_Read(9, _pothole, _pothole.size()) << endl;
 	/* cout << openFileTable.OpenFile[0].buffer << endl; */
 
 
