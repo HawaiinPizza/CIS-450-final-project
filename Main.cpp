@@ -196,25 +196,16 @@ int main(){
 	string _temp="1111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111";
 	cout << File_Write(0, _temp, _temp.size()) << endl;
 	string _pothole;
+	forloop(0,10){
+		if(openFileTable.isValid[i])
+			cout << i << '\t' << openFileTable.OpenFile[i].name << endl;
+	}
 	_pothole.resize(15);
 
 	cout << File_Read(0, _pothole, _pothole.size()) << endl;
+	/* cout << openFileTable.OpenFile[0].buffer << endl; */
 
-	forloop(0,10){
-		if(openFileTable.isValid[i])
-			cout << i << '\t' << openFileTable.OpenFile[i].name << endl;
-	}
 
-	cout << File_Close(0) << endl;
-
-	cout << "OH NO\t" << File_Open("/A/1") << endl;
-	cout << "SIZE\t" << openFileTable.size << endl;
-
-	cout << "NINE !! \n";
-	forloop(0,10){
-		if(openFileTable.isValid[i])
-			cout << i << '\t' << openFileTable.OpenFile[i].name << endl;
-	}
 
 
 

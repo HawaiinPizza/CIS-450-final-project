@@ -8,6 +8,7 @@
 #include <bitset>
 #include <cassert>
 #include "BitData.h"
+#include "Disk.h"
 
 struct file{
 	pos Loc;
@@ -33,7 +34,9 @@ struct file{
 		if(_Seek>buffer.length() || _Seek<=0)
 			status=-1;
 		else{
+
 			string temp = buffer.substr(Seek, _Seek);
+			cout << temp << endl;
 			Seek=_Seek;
 			return temp;
 		}
@@ -46,7 +49,10 @@ struct file{
 			// Lmao TODO make sure this writes to both openFile AND file locaiotn
 			forloop(Seek, _Seek){
 				buffer[i]=_buffer[i];
-				WorkDisk[Loc.Sect][i]=buffer[i];
+				WorkDisk[Loc.Sect][i]=_buffer[i];
+			}
+			forloop(0, 4096){
+				cout << i << '\t' << buffer[i] << '\t' << WorkDisk[Loc.Sect][i] << endl;
 			}
 			cout << Loc.Sect << endl;
 			Seek=_Seek;
