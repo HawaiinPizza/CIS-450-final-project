@@ -193,14 +193,12 @@ int main(){
 	cout << File_Open("/A/3") << endl;
 	cout << File_Open("/A/4") << endl;
 
-	string _temp="1111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111";
+	string _temp="123451234567";
 	cout << File_Write(0, _temp, _temp.size()) << endl;
 	string _pothole;
-	forloop(0,10){
-		if(openFileTable.isValid[i])
-			cout << i << '\t' << openFileTable.OpenFile[i].name << endl;
-	}
-	_pothole.resize(15);
+	cout << "EARTH\t" << File_Close(0) << endl ;
+	cout << "FILE\t" << File_Open("/A/1") << endl;
+	_pothole.resize(5);
 
 	cout << File_Read(0, _pothole, _pothole.size()) << endl;
 	/* cout << openFileTable.OpenFile[0].buffer << endl; */

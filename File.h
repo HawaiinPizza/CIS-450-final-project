@@ -35,6 +35,10 @@ struct file{
 			status=-1;
 		else{
 
+			cout << Seek << '\t' << _Seek << "\tComing at ya" << endl;
+			forloop(Seek, _Seek){
+				cout << i << '\t' << buffer[i] << endl;
+			}
 			string temp = buffer.substr(Seek, _Seek);
 			cout << temp << endl;
 			Seek=_Seek;
@@ -51,10 +55,6 @@ struct file{
 				buffer[i]=_buffer[i];
 				WorkDisk[Loc.Sect][i]=_buffer[i];
 			}
-			forloop(0, 4096){
-				cout << i << '\t' << buffer[i] << '\t' << WorkDisk[Loc.Sect][i] << endl;
-			}
-			cout << Loc.Sect << endl;
 			Seek=_Seek;
 			return buffer;
 		}
@@ -82,23 +82,23 @@ struct openFile{
 		}
 	}
 
-	int read(int fd, string &buffer, int Seek){
+	int read(int fd, string &buffer, int _Seek){
 
 		if(!isValid[fd]) // NOt in open file table
 			return -1;
 		else{
 			int status=0;
-			OpenFile[fd].read(Seek, status);
+			OpenFile[fd].read(_Seek, status);
 			return status;
 		}
 	}
 
-	int write(int fd, string &buffer, int Seek){
+	int write(int fd, string &buffer, int _Seek){
 		if(!isValid[fd]) // NOt in open file table
 			return -1;
 		else{
 			int status=0;
-			OpenFile[fd].write(Seek, status, buffer);
+			OpenFile[fd].write(_Seek, status, buffer);
 			return status;
 		}
 	}
@@ -118,6 +118,7 @@ struct openFile{
 
 	void rmFileOpen(int fd){
 		cout << "RM\t" << fd << endl;
+		OpenFile[fd].Seek=0;
 		isValid[fd]=false;
 		size--;
 	}
@@ -287,14 +288,12 @@ int File_Close(int fd){
 
 
 int File_Read(int fd, string &buffer, int size){
-	openFileTable.read(fd, buffer, size);
-	return 0;
+	return openFileTable.read(fd, buffer, size);
 }
 
 
 int File_Write(int fd, string &buffer, int size){
-	openFileTable.write(fd, buffer, size);
-	return 0;
+	return openFileTable.write(fd, buffer, size);
 }
 
 
