@@ -195,16 +195,18 @@ int main(){
 	cout << File_Open("/A/4") << endl;
 
 
-	string _temp="11111111";
+	string _temp="110010010010010101100100000100101010";
 	File_Write(0, _temp, _temp.size()) ;
 	cout << getInode("/A/1").alloc[0] << endl;
+	cout << "Watch out for that\n pothole \n ";
 	File_Close(0);
 	File_Open("/A/1");
 
 	string _pothole;
 	_pothole.resize(_temp.length());
 	File_Read(0, _pothole, _pothole.size());
-	cout << File_Read(0, _pothole, _pothole.size()) << endl;
+
+	cout << _pothole << endl;
 
 
 
