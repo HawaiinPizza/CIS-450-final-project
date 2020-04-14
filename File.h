@@ -34,7 +34,6 @@ struct file{
 			status=-1;
 		else{
 			string temp = buffer.substr(Seek, _Seek);
-			cout << temp << endl;
 			Seek=_Seek;
 			return temp;
 		}
@@ -47,7 +46,9 @@ struct file{
 			// Lmao TODO make sure this writes to both openFile AND file locaiotn
 			forloop(Seek, _Seek){
 				buffer[i]=_buffer[i];
+				WorkDisk[Loc.Sect][i]=buffer[i];
 			}
+			cout << Loc.Sect << endl;
 			Seek=_Seek;
 			return buffer;
 		}
@@ -100,18 +101,18 @@ struct openFile{
 		OpenFile[size]=File;
 		forloop(0,10){
 			if(!isValid[i]){
+				cout << i << '\t' <<  " insert at";
 				isValid[i]=true;
 				size++;
 				return i;
 				break;
 			}
 		}
-		size++;
 	}
 
 	void rmFileOpen(int fd){
+		cout << "RM\t" << fd << endl;
 		isValid[fd]=false;
-		OpenFile[fd]=file();
 		size--;
 	}
 
@@ -119,7 +120,7 @@ struct openFile{
 
 	bool isFileOpened(string name){
 		forloop(0, size){
-			if(OpenFile[i].name==name) // Make sure name is all of it, not just the basename
+			if(isValid[i] && OpenFile[i].name==name) // Make sure name is all of it, not just the basename
 				return true;
 		}
 		return false;
@@ -173,7 +174,6 @@ int File_Create(string path){
 				}
 				else{
 					writeDirSectDir(WorkDisk[posParDir.Sect], posParDir.Count, NewDir );
-					writeDirSectDir(WorkDisk[posDir.Sect], posDir.Count, NewDir );
 				}
 				dir parDir=readDirSectDir(WorkDisk[posParDir.Sect], posParDir.Count);
 				int Alloc=(posDir.Sect);
