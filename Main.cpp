@@ -206,15 +206,17 @@ int main(){
 	DirCreate("/B/q/y") ;
 
 	DirCreate("/B/q/a1") ;
+	cout << getInode("/B/q/a1").alloc[0] << '\t'  << getInode("/B/q/a1").alloc[1] << endl;
 
 	DirCreate("/B/q/b1") ;
 
 
-	print();
+	/* print(); */
 	cout << "\nI AM WAR\n";
 
-	DirUnlink("/B/q/b1");
-	print();
+	/* DirUnlink("/B/q/b1"); */
+	inodePrint();
+	/* print(); */
 	/* DirCreate("/B/q/c1") ; */
 	/* DirCreate("/B/q/d1") ; */
 	/* DirCreate("/B/q/e1") ; */

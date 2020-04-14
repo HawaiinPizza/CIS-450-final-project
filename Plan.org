@@ -849,6 +849,9 @@
     - SO far, I have alot of progress. In terms of Todo groups, I got only 3 left, nad teh hardest part is over.
     - I set naem to 4 bits, not 4 bytes. OOF. TOok about an hour to fix. :()
     - The Bear Problem :: The code is so coupled/confsuing, taht changing 1 thing chagnes many.
+    - 
+*** Tuesday, 3 days left
+    - Got the go ahead ot have only 24 files/directories within 1. taht's good .
 * Specifications 
 ** System Decomposistion  
 *** Data

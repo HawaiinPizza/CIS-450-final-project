@@ -93,6 +93,7 @@ string diskErrMsg="";
 	void inodeSet(inode *Node, int pos, int val){
 		Node->alloc[pos]=val+inodeOffset;
 	}
+
 	bitset<114> getInodeBit(inode Inode){//Retrun 114 bits
 		string RetStr; //So we can concate instead of dealing with how bits are setup in bitset
 		{ // alloc decleartion
@@ -310,7 +311,6 @@ string diskErrMsg="";
 	/* 	writeInodeSect(sect, count, part1.to_string()); */
 	/* } */
 
-// getInoe and pos
 struct pos{
 	int Sect;
 	int Count;
@@ -323,7 +323,43 @@ struct pos{
 		Sect=_Sect;
 		Count=_Count;
 	}
+
+	int sectToPos(){
+		return (Sect-3)*35+Count;
+	}
 };
+// datablcok
+	struct datablock{
+		dir Dir[10];
+		inode Inode;
+		int count=1;
+		datablock(){
+		}
+		datablock(inode _Inode, dir _Dir){
+			Dir[0].inodePlace=_Dir.inodePlace;
+			forloop(0, 15){
+				Dir[0].Name[i]=_Dir.Name[i];
+			}
+			Inode=_Inode;
+		}
+
+		void pushDir(dir _Dir, pos _NewSect){
+			if(count<10){
+				Dir[count].inodePlace=_Dir.inodePlace;
+				forloop(0, 15){
+					Dir[count].Name[i]=_Dir.Name[i];
+				}
+				Inode.alloc[count] = _NewSect.sectToPos();
+				count++;
+				}
+		}
+
+		void write(){ // Write the inodes
+
+		}
+
+	};
+// getInoe and pos
 
 inode getInode(string path){
 
@@ -354,7 +390,8 @@ inode getInode(string path){
 	// Getting the node here.
 	bool stop=false;
 	int Sect=6; //There is where root dictionary will be
-	while(!RetStr.empty() && !stop){
+	int count=0;
+	while(!RetStr.empty() && !stop && count<10){
 		string find=RetStr.front(); RetStr.pop();
 		/* cout << "Gonna hit them with this\t" << find << endl; */
 		forloop(0, dirCount){ // This is code for finding something in root.
@@ -371,11 +408,11 @@ inode getInode(string path){
 					inode temp=readInodeSectInode(WorkDisk[_sect], _place);
 					/* cout << */ 
 					/* 	"inode\t" << b.inodePlace << '\t' << */
-						/* "SECT\t" << _sect << '\t' */
+					/* "SECT\t" << _sect << '\t' */
 					/* 	"Place\t" << _place << '\t' << */
 					/* 	"Alloc\t" << temp.alloc[0] << '\t' << */
 					/* 	"Names\t" << b.Name << '\t' << find */
-						/* << endl; */
+					/* << endl; */
 
 					/* ; */
 					Sect=temp.alloc[0];
@@ -395,12 +432,25 @@ inode getInode(string path){
 
 					break;
 				}
-				/* else */
 				/* 	cout << "STILL SEARCHING FOR HER\t"; */ 
+				else{
+					if(i==dirCount-1){
+						auto parent= readDirSectDir(WorkDisk[Sect], 0); 
+
+						pos _inode((parent.inodePlace-3)*35, parent.inodePlace%35);
+						inode _temp = readInodeSectInode(WorkDisk[_inode.Sect], _inode.Count);
+						cout << "README\t";
+						cout << _inode.Sect << '\t' << _inode.Count << '\t';
+						cout << _temp.alloc[0] << '\t' << _temp.alloc[1];
+						cout << endl;
+					}
+				}
 
 			}
 
+
 		}
+
 	}
 
 	// At this point we didn't find it
@@ -454,11 +504,11 @@ pos getInodePos(string path){
 					inode temp=readInodeSectInode(WorkDisk[_sect], _place);
 					/* cout << */ 
 					/* 	"inode\t" << b.inodePlace << '\t' << */
-						/* "SECT\t" << _sect << '\t' */
+					/* "SECT\t" << _sect << '\t' */
 					/* 	"Place\t" << _place << '\t' << */
 					/* 	"Alloc\t" << temp.alloc[0] << '\t' << */
 					/* 	"Names\t" << b.Name << '\t' << find */
-						/* << endl; */
+					/* << endl; */
 
 					/* ; */
 					Sect=temp.alloc[0];
@@ -479,9 +529,12 @@ pos getInodePos(string path){
 
 					break;
 				}
+
 				/* else */
 				/* 	cout << "STILL SEARCHING FOR HER\t"; */ 
 
+			}
+			else{
 			}
 
 		}
@@ -526,7 +579,7 @@ pos getFreeDataBlock(bool getNext){
 }
 
 //int _sect=6+parent.alloc[i];
-pos getFirDir(int _sect){ // _sect is the sector where the directory si in.
+pos getFirDir(int _sect, bitset<dirSize> &buffer, pos &retInode, int &Count ){ // _sect is the sector where the directory si in.
 	pos posParDir;
 	for(int i=0; i<9; i++){ // Finding the space for the parent dictionary
 		forloop2(0,dirCount){
@@ -544,25 +597,27 @@ pos getFirDir(int _sect){ // _sect is the sector where the directory si in.
 		if(posParDir.Count!=-1) // Stop looking, since we already found one.
 			break;
 		else{
-			
+
 			// Get parent dicitoanry (the first directory in the direcotry node)'s indoe
 			uint _pos= readDirSectDir(WorkDisk[_sect], 0).inodePlace;
 			pos _posInode(3+_pos/35, _pos%35);
+			retInode=_posInode;
 			inode temp= readInodeSectInode(WorkDisk[_posInode.Sect], _posInode.Count);
 
 
 			if(temp.alloc[i+1]==1023) { // Check the next one, and if it's not real, make a new locatoin for it.
 				bitset<dirSize> bitStream( readDirSect(WorkDisk[_sect], 0)); // This is where parent/name of direcotyr should be
+				buffer=bitStream;
 				posParDir=getFreeDataBlock(false);
+				Count=i;
 				// make new direcotry from it and write it.
-				writeDirSect(WorkDisk[posParDir.Sect], 0, bitStream);
-				temp.alloc[i+1]=posParDir.Sect;
+				/* writeDirSect(WorkDisk[posParDir.Sect], 0, bitStream); */
+				/* temp.alloc[i+1]=posParDir.Sect; */
 
-				writeInodeSectInode(WorkDisk[_posInode.Sect], _posInode.Count, temp);
+				/* writeInodeSectInode(WorkDisk[_posInode.Sect], _posInode.Count, temp); */
+
 				posParDir.isPar=true;
 				i=10;
-				
-
 
 			}
 			else{

@@ -38,7 +38,10 @@ int DirCreate(string path){
 
 			posInode=getFreeInode();
 			posDir=getFreeDataBlock(true);
-			posParDir=getFirDir( parent.alloc[0]); 
+			bitset<160> buffer(0);
+			pos _tempInode;
+			int _tempPlace=0;
+			posParDir=getFirDir( parent.alloc[0],buffer, _tempInode, _tempPlace); 
 
 
 
@@ -51,6 +54,13 @@ int DirCreate(string path){
 					pos _postemp=posDir;
 					posDir=posParDir;
 					posParDir=_postemp;
+
+					writeDirSect(WorkDisk[posParDir.Sect], 0, buffer);
+					inode temp= readInodeSectInode(WorkDisk[_tempInode.Sect], _tempInode.Count);
+					temp.alloc[_tempPlace+1]=posParDir.Sect;
+
+					writeInodeSectInode(WorkDisk[_tempInode.Sect], _tempInode.Count, temp);
+					posParDir.isPar=true;
 					}
 
 					dir ParentDir;
@@ -83,13 +93,16 @@ int DirCreate(string path){
 				// Update size
 				parent.size++;
 				bool stop=false;
-				for(int i=3; i<6 && !stop; i++){
-					forloop2(0,35){
-						if(parent.alloc[0]==readInodeSectInode(WorkDisk[i],j).alloc[0]){
-							writeInodeSectInode(WorkDisk[i],j, parent);
-							stop=true;
-							break;
 
+				for(int i=3; i<6 && !stop; i++){
+					for(int k=0; k<10 && !stop; i++){
+						forloop2(0,35){
+							if(parent.alloc[k]==readInodeSectInode(WorkDisk[i],j).alloc[k]){
+								writeInodeSectInode(WorkDisk[i],j, parent);
+								stop=true;
+								break;
+
+							}
 						}
 					}
 				}
@@ -129,109 +142,109 @@ int DirCreate(string path){
 				return -4;
 
 
-		}
-
-	}
-}
-
-int DirSize(string path){ // Get the size of the dctionary
-	inode inodepath=getInode(path);
-	if (inodepath.size == inode().size){ // indoe does not exist
-		return -1; 
-	}
-	else{
-		return inodepath.size;
-	}
-
-}
-
-int DirUnlink(string path){ //Remove a file.
-	inode delNode=getInode(path);
-	size_t found = path.find_last_of("/");
-	inode parent=getInode(path.substr(0,found));
-	if(delNode.size==-1){ // File does not exist
-		return -1;
-	}
-	else if ( DirSize(path)!=0){ //Path is not empty. 
-		cout << "NOT EMPTY\t" << DirSize(path) << '\t' << delNode.alloc[0] << endl;
-		return -2;
-	}
-	else if ( delNode.alloc[0]==6){ // 6 is where the root directory is. TODO mkae this look easier to read for Stenier
-		return -3;
-	}
-	else{ // Now we can delete it. Hurray. TODO make a getInode iwth possiton of the inode, so I don't have to ifnd it twice like a stupid
-
-		forloop(3,6){ // Deleting inode.
-			forloop2(0,35){
-				if(delNode.alloc[0]==readInodeSectInode(WorkDisk[i],j).alloc[0]){
-					writeInodeSect(WorkDisk[i], j, "0");
-				}
 			}
+
 		}
-		bitset<dirSize> temp(0);
-		for(int i=0; i<10; i++){
-			if(delNode.alloc[i]!=1023)
-				writeDirSect(WorkDisk[delNode.alloc[i]], 0,temp); // Deleting the acutal entry.
-			else
-				break;
+	}
+
+	int DirSize(string path){ // Get the size of the dctionary
+		inode inodepath=getInode(path);
+		if (inodepath.size == inode().size){ // indoe does not exist
+			return -1; 
+		}
+		else{
+			return inodepath.size;
 		}
 
-		// Now we gotta decrease the parent' inode siz
-		parent.size--;
-		forloop(3,6){
-			forloop2(0,35){
-				if(parent.alloc[0]==readInodeSectInode(WorkDisk[i],j).alloc[0]){
-					writeInodeSectInode(WorkDisk[i],j, parent);
-				}
-			}
-		}
+	}
 
-		//Now, we must find the parent dictionary file of del, and remove it
+	int DirUnlink(string path){ //Remove a file.
+		inode delNode=getInode(path);
 		size_t found = path.find_last_of("/");
-		string child=path.substr(found+1);
-		bool stop=false;
-		for(int i=0; i<dirCount && !stop; i++){
-			bitset<dirSize>  dirBit(readDirSect(WorkDisk[parent.alloc[0]], i));
-			if(dirBit!=0){
-				dir Dir=getBitDir(dirBit);
-				if(Dir.Name==child){ // Found the cihld directory in parent
-					cout << "I wonder what";
-					dirBit=0;
-					writeDirSect(WorkDisk[parent.alloc[0]]  , i, dirBit);
-					stop=true;
-					break;
-				}
+		inode parent=getInode(path.substr(0,found));
+		if(delNode.size==-1){ // File does not exist
+			return -1;
+		}
+		else if ( DirSize(path)!=0){ //Path is not empty. 
+			cout << "NOT EMPTY\t" << DirSize(path) << '\t' << delNode.alloc[0] << endl;
+			return -2;
+		}
+		else if ( delNode.alloc[0]==6){ // 6 is where the root directory is. TODO mkae this look easier to read for Stenier
+			return -3;
+		}
+		else{ // Now we can delete it. Hurray. TODO make a getInode iwth possiton of the inode, so I don't have to ifnd it twice like a stupid
 
+			forloop(3,6){ // Deleting inode.
+				forloop2(0,35){
+					if(delNode.alloc[0]==readInodeSectInode(WorkDisk[i],j).alloc[0]){
+						writeInodeSect(WorkDisk[i], j, "0");
+					}
+				}
+			}
+			bitset<dirSize> temp(0);
+			for(int i=0; i<10; i++){
+				if(delNode.alloc[i]!=1023)
+					writeDirSect(WorkDisk[delNode.alloc[i]], 0,temp); // Deleting the acutal entry.
+				else
+					break;
 			}
 
+			// Now we gotta decrease the parent' inode siz
+			parent.size--;
+			forloop(3,6){
+				forloop2(0,35){
+					if(parent.alloc[0]==readInodeSectInode(WorkDisk[i],j).alloc[0]){
+						writeInodeSectInode(WorkDisk[i],j, parent);
+					}
+				}
+			}
 
+			//Now, we must find the parent dictionary file of del, and remove it
+			size_t found = path.find_last_of("/");
+			string child=path.substr(found+1);
+			bool stop=false;
+			for(int i=0; i<dirCount && !stop; i++){
+				bitset<dirSize>  dirBit(readDirSect(WorkDisk[parent.alloc[0]], i));
+				if(dirBit!=0){
+					dir Dir=getBitDir(dirBit);
+					if(Dir.Name==child){ // Found the cihld directory in parent
+						cout << "I wonder what";
+						dirBit=0;
+						writeDirSect(WorkDisk[parent.alloc[0]]  , i, dirBit);
+						stop=true;
+						break;
+					}
+
+				}
+
+
+			}
+			uint _bitmapSize=WorkDisk[1].to_ulong();
+			_bitmapSize--;
+			WorkDisk[1]=_bitmapSize;
+			_bitmapSize=WorkDisk[2].to_ulong();
+			_bitmapSize--;
+			WorkDisk[2]=_bitmapSize;
+			return 0;
 		}
-		uint _bitmapSize=WorkDisk[1].to_ulong();
-		_bitmapSize--;
-		WorkDisk[1]=_bitmapSize;
-		_bitmapSize=WorkDisk[2].to_ulong();
-		_bitmapSize--;
-		WorkDisk[2]=_bitmapSize;
-		return 0;
+
 	}
 
-}
 
-
-void _DirRead(string path){ // Helper function of Read.
-	inode Inode=getInode(path);
-	cout << "YEA\n";
-	forloop(0, 10){
-		cout << "CURRENT: " << i << '\t' << Inode.alloc[i] << '\t';
-		forloop2(0, dirCount){
-			bitset<dirSize> bitRead( readDirSect(WorkDisk[Inode.alloc[i]],j));
-			if(bitRead!=0 && !( i==0 && j==0))
-				cout << getBitDir(bitRead).Name << endl;
+	void _DirRead(string path){ // Helper function of Read.
+		inode Inode=getInode(path);
+		cout << "YEA\n";
+		forloop(0, 10){
+			cout << "CURRENT: " << i << '\t' << Inode.alloc[i] << '\t';
+			forloop2(0, dirCount){
+				bitset<dirSize> bitRead( readDirSect(WorkDisk[Inode.alloc[i]],j));
+				if(bitRead!=0 && !( i==0 && j==0))
+					cout << getBitDir(bitRead).Name << endl;
+			}
+			// See if next alloc is valid 
+			if(Inode.alloc[i+1]==1023)
+				return;
 		}
-		// See if next alloc is valid 
-		if(Inode.alloc[i+1]==1023)
-			return;
 	}
-}
 
 #endif
