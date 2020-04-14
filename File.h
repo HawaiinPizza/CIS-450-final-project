@@ -12,57 +12,101 @@
 
 struct file{
 	pos Loc;
-	string buffer;
+	bitset<4096> buffer[10];
 	string name;
 	int Seek=0;
+	bool isValid[10];
 
-	file(pos _Loc, string _buffer, string _name){
+	file(pos _Loc,  bitset<4096> _buffer[], string _name){
 		Loc=_Loc;
-		buffer=_buffer;
+		isValid[0]=true;
+		forloop(1, 10){
+			if(_buffer[i]!=0){
+				buffer[i]=_buffer[i];
+				isValid[i]=true;
+			}
+			else{
+				buffer[i]=0;
+				isValid[i]=false;
+			}
+		}
+		name=_name;
+	}
+
+	file(pos _Loc, bitset<4096> _buffer, string _name){
+		Loc=_Loc;
+		buffer[0]=_buffer;
+		isValid[0]=true;
+		forloop(1,10){
+			isValid[i]=false;
+			buffer[i]=0;
+		}
 		name=_name;
 	}
 
 	file(){
-		bitset<4096> tempBuf(0);
+		forloop(0, 10){
+			buffer[i]=0;
+			isValid[i]=false;
+		}
 		Loc=pos(-1,-1);
 		name="?";
-		buffer=tempBuf.to_string();
 		Seek=-1;
 	}
 
-	string read(int _Seek, int& status){
-		if(_Seek>buffer.length() || _Seek<=0)
-			status=-1;
-		else{
-
-			cout << Seek << '\t' << _Seek << "\tComing at ya" << endl;
-			forloop(Seek, _Seek){
-				cout << i << '\t' << buffer[i] << endl;
+	int size(){
+		int count=0;
+		forloop(0, 10){
+			if(isValid[i]){
+				count++;
 			}
-			string temp = buffer.substr(Seek, _Seek);
-			cout << temp << endl;
+		}
+		return count;
+
+	}
+	string read(int _Seek, int& status){
+		if(_Seek>size()*4096 || _Seek<=0){
+			status=-1;
+			return "";
+		}
+		else{
+			string temp="";
+			for(int i=0; i<size(); i++){ 
+				//forloop2(Seek, _Seek){
+				forloop2(Seek, _Seek){
+					cout << i << ':' << j << '\t' << buffer[i][j] << '\n' ;
+					temp += buffer[i][j];
+				}
+				cout << endl;
+			}
 			Seek=_Seek;
 			return temp;
 		}
 	}
 
 	string write(int _Seek, int& status, string& _buffer){
-		if(_Seek>buffer.length() || _Seek<=0)
+		if(_Seek>size()*4096 || _Seek<=0){
 			status=-1;
+			return "";
+		}
 		else{
 			// Lmao TODO make sure this writes to both openFile AND file locaiotn
-			forloop(Seek, _Seek){
-				buffer[i]=_buffer[i];
-				WorkDisk[Loc.Sect][i]=_buffer[i];
+
+			forloop(0, size()){
+				forloop2(Seek, _Seek){
+					cout << "GETFUCK\t" << i << ':' << j << '\t' << buffer[i][j] << '\n' ;
+					buffer[i][j]=_buffer[i*4096+j];
+					WorkDisk[i+Loc.Sect][j]=_buffer[i*4096+j];
+				}
 			}
 			Seek=_Seek;
-			return buffer;
+			return _buffer;
 		}
 	}
 
 
 	int seek(int _Seek){
-		if(_Seek>buffer.length() || _Seek<=0)
+		if(_Seek>size()*4096 || _Seek<=0)
 			return -1;
 		Seek=_Seek;
 	}
@@ -107,13 +151,13 @@ struct openFile{
 		OpenFile[size]=File;
 		forloop(0,10){
 			if(!isValid[i]){
-				cout << i << '\t' <<  " insert at";
 				isValid[i]=true;
 				size++;
 				return i;
 				break;
 			}
 		}
+		return -1;
 	}
 
 	void rmFileOpen(int fd){
@@ -244,24 +288,30 @@ int File_Create(string path){
 		}
 	}
 
-int File_Open(string path){
-	inode fileNode=getInode(path);
-	if(fileNode.alloc[0]==1023 || fileNode.alloc[0]==-1 || fileNode.isFile==false){
-		return -1;
-	}
-	else{
-		if( openFileTable.isFileOpened(path) ) // FIle is already opened
-			return -2;
-		else if ( openFileTable.size>=10)
-			return -3;
+	int File_Open(string path){
+		inode fileNode=getInode(path);
+		if(fileNode.alloc[0]==1023 || fileNode.alloc[0]==-1 || fileNode.isFile==false){
+			return -1;
+		}
 		else{
-			// Setup file
-			file File;
-			pos Temp;
-			Temp.Sect=fileNode.alloc[0];
-			Temp.Count=0;
-			for(int i=0; i<10 && !( fileNode.alloc[i]==1023 ||  fileNode.alloc[i]==-1); i++){
-				file _File(Temp, WorkDisk[Temp.Sect].to_string(), path  ) ;
+			if( openFileTable.isFileOpened(path) ) // FIle is already opened
+				return -2;
+			else if ( openFileTable.size>=10)
+				return -3;
+			else{
+				// Setup file
+				file File;
+				pos Temp;
+				Temp.Sect=fileNode.alloc[0];
+				Temp.Count=0;
+				bitset<4096> newBuffer[10];
+				for(int i=0; i<10 && !( fileNode.alloc[i]==1023 ||  fileNode.alloc[i]==-1); i++){
+					newBuffer[i]=WorkDisk[Temp.Sect];
+					if(newBuffer[i]!=0)
+						cout << "TALK\t" << Temp.Sect << '\t' <<  newBuffer[i] << '\n';
+
+				}
+				file _File(Temp, newBuffer , path  ) ;
 				int temp=openFileTable.addFileOpen(_File);
 				return temp;
 
@@ -269,37 +319,34 @@ int File_Open(string path){
 			}
 
 
+
 		}
 
-
-
 	}
 
-}
-
-int File_Close(int fd){
-	if(openFileTable.size<=fd) // Fd not here.
-		return -1;
-	else{
-		openFileTable.rmFileOpen(fd);
+	int File_Close(int fd){
+		if(openFileTable.size<=fd) // Fd not here.
+			return -1;
+		else{
+			openFileTable.rmFileOpen(fd);
+		}
+		return 0;
 	}
-	return 0;
-}
 
 
-int File_Read(int fd, string &buffer, int size){
-	return openFileTable.read(fd, buffer, size);
-}
+	int File_Read(int fd, string &buffer, int size){
+		return openFileTable.read(fd, buffer, size);
+	}
 
 
-int File_Write(int fd, string &buffer, int size){
-	return openFileTable.write(fd, buffer, size);
-}
+	int File_Write(int fd, string &buffer, int size){
+		return openFileTable.write(fd, buffer, size);
+	}
 
 
-int File_Unlink(string path){
-	return 0;
-}
+	int File_Unlink(string path){
+		return 0;
+	}
 
 
 #endif

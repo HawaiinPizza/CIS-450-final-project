@@ -193,18 +193,17 @@ int main(){
 	cout << File_Open("/A/3") << endl;
 	cout << File_Open("/A/4") << endl;
 
-	string _temp="123451234567";
-	cout << File_Write(0, _temp, _temp.size()) << endl;
-	string _pothole;
-	cout << "EARTH\t" << File_Close(0) << endl ;
-	cout << "FILE\t" << File_Open("/A/1") << endl;
-	_pothole.resize(5);
 
-	cout << File_Read(0, _pothole, _pothole.size()) << endl;
-	_pothole.resize(7);
-	cout << File_Read(0, _pothole, _pothole.size()) << endl;
-	cout << File_Read(9, _pothole, _pothole.size()) << endl;
-	/* cout << openFileTable.OpenFile[0].buffer << endl; */
+	string _temp="00000000";
+	File_Write(0, _temp, _temp.size()) ;
+	cout << getInode("/A/1").alloc[0] << endl;
+	File_Close(0);
+	File_Open("/A/1");
+
+	string _pothole;
+	_pothole.resize(_temp.length());
+	File_Read(0, _pothole, _pothole.size());
+	//cout << File_Read(0, _pothole, _pothole.size()) << endl;
 
 
 
