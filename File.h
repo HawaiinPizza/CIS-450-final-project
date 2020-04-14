@@ -11,16 +11,16 @@
 #include "Disk.h"
 
 struct file{
-	pos Loc;
+	pos Loc[10];
 	bitset<4096> buffer[10];
 	string name;
 	int Seek=0;
 	bool isValid[10];
 
-	file(pos _Loc,  bitset<4096> _buffer[], string _name){
-		Loc=_Loc;
+	file(pos _Loc[10],  bitset<4096> _buffer[10], string _name){
 		isValid[0]=true;
-		forloop(1, 10){
+		forloop(0, 10){
+			Loc[i]=_Loc[i];
 			if(_buffer[i]!=0){
 				buffer[i]=_buffer[i];
 				isValid[i]=true;
@@ -33,23 +33,12 @@ struct file{
 		name=_name;
 	}
 
-	file(pos _Loc, bitset<4096> _buffer, string _name){
-		Loc=_Loc;
-		buffer[0]=_buffer;
-		isValid[0]=true;
-		forloop(1,10){
-			isValid[i]=false;
-			buffer[i]=0;
-		}
-		name=_name;
-	}
-
 	file(){
 		forloop(0, 10){
 			buffer[i]=0;
 			isValid[i]=false;
+			Loc[i]=pos(-1,-1);
 		}
-		Loc=pos(-1,-1);
 		name="?";
 		Seek=-1;
 	}
@@ -96,7 +85,7 @@ struct file{
 				forloop2(Seek, _Seek){
 					cout << "GETFUCK\t" << i << ':' << j << '\t' << buffer[i][j] << '\n' ;
 					buffer[i][j]=_buffer[i*4096+j];
-					WorkDisk[i+Loc.Sect][j]=_buffer[i*4096+j];
+					WorkDisk[Loc[i].Sect][j]=_buffer[i*4096+j];
 				}
 			}
 			Seek=_Seek;
@@ -203,33 +192,36 @@ int File_Create(string path){
 			child.size=0;
 
 			dir Dir;
-			pos posDir;
 			pos posParDir;
 			pos posInode;
 
 			child.isFile=true;
 
 			posInode=getFreeInode();
-			posDir=getFreeDataBlock(true);
+			pos posFile[10];
+			getFreeDataBlock(0, posFile);
 			posParDir=getFirDir( parent.alloc[0]); 
 
+			forloop(0,10){
+				if ( posFile[i].Count==-1){
+					return -3;
+				}
+
+			}
 
 
-			if(posDir.Count!=-1 && posInode.Count!=-1 && posParDir.Count!=-1){ // This means there is free space for a new direcotry
+			if(posFile[0].Count!=-1 && posInode.Count!=-1 && posParDir.Count!=-1){ // This means there is free space for a new direcotry
 				// Swap posDir and posParDir{
 				string temp=path.substr(found+1);
 				dir NewDir(temp, posInode.Count+(posInode.Sect-3)*35);
-				if(posParDir.isPar==true){
-					cout << "ERROR ERROR YOU CANT HAVE MORE THAN 24 directories/files in one!\n";
-					return -6;
-				}
-				else{
-					writeDirSectDir(WorkDisk[posParDir.Sect], posParDir.Count, NewDir );
-				}
+				writeDirSectDir(WorkDisk[posParDir.Sect], posParDir.Count, NewDir );
 				dir parDir=readDirSectDir(WorkDisk[posParDir.Sect], posParDir.Count);
-				int Alloc=(posDir.Sect);
-				child.alloc[0]=Alloc; //CAUSE OF BUG
+				forloop(0,10){
+					int Alloc=(posFile[i].Sect);
+					child.alloc[i]=Alloc; 
+				}
 				writeInodeSectInode(WorkDisk[posInode.Sect], posInode.Count, child);
+
 
 				// Update size
 				parent.size++;
@@ -247,6 +239,8 @@ int File_Create(string path){
 						}
 					}
 				}
+
+
 
 				//Bitmap techincally isn't as intended, but i Dont' care. use bitamp of indoe and datablcok to get count of datablocks and indoe.
 				uint _bitmapSize=WorkDisk[1].to_ulong();
@@ -300,20 +294,22 @@ int File_Create(string path){
 				return -3;
 			else{
 				// Setup file
-				file File;
-				pos Temp;
-				Temp.Sect=fileNode.alloc[0];
-				Temp.Count=0;
-				bitset<4096> newBuffer[10];
-				for(int i=0; i<10 && !( fileNode.alloc[i]==1023 ||  fileNode.alloc[i]==-1); i++){
-					newBuffer[i]=WorkDisk[Temp.Sect];
-					if(newBuffer[i]!=0)
-						cout << "TALK\t" << Temp.Sect << '\t' <<  newBuffer[i] << '\n';
-
+				pos Temp[10];
+				forloop(0,10){
+					Temp[i].Sect=fileNode.alloc[i];
+					Temp[i].Count=0;
 				}
-				file _File(Temp, newBuffer , path  ) ;
-				int temp=openFileTable.addFileOpen(_File);
-				return temp;
+				bitset<4096> newBuffer[10];
+				for(int i=0; i<10;  i++){
+					newBuffer[i]=WorkDisk[Temp[i].Sect];
+				}
+				file File(Temp, newBuffer, path);
+				openFileTable.addFileOpen(File);
+
+				return 0;
+				/* file _File(Temp, newBuffer, path); */
+				/* int temp=openFileTable.addFileOpen(_File); */
+				/* return temp; */
 
 
 			}

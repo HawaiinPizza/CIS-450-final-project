@@ -50,6 +50,7 @@ bool range(int val, int x, int y){
 #define disk(x) std::bitset<SectorSize*8> x[SectorNum]
 //Using
 #include <iostream>
+#include <algorithm>
 #include <queue>
 #include <cmath>
 #include <vector>
@@ -565,6 +566,34 @@ pos getFreeInode(){
 }
 
 
+void getFreeDataBlock(int temp, pos* Temp){
+	forloop(0, 10){
+		Temp[i]=pos();
+	}
+	int Count=0;
+	vector<int> alreadyIn;
+	forloop(3, 6){
+		forloop2(0, inodeCount){
+			inode temp=readInodeSectInode(WorkDisk[i],j);
+			for(int k=0; k<10; k++){
+				if(temp.alloc[k]!=0)
+					alreadyIn.push_back(temp.alloc[k]);
+			}
+		}
+	}
+
+	for(int i=6; i<SectorNum && Count!=10; i++){ // Finding the first free dir space
+		if(WorkDisk[i]==0){
+			if(find(alreadyIn.begin(), alreadyIn.end(), i) != alreadyIn.end()){
+			}
+			else{
+				Temp[Count]=pos(i,0);
+				Count++;
+			}
+		}
+	}
+
+}
 pos getFreeDataBlock(bool getNext){
 	pos posDir;
 	for(int i=6; i<SectorNum; i++){ // Finding the first free dir space
