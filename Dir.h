@@ -25,6 +25,8 @@ int DirCreate(string path){
 		else if (path.length()>256 ){ // Checking if path exceeds 256 characters
 			return -3;
 		}
+		else if( WorkDisk[1].to_ulong()>=100) // There are 100 or over files/direcotires already
+			return -5;
 		else{ // Can make dirctioanry.
 			child.isFile=false;
 			child.size=0;
@@ -36,7 +38,7 @@ int DirCreate(string path){
 
 			posInode=getFreeInode();
 			posDir=getFreeDataBlock();
-			posParDir=getFirDir( parent.alloc[0]); // TODO Might be reason of problem
+			posParDir=getFirDir( parent.alloc[0]); 
 
 
 
@@ -65,6 +67,14 @@ int DirCreate(string path){
 						}
 					}
 				}
+
+				//Bitmap techincally isn't as intended, but i Dont' care. use bitamp of indoe and datablcok to get count of datablocks and indoe.
+				uint _bitmapSize=WorkDisk[1].to_ulong();
+				_bitmapSize++;
+				WorkDisk[1]=_bitmapSize;
+				_bitmapSize=WorkDisk[2].to_ulong();
+				_bitmapSize++;
+				WorkDisk[2]=_bitmapSize;
 				/* cout << "Child info\t" << child.size << '\t' << child.alloc[0] << endl; */
 				/* cout << "Parent info\t" << parent.size << '\t' << parent.alloc[0] << endl; */
 				/* cout << "pos table\t" << "Sect\t" << "Count" << endl; */
@@ -165,6 +175,12 @@ int DirUnlink(string path){ //Remove a file.
 			
 
 		}
+		uint _bitmapSize=WorkDisk[1].to_ulong();
+		_bitmapSize--;
+		WorkDisk[1]=_bitmapSize;
+		_bitmapSize=WorkDisk[2].to_ulong();
+		_bitmapSize--;
+		WorkDisk[2]=_bitmapSize;
 		return 0;
 	}
 

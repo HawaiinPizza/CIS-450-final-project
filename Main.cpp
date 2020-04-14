@@ -140,21 +140,14 @@ int main(){
 
 	writeInodeSectInode(WorkDisk[3], 0, RootInode);
 
-	bitset<160> test(0);
-	test=getDirBit(RootDir);
-	dir test2=getBitDir(test);
-	cout << "Before\t" << RootDir.Name << '\t' << RootDir.inodePlace << endl;
-	cout << "After\t" << test2.Name << '\t' << test2.inodePlace << endl;
-	cout << "EMPTY\n";
-	print();
 	writeDirSectDir(WorkDisk[RootInode.alloc[0]], 0, RootDir);
-	print();
+
+	/* cout  << "Try to dlete root/\t" <<  DirUnlink("/") << endl; */
+
 	cout << DirCreate("/A") << endl;
 	cout << DirCreate("/B") << endl;
 	cout << DirCreate("/C") << endl;
 	cout << DirCreate("/D") << endl;
-	cout << "AFTER DECLEARITON\n";
-	print();
 
 
 	cout << DirCreate("/A/a") << endl;
@@ -177,25 +170,27 @@ int main(){
 	cout  << DirCreate("/B/q/7") << endl;
 	cout  << DirCreate("/B/q/8") << endl;
 
+	cout << WorkDisk[2].to_ulong() << endl;
 
-	cout  << "3rd level /B/q/1\t" << DirUnlink("/B/q/1") << endl;
-	cout  << "3rd level /B/q/2\t" << DirUnlink("/B/q/2") << endl;
-	cout  << "3rd level /B/q/3\t" << DirUnlink("/B/q/3") << endl;
-	cout  << "3rd level /B/q/4\t" << DirUnlink("/B/q/4") << endl;
+	/* cout  << "3rd level /B/q/1\t" << DirUnlink("/B/q/1") << endl; */
+	/* cout  << "3rd level /B/q/2\t" << DirUnlink("/B/q/2") << endl; */
+	/* cout  << "3rd level /B/q/3\t" << DirUnlink("/B/q/3") << endl; */
+	/* cout  << "3rd level /B/q/4\t" << DirUnlink("/B/q/4") << endl; */
 
-	cout  << "3rd level /B/q/5\t" << DirUnlink("/B/q/5") << endl;
-	cout  << "3rd level /B/q/6\t" << DirUnlink("/B/q/6") << endl;
-	cout  << "3rd level /B/q/7\t" << DirUnlink("/B/q/7") << endl;
-	cout  << "3rd level /B/q/8\t" << DirUnlink("/B/q/8") << endl;
+	/* cout  << "3rd level /B/q/5\t" << DirUnlink("/B/q/5") << endl; */
+	/* cout  << "3rd level /B/q/6\t" << DirUnlink("/B/q/6") << endl; */
+	/* cout  << "3rd level /B/q/7\t" << DirUnlink("/B/q/7") << endl; */
+	/* cout  << "3rd level /B/q/8\t" << DirUnlink("/B/q/8") << endl; */
 
-	cout  << "2nd level /B/q\t" << DirUnlink("/B/q") << endl;
-	cout  << "2nd level /B/w\t" << DirUnlink("/B/w") << endl;
-	cout  << "2nd level /B/e\t" << DirUnlink("/B/e") << endl;
-	cout  << "2nd level /B/r\t" << DirUnlink("/B/r") << endl;
+	/* cout  << "2nd level /B/q\t" << DirUnlink("/B/q") << endl; */
+	/* cout  << "2nd level /B/w\t" << DirUnlink("/B/w") << endl; */
+	/* cout  << "2nd level /B/e\t" << DirUnlink("/B/e") << endl; */
+	/* cout  << "2nd level /B/r\t" << DirUnlink("/B/r") << endl; */
 
-	cout  << "1st level /B\t" <<  DirUnlink("/B") << endl;
+	/* cout  << "1st level /B\t" <<  DirUnlink("/B") << endl; */
 
-	print();
+	/* cout  << "Try to dlete root/\t" <<  DirUnlink("/") << endl; */
+	/* print(); */
 
 	return 0;
 

@@ -69,7 +69,7 @@
     - AOutput :: 
       
 *** TODO DIR     [1/2] :DIR:
-**** DONE Directory Create [5/5]
+**** DONE Directory Create [5/7]
      ERROR MESSAGE to osErrMsg 
 	  - Input :: String Path
 	  - Expected Ouput :: Given a path, it creates a direcotry (not recursvie)
@@ -80,6 +80,8 @@
 	  - [X] Go to parent path Failure Exist :: Get the file of the parent path, and once you do that, you see hte file *Path* already exist. Than, you return E_DIR_CREATE
 	  - [X] Go to parent path Failure Bad Path :: Get the file of the parent path, but you the parent path doesn't exist. Than, you return E_DIR_CREATE
 	  - [X] Path exceeds 256 characters :: If the supposed path is greater than 256 characters, or 2048 bits, return E_TOO_LONG_PATH
+	  - [ ] File/Dir count is less than 100 :: if file count is less than 100, give -1 E_DIR_CREATE
+	  - [ ] If datablcok for parent exceeds dirCount, extend it :: self explantationy
 **** TODO Directory Size/Read 
      ERROR MESSAGE to osErrMsg 
      - INPUT :: String PATH, string buffer, int size
@@ -122,7 +124,7 @@
     - [ ] File_Write(int fd, string fuffer, int size) Failure maximum file size :: While writing, if you find there's the file takes up more than 10 data blcoks, return E_FILE_TOO_BIG
       
 ** TODO Seek and unLink [0/1]
-*** TODO File_Seek and Dir/File_UnLink [0/10] :FILE:DIR: 
+*** TODO File_Seek and Dir/File_UnLink [4/10] :FILE:DIR: 
     Error -> osErrMsg
     - Input ::  string file | strign file | string path
     - Expected Ouput ::   new location of file poitner. | file/dir is deleted
@@ -131,10 +133,10 @@
     - [ ] File_Unlink(String File) but no such file :: File does not exist. Return E_CLOSE_BAD_FD
     - [ ] File_Unlink(String File) but file is already opened :: File is currenlty opened. Return E_File_IN_Use
 
-    - [ ] Dir_Unlink(String File) Directory is  empty :: Remove file from parent inode pointers, and htan free up the inode/data blocks.
-    - [ ] Dir_Unlink(String File) Directory is not empty :: Return E_DIR_NOT_EMPTY 
-    - [ ] Dir_Unlink(String File) Direcotry is root  :: return E_DEL_ROOT_DIR
-    - [ ] Dir_Unlink(String File) Direcotry does not exist  :: retur E_DIR_NON_EXIST
+    - [X] Dir_Unlink(String File) Directory is  empty :: Remove file from parent inode pointers, and htan free up the inode/data blocks.
+    - [X] Dir_Unlink(String File) Directory is not empty :: Return E_DIR_NOT_EMPTY 
+    - [X] Dir_Unlink(String File) Direcotry is root  :: return E_DEL_ROOT_DIR
+    - [X] Dir_Unlink(String File) Direcotry does not exist  :: retur E_DIR_NON_EXIST
 	   
     - [ ] File_Seek(int fd, int offset) :: File's posstiion is chnaged by the offset
     - [ ] File_Seek(int fd, int offset) Out of bounds :: Offset is negative/exceeds file size. Return E_SEEK_OUT_OF_BOUNDS
@@ -142,6 +144,7 @@
 ** TODO Finsihing it up/Refctoring      
    - [ ] rename read/write functions in datastruct
    - [ ] pre/post conditions for everything
+   - [ ] set error messages in appoerpate palces
 
 * Algorithm/Code
 ** Whoel Porgram decompsiostion
@@ -838,12 +841,13 @@
   - Add in dir_Size functaionilty.
   - Add in a function to get the inode AND it's location
   - Inlcude checks of datablock extending out of bounds
+  - Goign to use bitamps to get number of datablocks.
 ** Captain's log
 *** Monday, 4 days left
     - I created the get inode, and get free indoe, datablock and dictionary in parent, I am going to finish the dir functionality.
     - I forgot to use the bitmap. sad.  I am going to incldue a note saying i missed it
     - SO far, I have alot of progress. In terms of Todo groups, I got only 3 left, nad teh hardest part is over.
-    - I FORGOT 
+    - I set naem to 4 bits, not 4 bytes. OOF. TOok about an hour to fix. :()
 * Specifications 
 ** System Decomposistion  
 *** Data
