@@ -197,7 +197,8 @@ int main(){
 
 
 
-	print();
+	_DirRead("/A");
+	/* print(); */
 
 	/* cout  << "3rd level /B/q/1\t" << DirUnlink("/B/q/1") << endl; */
 	/* cout  << "3rd level /B/q/2\t" << DirUnlink("/B/q/2") << endl; */
