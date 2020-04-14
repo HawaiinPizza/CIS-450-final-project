@@ -208,7 +208,6 @@ string diskErrMsg="";
 
 				if(i<_Name.length())
 					Name[i]=_Name[i];
-				Name[i]=endOf;
 
 			}
 			Name[15]=endOf;
@@ -227,7 +226,7 @@ string diskErrMsg="";
 			}
 			{ // Name assigmetnation
 				for(int i=0; i<16; i++){
-					bitset<8> temp(BitStream.substr(4+i*8,8));
+					bitset<8> temp(BitStream.substr(32+i*8,8));
 					Ret.Name[i]=(char)temp.to_ulong();
 				}
 			}
@@ -243,7 +242,7 @@ string diskErrMsg="";
 			}
 			{ // Name assigmetnation
 				for(int i=0; i<16; i++){
-					bitset<8> temp(BitStream.substr(4+i*8,8));
+					bitset<8> temp(BitStream.substr(32+i*8,8));
 					Ret.Name[i]=(char)temp.to_ulong();
 				}
 			}
@@ -254,16 +253,15 @@ string diskErrMsg="";
 		bitset<dirSize> getDirBit(dir Dir){
 			string RetStr="";
 			{ // inodePlace decleariotn
-				bitset<4*8> inode(Dir.inodePlace);
-				cout << "FUC\t" << Dir.inodePlace << '\t' << inode.to_ulong() << endl;
+				bitset<32> inode(Dir.inodePlace);
 				RetStr+=inode.to_string();
 			}
 			{ // Name assigmetnation
 				for(int i=0; i<16; i++){
 					bitset<8> temp(Dir.Name[i]);
 					RetStr+=temp.to_string();
-					cout << Dir.Name[i] << endl;
 				}
+
 			}
 			bitset<dirSize> Ret(RetStr);
 			return Ret;

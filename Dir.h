@@ -65,10 +65,10 @@ int DirCreate(string path){
 						}
 					}
 				}
-				cout << "Child info\t" << child.size << '\t' << child.alloc[0] << endl;
+				/* cout << "Child info\t" << child.size << '\t' << child.alloc[0] << endl; */
 				/* cout << "Parent info\t" << parent.size << '\t' << parent.alloc[0] << endl; */
 				/* cout << "pos table\t" << "Sect\t" << "Count" << endl; */
-				cout << "pos of inode\t" << posInode.Sect << '\t' << posInode.Count << '\t' << Alloc << endl;
+				/* cout << "pos of inode\t" << posInode.Sect << '\t' << posInode.Count << '\t' << Alloc << endl; */
 				/* cout << "pos of dir\t" 	 << posDir.Sect << '\t' << posDir.Count << endl; */
 				/* cout << "pos of par dir\t" << posParDir.Sect << '\t' << posParDir.Count << endl; */
 				
