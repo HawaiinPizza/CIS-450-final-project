@@ -13,6 +13,8 @@
 #include "FS.h"
 #include "Disk.h"
 #include "Dir.h"
+#include "File.h"
+
 using namespace std;
 #define siz 50
 #define set 13
@@ -166,97 +168,11 @@ int main(){
 	DirCreate("/C") ;
 	DirCreate("/D") ;
 
+	File_Create("/A/a");
 
-	DirCreate("/A/a") ;
-	DirCreate("/A/b") ;
-	DirCreate("/A/c") ;
-	DirCreate("/A/d") ;
+	cout << getInode("A/a").isFile << endl;
+	cout << getInode("/A/").isFile << endl;
 
-	DirCreate("/B/q") ;
-	DirCreate("/B/w") ;
-	DirCreate("/B/e") ;
-	DirCreate("/B/r") ;
-
-
-	DirCreate("/B/q/a") ;
-	DirCreate("/B/q/b") ;
-	DirCreate("/B/q/c") ;
-	DirCreate("/B/q/d") ;
-	DirCreate("/B/q/e") ;
-	DirCreate("/B/q/f") ;
-	DirCreate("/B/q/g") ;
-	DirCreate("/B/q/h") ;
-	DirCreate("/B/q/i") ;
-	DirCreate("/B/q/j") ;
-	DirCreate("/B/q/k") ;
-	DirCreate("/B/q/l") ;
-	DirCreate("/B/q/m") ;
-	DirCreate("/B/q/n") ;
-	DirCreate("/B/q/o") ;
-	DirCreate("/B/q/l") ;
-	DirCreate("/B/q/p") ;
-	DirCreate("/B/q/q") ;
-	DirCreate("/B/q/r") ;
-	DirCreate("/B/q/s") ;
-	DirCreate("/B/q/t") ;
-	DirCreate("/B/q/u") ;
-	DirCreate("/B/q/v") ;
-	DirCreate("/B/q/w") ;
-	DirCreate("/B/q/x") ;
-	DirCreate("/B/q/y") ;
-
-	/* print(); */
-
-	/* DirUnlink("/B/q/y"); */
-	/* print(); */
-
-	string buf;
-
-	cout << DirRead("/B/q/", buf) << endl;
-	buf.resize(DirSize("/B/q")) ;
-
-	cout << DirRead("/B/q/", buf) << endl;
-
-	cout << DirRead("B/.", buf) << endl;
-
-
-	/* DirUnlink("/B/q/b1"); */
-	/* inodePrint(); */
-	/* print(); */
-	/* DirCreate("/B/q/c1") ; */
-	/* DirCreate("/B/q/d1") ; */
-	/* DirCreate("/B/q/e1") ; */
-	/* DirCreate("/B/q/f1") ; */
-	/* DirCreate("/B/q/g1") ; */
-
-
-
-	/* 	_DirRead("/"); */
-	/* 	_DirRead("/A"); */
-	/* 	_DirRead("/B"); */
-	/* 	_DirRead("/B/q"); */
-	;
-	/* print(); */
-
-	/* cout  << "3rd level /B/q/1\t" << DirUnlink("/B/q/1") << endl; */
-	/* cout  << "3rd level /B/q/2\t" << DirUnlink("/B/q/2") << endl; */
-	/* cout  << "3rd level /B/q/3\t" << DirUnlink("/B/q/3") << endl; */
-	/* cout  << "3rd level /B/q/4\t" << DirUnlink("/B/q/4") << endl; */
-
-	/* cout  << "3rd level /B/q/5\t" << DirUnlink("/B/q/5") << endl; */
-	/* cout  << "3rd level /B/q/6\t" << DirUnlink("/B/q/6") << endl; */
-	/* cout  << "3rd level /B/q/7\t" << DirUnlink("/B/q/7") << endl; */
-	/* cout  << "3rd level /B/q/8\t" << DirUnlink("/B/q/8") << endl; */
-
-	/* cout  << "2nd level /B/q\t" << DirUnlink("/B/q") << endl; */
-	/* cout  << "2nd level /B/w\t" << DirUnlink("/B/w") << endl; */
-	/* cout  << "2nd level /B/e\t" << DirUnlink("/B/e") << endl; */
-	/* cout  << "2nd level /B/r\t" << DirUnlink("/B/r") << endl; */
-
-	/* cout  << "1st level /B\t" <<  DirUnlink("/B") << endl; */
-
-	/* cout  << "Try to dlete root/\t" <<  DirUnlink("/") << endl; */
-	/* print(); */
 
 	return 0;
 

@@ -122,9 +122,16 @@
     - [ ] File_Write(int fd, string fuffer, int size) Failure not open  ::  Write to a file from buffer, from teh buffer. Current file offset shold be by size. Return E_WRITE_BAD_FD
     - [ ] File_Write(int fd, string fuffer, int size) Failure no space left :: While writing, if you find there's no more space in teh disk, return E_NO_SPACE
     - [ ] File_Write(int fd, string fuffer, int size) Failure maximum file size :: While writing, if you find there's the file takes up more than 10 data blcoks, return E_FILE_TOO_BIG
+**** TODO File Seek      
+    - [ ] File_Unlink(String File) :: Remove file in inode lbock, and freeing up any datablocks/indoes the file used.
+    - [ ] File_Unlink(String File) but no such file :: File does not exist. Return E_CLOSE_BAD_FD
+    - [ ] File_Unlink(String File) but file is already opened :: File is currenlty opened. Return E_File_IN_Use
       
+    - [ ] File_Seek(int fd, int offset) :: File's posstiion is chnaged by the offset
+    - [ ] File_Seek(int fd, int offset) Out of bounds :: Offset is negative/exceeds file size. Return E_SEEK_OUT_OF_BOUNDS
+    - [ ] File_Seek(int fd, int offset) bad fd :: File isn't open. Return out of bounds
 ** TODO Seek and unLink [0/1]
-*** TODO File_Seek and Dir/File_UnLink [4/10] :FILE:DIR: 
+*** TODO File_Seek and Dir/File_UnLink NOTE THAT FILE SEEK AND UNLINK IS IN BEFORE SEcTION[4/10] :FILE:DIR: 
     Error -> osErrMsg
     - Input ::  string file | strign file | string path
     - Expected Ouput ::   new location of file poitner. | file/dir is deleted
@@ -319,7 +326,7 @@
      #+BEGIN_SRC plantuml  :file Plant/FS_BOOT.png
      @startuml
      :Remove FS_RESET Lock; 
-     if (ExtDisk already exist) then (yes)
+     if (ExtDisk already exist) is (yes)
 	if(Magic number is correct)
 		:WorkDisk=ExtDisk;
 	else (no)
@@ -352,7 +359,7 @@
    - FS_RESET() :: Stops the filesystem from ebing access, by placing a lock on it. 
      #+BEGIN_SRC plantuml  :file Plant/FS_RESET.png
      @startuml
-	if(lock is already in place) then (yes)
+	if(lock is already in place) is (yes)
 		:osErrMsg = E_FILE_RESET
 		return -1;
 		:in parent function osErrMsg = E_INVALID_ACCESS_ATTEMPT
@@ -377,7 +384,7 @@
       :Assume path is whole dirname;
 	while( read each dir in dirname) is (exist in current directory)
 		:Get list of dir names in current direcotry;
-		if(dir matches with a directory in current dirceotry) then (no)
+		if(dir matches with a directory in current dirceotry) is (no)
 			:return  -1;
 			stop
 		else (yes)
@@ -403,7 +410,7 @@
       :Split path to dirname and basename (if it ends with a /, it's a directory. Else, it's a file);
 	while( read each dir in dirname) is (exist in current directory)
 		:Get list of dir names in current direcotry;
-		if(dir matches with a directory in current dirceotry) then (no)
+		if(dir matches with a directory in current dirceotry) is (no)
 			:return  -1;
 			stop
 		else (yes)
@@ -426,18 +433,18 @@
 
    - File_Create(string path) :: Create a new file at path. There is a check to see if that file already exist, and if there's a free datablock for it.
      #+BEGIN_SRC plantuml  :file Plant/FileCreate.png
-	if(count of free datablocks is > 0 && count of free indoes is >0) then (yes)
+	if(count of free datablocks is > 0 && count of free indoes is >0) is (yes)
 		:int inode=getDirPath(path);
-		if(inode == -1) then (true)
+		if(inode == -1) is (true)
 		    :return "E_FILE_CREATE" -1;
 				    stop
 		else
 			:Go to directory specifeid in inode;
-			if(basename file already in directory) then (true)
+			if(basename file already in directory) is (true)
 			    :return "E_FILE_CREATE" -1;
 				    stop
 			else
-				if(directory has not hit the 25 file limit && actualPath.length does not exceed 256 characters) then (true)
+				if(directory has not hit the 25 file limit && actualPath.length does not exceed 256 characters) is (true)
 				    :Create new inode, allociated at a free datablock;
 				    :return 0;
 				    stop
@@ -465,7 +472,7 @@
    - File_Open(string path) :: returns the file descriptor of the file, which can be used to read and write to it.
      #+BEGIN_SRC plantuml  :file Plant/FileOpen.png
 	    :int inode=getFilePath(path);
-	    if(inode == -1) then (true)
+	    if(inode == -1) is (true)
 		:return "E_NO_SUCH_FILE" -1;
 		stop
 	    else
@@ -475,7 +482,7 @@
 			:return -1 "E_FILE_ALREADY_OPEN";
 			stop
 		    else
-			if(fileOpenTable coutn is not 10 or more) then (true)
+			if(fileOpenTable coutn is not 10 or more) is (true)
 				:Append inode to open file table;
 				:return file descriptor, whcih sit he count of open file table;
 				stop
@@ -498,7 +505,7 @@
 		stop
 	else
 		:file=openfiletable[fd];
-		while (i <- 0 to size*8, to account for byte to bit conversion AND file still hasn't reach of file) then (true)
+		while (i <- 0 to size*8, to account for byte to bit conversion AND file still hasn't reach of file) is (true)
 			:buffer+=file.getBit[i+file.pos()];
 			
 		endwhile
@@ -524,7 +531,7 @@
 	else
 		:file=openfiletable[fd];
 		while (i <- 0 to size*8, to account for byte to bit conversion AND file still hasn't reach of file) is true)
-			if(write requires a new datablock, but there's no free datablcok) then (yes)
+			if(write requires a new datablock, but there's no free datablcok) is (yes)
 				:return -1 E_NO_SPACE;
 				stop
 			elseif (file has reached max file size of 10 datablocks)
@@ -599,7 +606,7 @@
 		stop
 	else
 		:inode=getPath(path);
-		if(indoe equals) then (-1)
+		if(indoe equals) is (-1)
 			:return -1 "E_NO_SUCH_FILE";
 			stop
 		else (postive)
@@ -623,8 +630,8 @@
 	:return E_DIR_CREATE;
 	stop
      endif
-     if(getDirPath(path)) then (is -1)
-	if(getDirPath(path.parent)  && actualPath.length does not exceed 256 characters ) then (is -1)
+     if(getDirPath(path)) is (is -1)
+	if(getDirPath(path.parent)  && actualPath.length does not exceed 256 characters ) is (is -1)
 		:return E_DIR_CREATE;
 		stop
 	else ( is postive   )
@@ -656,11 +663,11 @@
      if(indoe count and datablcok count is not >0)
 	:return E_DIR_CREATE;
      endif
-     if(getDirPath(path)) then (is -1)
+     if(getDirPath(path)) is (is -1)
 		:return E_DIR_NO_EXISTT;
 		stop
 	else ( is postive)
-		if(size>= Dir_Size(path)) then (yes)
+		if(size>= Dir_Size(path)) is (yes)
 			while(dir in directory) is (not done)
 				:buffer+=dir.type
 				buffer+=dir.path;
@@ -685,7 +692,7 @@
       #+BEGIN_SRC plantuml  :file Plant/DirUnlink.png
       @startuml
 		 :inode=getDirPath(path);
-		 if(indoe equals) then (-1)
+		 if(indoe equals) is (-1)
 			 :return -1 "E_DIR_NON_EXIST";
 			 stop
 		 else (postive)
@@ -760,7 +767,7 @@
 
     #+BEGIN_SRC plantuml  :file Plant/DiskWrite.png
     @startuml
-	if(buffer.size() != 512 bytes/4096 bits || buffer==NULL || sector<0 || sector >=1000) then (true)
+	if(buffer.size() != 512 bytes/4096 bits || buffer==NULL || sector<0 || sector >=1000) is (true)
 		:return E_WRITE_INVALID_PARM -1;
 		stop
 	else  (false)
@@ -783,7 +790,7 @@
 
     #+BEGIN_SRC plantuml  :file Plant/DiskREAD.png
     @startuml
-	if(buffer.size() != 512 bytes/4096 bits || buffer==NULL || sector<0 || sector >=1000) then (true)
+	if(buffer.size() != 512 bytes/4096 bits || buffer==NULL || sector<0 || sector >=1000) is (true)
 		:return E_READ_INVALID_PARM -1;
 		stop
 	else  (false)
