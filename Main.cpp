@@ -144,33 +144,37 @@ int main(){
 
 	/* cout  << "Try to dlete root/\t" <<  DirUnlink("/") << endl; */
 
-	cout << DirCreate("/A") << endl;
-	cout << DirCreate("/B") << endl;
-	cout << DirCreate("/C") << endl;
-	cout << DirCreate("/D") << endl;
+	DirCreate("/A") ;
+	DirCreate("/B") ;
+	DirCreate("/C") ;
+	DirCreate("/D") ;
 
 
-	cout << DirCreate("/A/a") << endl;
-	cout << DirCreate("/A/b") << endl;
-	cout << DirCreate("/A/c") << endl;
-	cout << DirCreate("/A/d") << endl;
+	DirCreate("/A/a") ;
+	DirCreate("/A/b") ;
+	DirCreate("/A/c") ;
+	DirCreate("/A/d") ;
 
-	cout  << DirCreate("/B/q") << endl;
-	cout  << DirCreate("/B/w") << endl;
-	cout  << DirCreate("/B/e") << endl;
-	cout  << DirCreate("/B/r") << endl;
+	DirCreate("/B/q") ;
+	DirCreate("/B/w") ;
+	DirCreate("/B/e") ;
+	DirCreate("/B/r") ;
 
 
-	cout  << DirCreate("/B/q/1") << endl;
-	cout  << DirCreate("/B/q/2") << endl;
-	cout  << DirCreate("/B/q/3") << endl;
-	cout  << DirCreate("/B/q/4") << endl;
-	cout  << DirCreate("/B/q/5") << endl;
-	cout  << DirCreate("/B/q/6") << endl;
-	cout  << DirCreate("/B/q/7") << endl;
-	cout  << DirCreate("/B/q/8") << endl;
+	DirCreate("/B/q/1") ;
+	DirCreate("/B/q/2") ;
+	DirCreate("/B/q/3") ;
+	DirCreate("/B/q/4") ;
+	DirCreate("/B/q/5") ;
+	DirCreate("/B/q/6") ;
+	DirCreate("/B/q/7") ;
+	DirCreate("/B/q/8") ;
 
-	cout << WorkDisk[2].to_ulong() << endl;
+
+	cout << endl;
+	int use=8;
+	uint _pos= readDirSectDir(WorkDisk[use], 0).inodePlace;
+	inode temp= readInodeSectInode(WorkDisk[3+_pos/35], _pos%35);
 
 	/* cout  << "3rd level /B/q/1\t" << DirUnlink("/B/q/1") << endl; */
 	/* cout  << "3rd level /B/q/2\t" << DirUnlink("/B/q/2") << endl; */

@@ -454,8 +454,17 @@ pos getFirDir(int _sect){ // _sect is the sector where the directory si in.
 			if(posParDir.Count!=-1) // Stop looking, since we already found one.
 				break;
 		}
+
+		// Get parent dicitoanry (the first directory in the direcotry node)'s indoe
+		// get it's next alloc
+		// make that the _sect
+		uint _pos= readDirSectDir(WorkDisk[_sect], 0).inodePlace;
+		inode temp= readInodeSectInode(WorkDisk[3+_pos/35], _pos%35);
+		cout <<  readDirSectDir(WorkDisk[_sect], 0).Name << '\t' << temp.alloc[0] << '\t' << temp.alloc[1] << '\t' << _pos << '\t' << _pos%35 << ':' << _pos/35 <<'\t' << _sect << endl;
 		if(posParDir.Count!=-1) // Stop looking, since we already found one.
 			break;
+		else{
+		}
 	}
 	return posParDir;
 }
