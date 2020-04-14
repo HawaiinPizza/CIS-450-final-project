@@ -62,14 +62,14 @@
      - [X] Buffer is nonNull :: If not, than return E_READ_INVALID_PARAM
      - [X] Sector paramter is out of boudns :: retrun E_READ_INVALID_PARM
      - [X] Sector has data being read from to it :: Write the Sector to Buffer.
-** TODO Setting up Directories and files [1/3]
+** Setting up Directories and files [2/3]
 *** DONE getFilePath(string path) and getDirPath(string path)
     - Input :: string path
     - Expected Output :: given path, get the inode assoicated with it | -1 if that path is not found with the correct type
     - AOutput :: 
       
-*** TODO DIR     [1/2] :DIR:
-**** DONE Directory Create [5/7]
+*** DONE DIR     [2/2] :DIR:
+**** DONE Directory Create [7/7]
      ERROR MESSAGE to osErrMsg 
 	  - Input :: String Path
 	  - Expected Ouput :: Given a path, it creates a direcotry (not recursvie)
@@ -80,18 +80,18 @@
 	  - [X] Go to parent path Failure Exist :: Get the file of the parent path, and once you do that, you see hte file *Path* already exist. Than, you return E_DIR_CREATE
 	  - [X] Go to parent path Failure Bad Path :: Get the file of the parent path, but you the parent path doesn't exist. Than, you return E_DIR_CREATE
 	  - [X] Path exceeds 256 characters :: If the supposed path is greater than 256 characters, or 2048 bits, return E_TOO_LONG_PATH
-	  - [ ] File/Dir count is less than 100 :: if file count is less than 100, give -1 E_DIR_CREATE
-	  - [ ] If datablcok for parent exceeds dirCount, extend it :: self explantationy
-**** TODO Directory Size/Read 
+	  - [X] File/Dir count is less than 100 :: if file count is less than 100, give -1 E_DIR_CREATE
+	  - [X] If datablcok for parent exceeds dirCount, SERROR MESSAGE :: self explantationy
+**** DONE Directory Size/Read 
      ERROR MESSAGE to osErrMsg 
      - INPUT :: String PATH, string buffer, int size
      - Expected Ouput :: Return in the number of entries and modifed buffer.
      - Actual Output ::
-     - [ ] Return the number of bytes in a path with Dir_Size() :: These two functions work in tandem, and as such, have to play nice.
+     - [X] Return the number of bytes in a path with Dir_Size() :: These two functions work in tandem, and as such, have to play nice.
      - [X] DIR_SIZE() works :: Gets a size of the direcotry, and sets hte buffer to appoperaite size. Note that each entry in a direcotry is 20 bytes
-     - [ ] DIR_READ Success :: The buffer is of appoperaite size, adn as such, you can write each inode to it.
-     - [ ] DIR_READ Faiure Size too small :: The buffer is of too small size, return E_BUFFER_TOO_SMALL
-     - [ ] DIR_READ Faiure Dir no eixst :: directory does not exist, return E_DIR_NO_EXIST
+     - [X] DIR_READ Success :: The buffer is of appoperaite size, adn as such, you can write each inode to it.
+     - [X] DIR_READ Faiure Size too small :: The buffer is of too small size, return E_BUFFER_TOO_SMALL
+     - [X] DIR_READ Faiure Dir no eixst :: directory does not exist, return E_DIR_NO_EXIST
 *** TODO Files [0/2] :FILE:
 **** TODO Create/Open and Close [0/10]
     Errors go to osErrMsg
@@ -852,6 +852,9 @@
     - 
 *** Tuesday, 3 days left
     - Got the go ahead ot have only 24 files/directories within 1. taht's good .
+    - Upon reflection, I'll have to deal with it for files. but right now i dont, and That makes me happ. :)
+    - INCLUDE IN BOLD :: There's only 24 files within a directory
+    - dirSize returns in bits, not bytes.
 * Specifications 
 ** System Decomposistion  
 *** Data

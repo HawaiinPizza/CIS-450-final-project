@@ -579,52 +579,21 @@ pos getFreeDataBlock(bool getNext){
 }
 
 //int _sect=6+parent.alloc[i];
-pos getFirDir(int _sect, bitset<dirSize> &buffer, pos &retInode, int &Count ){ // _sect is the sector where the directory si in.
+pos getFirDir(int _sect){ // _sect is the sector where the directory si in.
 	pos posParDir;
-	for(int i=0; i<9; i++){ // Finding the space for the parent dictionary
 		forloop2(0,dirCount){
 			bitset<dirSize> bitStream( readDirSect(WorkDisk[_sect], j));
 			if(bitStream==0){ // INCLUDE CHECK THAT IF THIS DIR RUNS OUT OF SPACE, YOU APPEND A NEW SPACE
-				/* int _sect=3+b.inodePlace/35; */
-				/* int _place=b.inodePlace%35; */
-				/* cout << _sect << '\t' << j << "\t Values to node\n"; */
 				posParDir=pos(_sect, j );
 			}
 			if(posParDir.Count!=-1) // Stop looking, since we already found one.
 				break;
 		}
 
-		if(posParDir.Count!=-1) // Stop looking, since we already found one.
-			break;
-		else{
 
-			// Get parent dicitoanry (the first directory in the direcotry node)'s indoe
-			uint _pos= readDirSectDir(WorkDisk[_sect], 0).inodePlace;
-			pos _posInode(3+_pos/35, _pos%35);
-			retInode=_posInode;
-			inode temp= readInodeSectInode(WorkDisk[_posInode.Sect], _posInode.Count);
-
-
-			if(temp.alloc[i+1]==1023) { // Check the next one, and if it's not real, make a new locatoin for it.
-				bitset<dirSize> bitStream( readDirSect(WorkDisk[_sect], 0)); // This is where parent/name of direcotyr should be
-				buffer=bitStream;
-				posParDir=getFreeDataBlock(false);
-				Count=i;
-				// make new direcotry from it and write it.
-				/* writeDirSect(WorkDisk[posParDir.Sect], 0, bitStream); */
-				/* temp.alloc[i+1]=posParDir.Sect; */
-
-				/* writeInodeSectInode(WorkDisk[_posInode.Sect], _posInode.Count, temp); */
-
-				posParDir.isPar=true;
-				i=10;
-
-			}
-			else{
-				_sect=temp.alloc[i+1];
-			}
+		if(posParDir.Count==-1){
+			posParDir.isPar=true;
 		}
-	}
 	return posParDir;
 }
 #endif

@@ -205,17 +205,23 @@ int main(){
 	DirCreate("/B/q/x") ;
 	DirCreate("/B/q/y") ;
 
-	DirCreate("/B/q/a1") ;
-	cout << getInode("/B/q/a1").alloc[0] << '\t'  << getInode("/B/q/a1").alloc[1] << endl;
-
-	DirCreate("/B/q/b1") ;
-
-
 	/* print(); */
-	cout << "\nI AM WAR\n";
+
+	/* DirUnlink("/B/q/y"); */
+	/* print(); */
+
+	string buf;
+
+	cout << DirRead("/B/q/", buf) << endl;
+	buf.resize(DirSize("/B/q")) ;
+
+	cout << DirRead("/B/q/", buf) << endl;
+
+	cout << DirRead("B/.", buf) << endl;
+
 
 	/* DirUnlink("/B/q/b1"); */
-	inodePrint();
+	/* inodePrint(); */
 	/* print(); */
 	/* DirCreate("/B/q/c1") ; */
 	/* DirCreate("/B/q/d1") ; */
