@@ -194,26 +194,17 @@ int main(){
 	cout << File_Open("/A/3") << endl;
 	cout << File_Open("/A/4") << endl;
 
-	cout << endl;
 
-	forloop(0, 10){
-		if(openFileTable.isValid[i]){
-			file File=openFileTable.OpenFile[i];
-			cout << File.name << '\t' << File.Loc[0].Sect << '\t' << endl;
-		}
-	}
+	string _temp="11111111";
+	File_Write(0, _temp, _temp.size()) ;
+	cout << getInode("/A/1").alloc[0] << endl;
+	File_Close(0);
+	File_Open("/A/1");
 
-
-		string _temp="00000000";
-		File_Write(0, _temp, _temp.size()) ;
-		cout << getInode("/A/1").alloc[0] << endl;
-		File_Close(0);
-		File_Open("/A/1");
-
-		string _pothole;
-		_pothole.resize(_temp.length());
-		File_Read(0, _pothole, _pothole.size());
-		cout << File_Read(0, _pothole, _pothole.size()) << endl;
+	string _pothole;
+	_pothole.resize(_temp.length());
+	File_Read(0, _pothole, _pothole.size());
+	cout << File_Read(0, _pothole, _pothole.size()) << endl;
 
 
 
