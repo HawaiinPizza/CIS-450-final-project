@@ -188,87 +188,18 @@ int DirUnlink(string path){ //Remove a file.
 
 
 void _DirRead(string path){ // Helper function of Read.
-	bool isRoot=false;
-	queue<string> RetStr;
-	inode Ret;
-	RetStr.push("/");
-	{ // See if root and if not, get the next child
-		string _testStr="";
-		{
-			if(path[path.length()-1]!='/')
-				path+='/';
-			string tempStr="";
-			for(int i=1; i<path.length(); i++){
-				if(path[i]=='/'){
-					RetStr.push(tempStr);
-					tempStr="";
-				}
-				else{
-					tempStr+=path[i];
-					_testStr+=path[i];
-				}
-			}
+	inode Inode=getInode(path);
+	cout << "YEA\n";
+	forloop(0, 10){
+		cout << "CURRENT: " << i << '\t' << Inode.alloc[i] << '\t';
+		forloop2(0, dirCount){
+			bitset<dirSize> bitRead( readDirSect(WorkDisk[Inode.alloc[i]],j));
+			if(bitRead!=0 && !( i==0 && j==0))
+				cout << getBitDir(bitRead).Name << endl;
 		}
-		//cout << _testStr << "\t FULL PATH" << endl;
-	}
-
-	// Getting the node here.
-	bool stop=false;
-	int Sect=6; //There is where root dictionary will be
-	while(!RetStr.empty() && !stop){
-		string find=RetStr.front(); RetStr.pop();
-		forloop(0, dirCount){ // This is code for finding something in root.
-			auto a= readDirSect(WorkDisk[Sect], i); 
-			if(a!=0){
-				dir b=getBitDir(a);
-
-				if(b.Name==find && !RetStr.empty()) { // This isn't what we're looking for. Go to antoher stage
-					/* 			newdir.inodePlace=(posInode.sect-3)*inodeCount +  posInode.count; */
-					int _sect=3+b.inodePlace/35;
-					int _place=b.inodePlace%35;
-					inode temp=readInodeSectInode(WorkDisk[_sect], _place);
-
-					/* ; */
-					Sect=temp.alloc[0];
-					break;
-
-				}
-				else if(b.Name == find && RetStr.empty()){ // Now, read through each direcotry, now that we found it.
-					pos posParDir;
-					for(int i=0; i<10; i++){ // Finding the space for the parent dictionary
-						forloop2(0,dirCount){
-							bitset<dirSize> bitStream( readDirSect(WorkDisk[Sect], j));
-							if(bitStream!=0){ // INCLUDE CHECK THAT IF THIS DIR RUNS OUT OF SPACE, YOU APPEND A NEW SPACE
-								cout << i << ':' << j << ' ' << Sect << '\t' <<  getBitDir(bitStream).Name << endl;
-							}
-						}
-
-						if(posParDir.Count!=-1) // Stop looking, since we already found one.
-							break;
-						else{
-							// Get parent dicitoanry (the first directory in the direcotry node)'s indoe
-							uint _pos= readDirSectDir(WorkDisk[Sect], 0).inodePlace;
-							inode temp= readInodeSectInode(WorkDisk[3+_pos/35], _pos%35);
-
-
-							if(i!=10){
-								if(temp.alloc[i+1]==1023) { // Break, tehres no more here.
-									break;
-
-								}
-							}
-							else{
-								Sect=temp.alloc[i+1];
-							}
-						}
-					}
-				}
-				/* else */
-				/* 	cout << "STILL SEARCHING FOR HER\t"; */ 
-
-			}
-
-		}
+		// See if next alloc is valid 
+		if(Inode.alloc[i+1]==1023)
+			return;
 	}
 }
 

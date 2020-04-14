@@ -161,44 +161,51 @@ int main(){
 	DirCreate("/B/r") ;
 
 
-	DirCreate("/B/q/1") ;
-	DirCreate("/B/q/2") ;
-	DirCreate("/B/q/3") ;
-	DirCreate("/B/q/4") ;
-	DirCreate("/B/q/5") ;
-	DirCreate("/B/q/6") ;
-	DirCreate("/B/q/7") ;
-	DirCreate("/B/q/8") ;
-	DirCreate("/B/q/9") ;
-	DirCreate("/B/q/10") ;
-	DirCreate("/B/q/11") ;
-	DirCreate("/B/q/12") ;
-	DirCreate("/B/q/13") ;
-	DirCreate("/B/q/14") ;
-	DirCreate("/B/q/15") ;
-	DirCreate("/B/q/16") ;
-	DirCreate("/B/q/17") ;
-	DirCreate("/B/q/18") ;
-	DirCreate("/B/q/19") ;
-	DirCreate("/B/q/20") ;
-	DirCreate("/B/q/21") ;
-	DirCreate("/B/q/22") ;
-	DirCreate("/B/q/23") ;
-	DirCreate("/B/q/24") ;
-	DirCreate("/B/q/25") ;
-	DirCreate("/B/q/26") ;
-	DirCreate("/B/q/27") ;
-	DirCreate("/B/q/28") ;
-	DirCreate("/B/q/29") ;
-	DirCreate("/B/q/30") ;
-	DirCreate("/B/q/31") ;
-	DirCreate("/B/q/32") ;
-	DirCreate("/B/q/32") ;
+	DirCreate("/B/q/a") ;
+	DirCreate("/B/q/b") ;
+	DirCreate("/B/q/c") ;
+	DirCreate("/B/q/d") ;
+	DirCreate("/B/q/e") ;
+	DirCreate("/B/q/f") ;
+	DirCreate("/B/q/g") ;
+	DirCreate("/B/q/h") ;
+	DirCreate("/B/q/i") ;
+	DirCreate("/B/q/j") ;
+	DirCreate("/B/q/k") ;
+	DirCreate("/B/q/l") ;
+	DirCreate("/B/q/m") ;
+	DirCreate("/B/q/n") ;
+	DirCreate("/B/q/o") ;
+	DirCreate("/B/q/l") ;
+	DirCreate("/B/q/p") ;
+	DirCreate("/B/q/q") ;
+	DirCreate("/B/q/r") ;
+	DirCreate("/B/q/s") ;
+	DirCreate("/B/q/t") ;
+	DirCreate("/B/q/u") ;
+	DirCreate("/B/q/v") ;
+	DirCreate("/B/q/w") ;
+	DirCreate("/B/q/x") ;
+	DirCreate("/B/q/y") ;
+	DirCreate("/B/q/a1") ;
+	DirCreate("/B/q/b1") ;
+	DirCreate("/B/q/c1") ;
+	DirCreate("/B/q/d1") ;
+	DirCreate("/B/q/e1") ;
+	DirCreate("/B/q/f1") ;
+	DirCreate("/B/q/g1") ;
 
 
 
+	_DirRead("/");
 	_DirRead("/A");
-	/* print(); */
+	_DirRead("/B");
+	_DirRead("/B/q");
+
+	inode temp=getInode("/B/q");
+	cout << endl;
+	cout << temp.alloc[1] << endl;
+	print();
 
 	/* cout  << "3rd level /B/q/1\t" << DirUnlink("/B/q/1") << endl; */
 	/* cout  << "3rd level /B/q/2\t" << DirUnlink("/B/q/2") << endl; */
