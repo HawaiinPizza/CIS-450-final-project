@@ -195,29 +195,23 @@ int main(){
 	cout << File_Open("/A/4") << endl;
 
 
-	string _temp="1111111111110100101010101010";
-	File_Write(0, _temp, _temp.size()) ;
+	string _temp;
+	forloop(0, 4096*11){
+		_temp+="1";
+	}
+	_temp="111001";
+	cout << File_Write(0, _temp, _temp.size()) << endl;
 	File_Close(0);
 	File_Open("/A/1");
 
 	string _pothole;
-	_pothole.resize(_temp.length());
-	File_Read(0, _pothole, _pothole.size());
+	_pothole.resize(4096*10);
+	cout << File_Read(0, _pothole, _pothole.size()) << endl;
 
 	if(_pothole==_temp)
-		cout << "NICE:)\n";
-
-	File_Close(0);
-	inode PLEASENO=getInode("/A/1");
-	cout << File_Unlink("/A/1") << endl;
-
-	forloop(0,10){
-		if(PLEASENO.alloc[i]!=0){
-			if (WorkDisk[PLEASENO.alloc[i]]!=0)
-				cout << "TIMEEEEE FOR THESE OBY";
-		}
-
-	}
+		cout << "😀";
+	else
+		cout << "💀";
 
 
 

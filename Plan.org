@@ -1,6 +1,6 @@
 #+LATEX_HEADER : \usepackage{amsmath}
 - [ ] Make sure bitmaps gets changed  in the create functiosn for filecreate/dircreate, and file unlink/dir unlink
-* Totest list [2/4]
+* Totest list [3/4]
 ** DONE Bitmaniplation     [2/2] :BIT:
 *** DONE Inode :INODE: [2/2]
     
@@ -62,7 +62,7 @@
      - [X] Buffer is nonNull :: If not, than return E_READ_INVALID_PARAM
      - [X] Sector paramter is out of boudns :: retrun E_READ_INVALID_PARM
      - [X] Sector has data being read from to it :: Write the Sector to Buffer.
-** Setting up Directories and files [2/3]
+** Setting up Directories and files [3/3]
 *** DONE getFilePath(string path) and getDirPath(string path)
     - Input :: string path
     - Expected Output :: given path, get the inode assoicated with it | -1 if that path is not found with the correct type
@@ -92,8 +92,8 @@
      - [X] DIR_READ Success :: The buffer is of appoperaite size, adn as such, you can write each inode to it.
      - [X] DIR_READ Faiure Size too small :: The buffer is of too small size, return E_BUFFER_TOO_SMALL
      - [X] DIR_READ Faiure Dir no eixst :: directory does not exist, return E_DIR_NO_EXIST
-*** TODO Files [0/2] :FILE:
-**** TODO Create/Open and Close [10/10]
+*** DONE Files [3/3] :FILE:
+**** DONE Create/Open and Close [10/10]
     Errors go to osErrMsg
     - INPUT :: string File
     - Expected Output :: Create a file |  File Descriptor [0,$\infty$] to a file  |    close the file.
@@ -110,7 +110,7 @@
       
     - [X]  File_CLose(int fd) Success :: Close file in open file table, with fd.
     - [X]  File_CLose(int fd) Failure :: File is not in open file table, return E_CLOSE_BAD_FD
-**** TODO File Read, write  
+**** DONE File Read, write  [6/6]
     - INPUT :: string File
     - Expected Output :: Number of bytes in a file read from file | size of write 
     - AO-OUTPUT ::
@@ -120,18 +120,25 @@
       
     - [X] File_Write(int fd, string fuffer, int size) Success ::  Write to a file from buffer, from teh buffer. Current file offset shold be by size.
     - [X] File_Write(int fd, string fuffer, int size) Failure not open  ::  Write to a file from buffer, from teh buffer. Current file offset shold be by size. Return E_WRITE_BAD_FD
-    - [ ] File_Write(int fd, string fuffer, int size) Failure no space left :: While writing, if you find there's no more space in teh disk, return E_NO_SPACE
-    - [ ] File_Write(int fd, string fuffer, int size) Failure maximum file size :: While writing, if you find there's the file takes up more than 10 data blcoks, return E_FILE_TOO_BIG
-**** TODO File Seek      
-    - [ ] File_Unlink(String File) :: Remove file in inode lbock, and freeing up any datablocks/indoes the file used.
-    - [ ] File_Unlink(String File) but no such file :: File does not exist. Return E_CLOSE_BAD_FD
-    - [ ] File_Unlink(String File) but file is already opened :: File is currenlty opened. Return E_File_IN_Use
+    - [X] File_Write(int fd, string fuffer, int size) Failure no space left :: While writing, if you find there's no more space in teh disk, return E_NO_SPACE
+    - [X] File_Write(int fd, string fuffer, int size) Failure maximum file size :: While writing, if you find there's the file takes up more than 10 data blcoks, return E_FILE_TOO_BIG
+**** DONE File Seek      
+    - [X] File_Unlink(String File) :: Remove file in inode lbock, and freeing up any datablocks/indoes the file used.
+    - [X] File_Unlink(String File) but no such file :: File does not exist. Return E_CLOSE_BAD_FD
+    - [X] File_Unlink(String File) but file is already opened :: File is currenlty opened. Return E_File_IN_Use
       
-    - [ ] File_Seek(int fd, int offset) :: File's posstiion is chnaged by the offset
-    - [ ] File_Seek(int fd, int offset) Out of bounds :: Offset is negative/exceeds file size. Return E_SEEK_OUT_OF_BOUNDS
-    - [ ] File_Seek(int fd, int offset) bad fd :: File isn't open. Return out of bounds
-** TODO Seek and unLink [0/1]
-*** TODO File_Seek and Dir/File_UnLink NOTE THAT FILE SEEK AND UNLINK IS IN BEFORE SEcTION[4/10] :FILE:DIR: 
+    - [X] File_Seek(int fd, int offset) :: File's posstiion is chnaged by the offset
+    - [X] File_Seek(int fd, int offset) Out of bounds :: Offset is negative/exceeds file size. Return E_SEEK_OUT_OF_BOUNDS
+    - [X] File_Seek(int fd, int offset) bad fd :: File isn't open. Return out of bounds
+** DONE Seek and unLink [1/1]
+**** DONE File Seek      
+    - [X] File_Unlink(String File) :: Remove file in inode lbock, and freeing up any datablocks/indoes the file used.
+    - [X] File_Unlink(String File) but no such file :: File does not exist. Return E_CLOSE_BAD_FD
+    - [X] File_Unlink(String File) but file is already opened :: File is currenlty opened. Return E_File_IN_Use
+      
+    - [X] File_Seek(int fd, int offset) :: File's posstiion is chnaged by the offset
+    - [X] File_Seek(int fd, int offset) Out of bounds :: Offset is negative/exceeds file size. Return E_SEEK_OUT_OF_BOUNDS
+    - [X] File_Seek(int fd, int offset) bad fd :: File isn't open. Return out of bounds
     Error -> osErrMsg
     - Input ::  string file | strign file | string path
     - Expected Ouput ::   new location of file poitner. | file/dir is deleted
@@ -858,7 +865,7 @@
     - Upon reflection, I'll have to deal with it for files. but right now i dont, and That makes me happ. :)
     - INCLUDE IN BOLD :: There's only 24 files within a directory
     - dirSize returns in bits, not bytes.
-    - Almsot done wtih project. now, 1 funciton left.
+    - Almsot done wtih project. now, 1 funciton left.cjj
 * Specifications 
 ** System Decomposistion  
 *** Data

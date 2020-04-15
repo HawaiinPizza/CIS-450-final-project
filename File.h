@@ -78,8 +78,9 @@ struct file{
 	int seek(int _Seek){
 		if(_Seek>(10*4096-Seek) || _Seek<=0){
 			return -1;
-			Seek=_Seek;
 		}
+		Seek=_Seek;
+		return 0;
 	}
 
 };
@@ -137,6 +138,15 @@ struct openFile{
 		size--;
 	}
 
+
+	int seek(int fd, int offset){
+		if(isValid[fd]){
+			if(OpenFile[fd].seek(offset))
+				return fd;
+		}
+		else
+			return -1;
+	}
 
 
 	bool isFileOpened(string name){
@@ -388,5 +398,9 @@ int File_Create(string path){
 		return 0;
 	}
 
+
+	int File_Seek(int fd, int offset){
+		return openFileTable.seek(fd, offset);
+	}
 
 #endif
