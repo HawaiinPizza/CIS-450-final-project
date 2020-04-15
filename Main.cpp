@@ -20,200 +20,146 @@ using namespace std;
 #define set 13
 // Read and write are here for histroical purposes. They are take a size (how many inodes/directories can you fit in a sector) and set (aka how long is a inode/directory) and count (which spot in sector do you want to change" and maniplates them.
 //
-// THE KEY ASSUMPATION IS NOISE: there's also bits left over. their posistion is from 0->siz%set
-void read(bitset<siz> test, int count){
-	if(range(count, 0, siz/set)){
-		int start=count*set;
-		int stop=start+set;
-		bitset<set> retBit;
-		forloop(start,stop) {
-			retBit[i-start]=test[i];
-		}
-		cout << start <<":" << (stop-1) << '\t' << retBit << endl;
-	}
-	else{
-	}
-}
-void write(bitset<siz> &test, int count, string buffer){
-	if(range(count, 0, siz/set)){
-		int start=count*set;
-		int stop=start+set;
-		bitset<set> writeBit(buffer);
-		forloop(start,stop) {
-			test[i]=writeBit[i-start];
-		}
-	}
-	else{
-	}
-}
-int mainTest1(){
-	char on='1';
-	char off;
-	ifelse(on=='1', off='0', off='1');
-	string testStr;
-	forloop(0, siz%set){ // Useless/nosie
-		testStr+="1";
-	}
-	forloop(0,siz){
-		ifelse((i/set)%2==0, testStr+=on, testStr+=off);
-	}
-	cout << "%:" << siz%set << '\t' <<  '\t';//  << testStr << ;;
-	cout << endl;
-	bitset<siz> test1(testStr);
-	forloop(0,siz/set){
-		read(test1, i);
-	}
-	cout << endl;
-	cout << on << '\t' << off << endl;
-	forloop(0,siz/set){
-		if(i%2==0){
-			string z="";
-			forloop(0, set){
-				z+=on;
-			}
-			write(test1, i,z);
-		}
-		else{
-			string z="";
-			forloop(0, set){
-				z+=off;
-			}
-			write(test1, i, z);
-		}
-	}
-	forloop(0,siz/set){
-		read(test1, i);
-	}
-	return 0;
-}
-int mainTest2(){ // NOise testing
-	char on='1';
-	char off;
-	ifelse(on=='1', off='0', off='1');
-	string testStr;
-	forloop(0, siz%set){ // Useless/nosie
-		testStr+=on;
-	}
-	forloop(0,siz){
-		ifelse((i/set)%2==0, testStr+=on, testStr+=off);
-	}
-	cout << "%:" << siz%set << '\t' <<  '\t';//  << testStr << ;;
-	cout << endl;
-	bitset<siz> test1(testStr);
-	forloop(0, siz){
-		if(range(i, 0, siz%set ))
-			cout << "Noise\t";
-		else
-			cout << "Value\t";
-		cout << i << '\t' << test1[i] << endl;
-	}
-	return 0;
-}
-
-
-	void print(){
-		forloop2(6, SectorNum){
-			forloop(0, dirCount){
-				auto a=readDirSect(WorkDisk[j], i);
-				if(a!=0){
-					cout << j << '\t' << i << '\t';
-					dir Dir=readDirSectDir(WorkDisk[j], i); 
-					cout << Dir.Name;
-					cout << endl;
-				}
-			}
-		}
-
-	}
-
-	void inodePrint(){
-		forloop(3, 6){
-			forloop2(0, inodeCount){
-				auto a=readInodeSectBit(WorkDisk[i], j);
-				if(a!=0){
-					cout << i << '\t' << j << '\t';
-					inode node=getBitInode(a);
-					cout << node.alloc[0] << '\t' << node.alloc[1];
-					cout << endl;
-				}
-
-			}
-		}
-	}
-
-
 int main(){
-	/* FS_Boot(); */
+	FS_Boot();
 
-	//Creating directories manually
-	inode RootInode	(0,0,	6);
-	/* inode AInode	(0,1, 	1); */
-	/* inode BInode	(0,0,	2); */
-	/* inode A1Inode	(0,0,	3); */
+	cout << "Creating directories\n";
 
-	dir RootDir("/", 0);
-	/* dir RootDir("/", 0); */
-	/* dir ADir("A", 1); */
-	/* dir BDir("B", 2); */
-	/* dir A1Dir("1", 3); */
+	cout << "Creating Direcotry /I\t" << DirCreate("/I") << endl;
+	cout << "Creating Direcotry /A\t" << DirCreate("/A") << endl;
+	cout << "Creating Direcotry /B\t" << DirCreate("/B") << endl;
+	cout << "Creating Direcotry /D\t" << DirCreate("/D") << endl;
+	cout << "Creating Direcotry /C\t" << DirCreate("/C") << endl;
+	cout << "Creating Direcotry /F\t" << DirCreate("/F") << endl;
+	cout << "Creating Direcotry /F\t" << DirCreate("/F") << endl;
+	cout << "Creating Direcotry /E\t" << DirCreate("/E") << endl;
+	cout << "Creating Direcotry /G\t" << DirCreate("/G") << endl;
+	cout << "Creating Direcotry /H\t" << DirCreate("/H") << endl;
+	cout << "Creating Direcotry /K\t" << DirCreate("/K") << endl;
+	string longname="/1111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111 ";
 
-	writeInodeSectInode(WorkDisk[3], 0, RootInode);
+	cout << "Creating Direcotry path with over 26 characters" << DirCreate(longname) << endl;
 
-	writeDirSectDir(WorkDisk[RootInode.alloc[0]], 0, RootDir);
+	cout << "Creating Direcotry /A/a\t" << DirCreate("/A/a") << endl;
+	cout << "Creating Direcotry /B/b\t" << DirCreate("/B/b") << endl;
+	cout << "Creating Direcotry /C/c\t" << DirCreate("/C/c") << endl;
+	cout << "Creating Direcotry /C/c\t" << DirCreate("/C/c") << endl;
+	cout << "Creating Direcotry /D/d\t" << DirCreate("/D/d") << endl;
+	cout << "Creating Direcotry /E/e\t" << DirCreate("/E/e") << endl;
+	cout << "Creating Direcotry /F/f\t" << DirCreate("/F/f") << endl;
+	cout << "Creating Direcotry /G/g\t" << DirCreate("/G/g") << endl;
+	cout << "Creating Direcotry /H/h\t" << DirCreate("/H/h") << endl;
+	cout << "Creating Direcotry /I/i\t" << DirCreate("/I/i") << endl;
+	cout << "Creating Direcotry /K/k\t" << DirCreate("/K/k") << endl;
+	cout << "Creating Direcotry /P/.\t" << DirCreate("/P/.") << endl;
 
-	/* cout  << "Try to dlete root/\t" <<  DirUnlink("/") << endl; */
+	cout << "Creating Directory /A/0\t" << File_Create("/A/0") << endl;
+	cout << "Creating Directory /A/1\t" << File_Create("/A/1") << endl;
+	cout << "Creating Directory /A/2\t" << File_Create("/A/2") << endl;
+	cout << "Creating Directory /A/3\t" << File_Create("/A/3") << endl;
+	cout << "Creating Directory /A/4\t" << File_Create("/A/4") << endl;
+	cout << "Creating Directory /A/5\t" << File_Create("/A/5") << endl;
+	cout << "Creating Directory /A/6\t" << File_Create("/A/6") << endl;
+	cout << "Creating Directory /A/7\t" << File_Create("/A/7") << endl;
+	cout << "Creating Directory /A/8\t" << File_Create("/A/8") << endl;
+	cout << "Creating Directory /A/9\t" << File_Create("/A/9") << endl;
+	cout << "Creating Directory /B/1\t" << File_Create("/B/1") << endl;
+	cout << "Creating Directory /B/2\t" << File_Create("/B/2") << endl;
 
-	DirCreate("/A") ;
-	DirCreate("/B") ;
-	DirCreate("/C") ;
-	DirCreate("/D") ;
-	DirCreate("/E") ;
-	DirCreate("/F") ;
-	DirCreate("/G") ;
-	DirCreate("/H") ;
-	DirCreate("/I") ;
-	DirCreate("/K") ;
-
-
-	File_Create("/A/1");
-	File_Create("/A/10");
-	File_Create("/A/2");
-	File_Create("/A/3");
-	File_Create("/A/4");
-	File_Create("/A/5");
-	File_Create("/A/6");
-	File_Create("/A/7");
-	File_Create("/A/8");
-	File_Create("/A/9");
-	File_Create("/B/1");
-	File_Create("/B/2");
+	cout << "\nReading directories\n";
 
 
-	cout << File_Open("/A/1") << endl;
-	cout << File_Open("/A/2") << endl;
-	cout << File_Open("/A/3") << endl;
-	cout << File_Open("/A/4") << endl;
+	string read;
+	read.resize(DirSize("/A"));
+	DirRead("/A", read);
+	cout << "/A Directory \t" << read << endl;
+
+	read.resize(DirSize("/"));
+	DirRead("/", read);
+	cout << "/ Directory WITHOUT CLEARING THE BUFFER!! \t" << read << endl;
+
+	read="";
+	read.resize(DirSize("/"));
+	DirRead("/", read);
+	cout << "/ Directory WITH CLEARING THE BUFFER!! \t" << read << endl;
+
+
+	cout << "File Open  A/1 " << File_Open("/A/1") << endl;
+	cout << "File Open  A/2 " << File_Open("/A/2") << endl;
+	cout << "File Open  A/3 " << File_Open("/A/3") << endl;
+	cout << "File Open  A/4 " << File_Open("/A/4") << endl;
+	cout << endl;
 
 
 	string _temp;
-	forloop(0, 4096*11){
-		_temp+="1";
-	}
 	_temp="111001";
-	cout << File_Write(0, _temp, _temp.size()) << endl;
+	cout << "Writing to fd 0 of \t" << _temp << '\t' << File_Write(0, _temp, _temp.size()) << endl;
 	File_Close(0);
 	File_Open("/A/1");
 
 	string _pothole;
-	_pothole.resize(4096*10);
+	_pothole.resize(_temp.size());
 	cout << File_Read(0, _pothole, _pothole.size()) << endl;
-
+	cout << "Readingfrom  fd 0 with value of  \t" << _pothole << '\t' << endl;  
 	if(_pothole==_temp)
 		cout << "😀";
 	else
 		cout << "💀";
+	File_Close(0);
+
+	forloop(0, 4096*11){
+		_temp+="1";
+	}
+	cout << "Writing to fd 0 that has too much bits" << '\t' << File_Write(0, _temp, _temp.size()) << endl;
+	File_Close(0);
+	File_Open("/A/1");
+
+	_pothole;
+	_pothole.resize(_temp.size());
+	cout << File_Read(0, _pothole, _pothole.size()) << endl;
+	cout << "Failed at reading because it exceeds sector size " << _pothole << '\t' << endl;  
+	if(_pothole==_temp)
+		cout << "😀";
+	else
+		cout << "💀";
+	File_Close(0);
+
+	cout << "Removing File /A/0\t" << File_Unlink("/A/0") << endl;
+	cout << "Removing File /A/1\t" << File_Unlink("/A/1") << endl;
+	cout << "Removing File /A/2\t" << File_Unlink("/A/2") << endl;
+	cout << "Removing File /A/3\t" << File_Unlink("/A/3") << endl;
+	cout << "Removing File /A/4\t" << File_Unlink("/A/4") << endl;
+	cout << "Removing File /A/5\t" << File_Unlink("/A/5") << endl;
+	cout << "Removing File /A/6\t" << File_Unlink("/A/6") << endl;
+	cout << "Removing File /A/7\t" << File_Unlink("/A/7") << endl;
+	cout << "Removing File /A/8\t" << File_Unlink("/A/8") << endl;
+	cout << "Removing File /A/9\t" << File_Unlink("/A/9") << endl;
+	cout << "Removing File /B/1\t" << File_Unlink("/B/1") << endl;
+	cout << "Removing File /B/2\t" << File_Unlink("/B/2") << endl;
 
 
+	cout << "Unlinking Directory /A/a\t" << DirUnlink("/A/a") << endl;
+	cout << "Unlinking Directory /B/b\t" << DirUnlink("/B/b") << endl;
+	cout << "Unlinking Directory /C/c\t" << DirUnlink("/C/c") << endl;
+	cout << "Unlinking Directory /D/d\t" << DirUnlink("/D/d") << endl;
+	cout << "Unlinking Directory /E/e\t" << DirUnlink("/E/e") << endl;
+	cout << "Unlinking Directory /F/f\t" << DirUnlink("/F/f") << endl;
+	cout << "Unlinking Directory /G/g\t" << DirUnlink("/G/g") << endl;
+	cout << "Unlinking Directory /H/h\t" << DirUnlink("/H/h") << endl;
+	cout << "Unlinking Directory /I/i\t" << DirUnlink("/I/i") << endl;
+	cout << "Unlinking Directory /K/k\t" << DirUnlink("/K/k") << endl;
+
+
+	cout << "Unlinking Directory /I\t" << DirUnlink("/I") << endl;
+	cout << "Unlinking Directory /A\t" << DirUnlink("/A") << endl;
+	cout << "Unlinking Directory /B\t" << DirUnlink("/B") << endl;
+	cout << "Unlinking Directory /D\t" << DirUnlink("/D") << endl;
+	cout << "Unlinking Directory /C\t" << DirUnlink("/C") << endl;
+	cout << "Unlinking Directory /F\t" << DirUnlink("/F") << endl;
+	cout << "Unlinking Directory /E\t" << DirUnlink("/E") << endl;
+	cout << "Unlinking Directory /G\t" << DirUnlink("/G") << endl;
+	cout << "Unlinking Directory /H\t" << DirUnlink("/H") << endl;
+	cout << "Unlinking Directory /K\t" << DirUnlink("/K") << endl;
 
 
 

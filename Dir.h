@@ -127,6 +127,50 @@ int DirSize(string path){ // Get the size of the dctionary
 	}
 
 }
+int DirRead(string path, string &buffer){ // Helper function of Read.
+	inode Inode=getInode(path);
+	if(Inode.isFile==true || Inode.alloc[0]==-1 || Inode.alloc[0]==1023){ // Check for is file. Save myself soem headachek
+		return -2;
+	}
+	if(buffer.length()!= DirSize(path)){
+		return -1;
+	}
+
+		
+
+	forloop2(1, dirCount){
+		bitset<dirSize> bitRead( readDirSect(WorkDisk[Inode.alloc[0]],j));
+		if(bitRead!=0 ){
+			buffer+=getBitDir(bitRead).Name;
+			/* buffer+='\n'; */
+			buffer+=' ';
+		}
+	}
+	return 0;
+	// See if next alloc is valid 
+}
+
+
+
+
+
+
+
+int _DirRead(string path){ // Helper function of Read.
+	inode Inode=getInode(path);
+	if(Inode.isFile==true || Inode.alloc[0]==-1 || Inode.alloc[0]==1023) // Check for is file. Save myself soem headachek
+		return -1;
+
+	forloop2(0, dirCount){
+		bitset<dirSize> bitRead( readDirSect(WorkDisk[Inode.alloc[0]],j));
+		if(bitRead!=0 ){
+			cout << "Dir or file has " << getBitDir(bitRead).Name << endl;
+		}
+	}
+	return 0;
+}
+
+
 
 int DirUnlink(string path){ //Remove a file.
 	inode delNode=getInode(path);
@@ -136,6 +180,7 @@ int DirUnlink(string path){ //Remove a file.
 		return -1;
 	}
 	else if ( DirSize(path)!=0){ //Path is not empty. 
+		_DirRead(path);
 		cout << "NOT EMPTY\t" << DirSize(path) << '\t' << delNode.alloc[0] << endl;
 		return -2;
 	}
@@ -178,7 +223,6 @@ int DirUnlink(string path){ //Remove a file.
 			if(dirBit!=0){
 				dir Dir=getBitDir(dirBit);
 				if(Dir.Name==child){ // Found the cihld directory in parent
-					cout << "I wonder what";
 					dirBit=0;
 					writeDirSect(WorkDisk[parent.alloc[0]]  , i, dirBit);
 					stop=true;
@@ -203,42 +247,5 @@ int DirUnlink(string path){ //Remove a file.
 
 
 
-
-
-int DirRead(string path, string &buffer){ // Helper function of Read.
-	inode Inode=getInode(path);
-	if(Inode.isFile==true || Inode.alloc[0]==-1 || Inode.alloc[0]==1023) // Check for is file. Save myself soem headachek
-		return -2;
-	if(buffer.length()!= DirSize(path)){
-		return -1;
-	}
-
-		
-
-	forloop2(0, dirCount){
-		bitset<dirSize> bitRead( readDirSect(WorkDisk[Inode.alloc[0]],j));
-		if(bitRead!=0 ){
-			buffer+=getBitDir(bitRead).Name;
-			buffer+='\n';
-		}
-	}
-	return 0;
-	// See if next alloc is valid 
-}
-
-
-
-int _DirRead(string path){ // Helper function of Read.
-	inode Inode=getInode(path);
-	if(Inode.isFile==true || Inode.alloc[0]==-1 || Inode.alloc[0]==1023) // Check for is file. Save myself soem headachek
-		return -1;
-
-	forloop2(0, dirCount){
-		bitset<dirSize> bitRead( readDirSect(WorkDisk[Inode.alloc[0]],j));
-		if(bitRead!=0 )
-			cout << getBitDir(bitRead).Name << endl;
-	}
-	return 0;
-}
 
 #endif
