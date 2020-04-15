@@ -161,7 +161,7 @@ int _DirRead(string path){ // Helper function of Read.
 	if(Inode.isFile==true || Inode.alloc[0]==-1 || Inode.alloc[0]==1023) // Check for is file. Save myself soem headachek
 		return -1;
 
-	forloop2(0, dirCount){
+	forloop2(1, dirCount){
 		bitset<dirSize> bitRead( readDirSect(WorkDisk[Inode.alloc[0]],j));
 		if(bitRead!=0 ){
 			cout << "Dir or file has " << getBitDir(bitRead).Name << endl;

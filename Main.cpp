@@ -20,6 +20,13 @@ using namespace std;
 #define set 13
 // Read and write are here for histroical purposes. They are take a size (how many inodes/directories can you fit in a sector) and set (aka how long is a inode/directory) and count (which spot in sector do you want to change" and maniplates them.
 //
+
+int r(){
+	return ExtDisk[0].to_ulong();
+}
+int y(){
+	return WorkDisk[0].to_ulong();
+}
 int main(){
 	FS_Boot();
 
@@ -55,6 +62,7 @@ int main(){
 
 	cout << "Creating Directory /A/0\t" << File_Create("/A/0") << endl;
 	cout << "Creating Directory /A/1\t" << File_Create("/A/1") << endl;
+	cout << "Creating Directory /A/2\t" << File_Create("/A/2") << endl;
 	cout << "Creating Directory /A/2\t" << File_Create("/A/2") << endl;
 	cout << "Creating Directory /A/3\t" << File_Create("/A/3") << endl;
 	cout << "Creating Directory /A/4\t" << File_Create("/A/4") << endl;
@@ -152,6 +160,13 @@ int main(){
 
 	cout << "Unlinking Directory /I\t" << DirUnlink("/I") << endl;
 	cout << "Unlinking Directory /A\t" << DirUnlink("/A") << endl;
+	File_Close(0);
+	File_Close(1);
+	File_Close(2);
+	File_Close(3);
+	File_Close(4);
+	cout << "Removing File /A/2\t" << File_Unlink("/A/2") << endl;
+	cout << "Unlinking Directory /A\t" << DirUnlink("/A") << endl;
 	cout << "Unlinking Directory /B\t" << DirUnlink("/B") << endl;
 	cout << "Unlinking Directory /D\t" << DirUnlink("/D") << endl;
 	cout << "Unlinking Directory /C\t" << DirUnlink("/C") << endl;
@@ -161,7 +176,33 @@ int main(){
 	cout << "Unlinking Directory /H\t" << DirUnlink("/H") << endl;
 	cout << "Unlinking Directory /K\t" << DirUnlink("/K") << endl;
 
+	DirCreate("/I");
+	DirCreate("/A");
+	DirCreate("/B");
+	DirCreate("/D");
+	DirCreate("/C");
+	DirCreate("/F");
+	DirCreate("/F");
+	DirCreate("/E");
+	DirCreate("/G");
+	DirCreate("/H");
+	DirCreate("/K");
+	_temp="";
+	_temp.resize(DirSize("/"));
+	DirRead("/", _temp);
+	cout << "Root has " << _temp << "\t to test whetehr file acccess after closign is workign\n";
+	_temp = "";
+	FS_Sync();
+	FS_Reset();
+	DirRead("/", _temp);
+	cout << "Reading root after closing file system" << '\t' << _temp << endl;
 
+	FS_Boot();
+
+
+	_temp.resize(DirSize("/"));
+	DirRead("/", _temp);
+	cout << "Reading root after re opening file system" << '\t' << _temp << endl;
 
 
 

@@ -155,10 +155,11 @@
     - [ ] File_Seek(int fd, int offset) :: File's posstiion is chnaged by the offset
     - [ ] File_Seek(int fd, int offset) Out of bounds :: Offset is negative/exceeds file size. Return E_SEEK_OUT_OF_BOUNDS
     - [ ] File_Seek(int fd, int offset) bad fd :: File isn't open. Return out of bounds
-** TODO Finsihing it up/Refctoring      
+** TODO Finsihing it up/Refctoring      [0/4]
    - [ ] rename read/write functions in datastruct
    - [ ] pre/post conditions for everything
    - [ ] set error messages in appoerpate palces
+   - [ ] Create test cases for everything
 
 * Algorithm/Code
 ** Whoel Porgram decompsiostion
@@ -839,6 +840,7 @@
    - How can a buffer be null, cause you can't pass null strings in c++
    - Method signature chagnes, change I have to pass the disk. Is that valid?
    - Also, which disk does disk_write and disk_read write to? I assumed working
+   - I want to test if after closing the file system, the user can re open it and see their stuff is saved. HOWEVER<>
 * Changes/Journal
 ** Changes
   - Wrote teh read/write by Inode/dir funcitons, which allow for bit writing in the drive

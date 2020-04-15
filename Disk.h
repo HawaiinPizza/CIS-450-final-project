@@ -12,21 +12,21 @@
 
 
 
-int Disk_Init(){ // Setup the disk
+int Disk_Init(disk(DISK)){ // Setup the disk
 	// Set each sector 0
 	for(int i=0; i<SectorNum; i++){ 
-		ExtDisk[i]=0;
+		DISK[i]=0;
 	}
 
 	//Bitmap results The reason 1 is the first indoe and datablcok is root, and thus, it's unvaliable at first.
-	ExtDisk[0]=SBNum; //Sueprblock setting
-	ExtDisk[1]=1;
-	ExtDisk[2]=1; 
+	DISK[0]=SBNum; //Sueprblock setting
+	DISK[1]=1;
+	DISK[2]=1; 
 
 	// TODO Manually create root, so to better understand process
 	inode Root; // Used later
 	Root.isFile=false;
-	Root.size=SectorSize;
+	Root.size=0;
 	//inodeSet(&Root, 0, 0); // How to set inodes
 	Root.alloc[0]=inodeOffset;
 
@@ -39,7 +39,7 @@ int Disk_Init(){ // Setup the disk
 	bitset<dirSize> dirBit=getDirBit(RootDir);
 	dir test=getBitDir(dirBit.to_string());
 
-	writeDirSect(ExtDisk[inodeOffset], 0, dirBit);
+	writeDirSect(DISK[inodeOffset], 0, dirBit);
 	
 
 	//This is creating the root folder. Later on, we will make it with DirCreate("/")
@@ -47,7 +47,7 @@ int Disk_Init(){ // Setup the disk
 	string inodeString=getInodeBit(Root).to_string();
 	bitset<SectorSize*8> inodeBit(inodeString);
 
-	writeInodeSect(ExtDisk[3], 0, inodeString);
+	writeInodeSect(DISK[3], 0, inodeString);
 
 
 	return 0;

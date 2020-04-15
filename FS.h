@@ -42,7 +42,8 @@ int FS_Boot(){
 	}
 	// External is not made. As such, set the sueprblock to a number.
 	ExtDisk[0]=SBNum;
-	Disk_Init();
+	cout <<" FUCKIGN HELL" << endl;
+	Disk_Init(ExtDisk);
 	Disk_Save();
 	return 0;
 } 

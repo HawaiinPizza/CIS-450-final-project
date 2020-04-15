@@ -378,6 +378,7 @@ int File_Create(string path){
 				if(dirBit!=0){
 					dir Dir=getBitDir(dirBit);
 					if(Dir.Name==child){ // Found the cihld directory in parent
+						cout << "I wonder what";
 						dirBit=0;
 						writeDirSect(WorkDisk[parent.alloc[0]]  , i, dirBit);
 						stop=true;
