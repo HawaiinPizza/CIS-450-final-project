@@ -197,8 +197,6 @@ int main(){
 
 	string _temp="110010010010010101100100000100101010";
 	File_Write(0, _temp, _temp.size()) ;
-	cout << getInode("/A/1").alloc[0] << endl;
-	cout << "Watch out for that\n pothole \n ";
 	File_Close(0);
 	File_Open("/A/1");
 
@@ -206,7 +204,8 @@ int main(){
 	_pothole.resize(_temp.length());
 	File_Read(0, _pothole, _pothole.size());
 
-	cout << _pothole << endl;
+	if(_pothole==_temp)
+		cout << "NICE:)\n";
 
 
 

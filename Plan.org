@@ -858,6 +858,7 @@
     - Upon reflection, I'll have to deal with it for files. but right now i dont, and That makes me happ. :)
     - INCLUDE IN BOLD :: There's only 24 files within a directory
     - dirSize returns in bits, not bytes.
+    - Almsot done wtih project. now, 1 funciton left.
 * Specifications 
 ** System Decomposistion  
 *** Data
