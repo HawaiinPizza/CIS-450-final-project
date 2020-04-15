@@ -320,6 +320,71 @@ int File_Create(string path){
 
 
 	int File_Unlink(string path){
+		inode delNode=getInode(path);
+		size_t found = path.find_last_of("/");
+		inode parent=getInode(path.substr(0,found));
+		if(delNode.size==-1){ // File does not exist
+			return -1;
+		}
+		else if ( openFileTable.isFileOpened(path)  ){ //Path is not empty. 
+			cout << "IS OPENED DUMBASS\n";
+			return -2;
+		}
+		else{ // Now we can delete it. Hurray. TODO make a getInode iwth possiton of the inode, so I don't have to ifnd it twice like a stupid
+
+			forloop(3,6){ // Deleting inode.
+				forloop2(0,35){
+					if(delNode.alloc[0]==readInodeSectInode(WorkDisk[i],j).alloc[0]){
+						writeInodeSect(WorkDisk[i], j, "0");
+					}
+				}
+			}
+			bitset<dirSize> temp(0);
+			for(int i=0; i<10; i++){
+				if(delNode.alloc[i]!=1023)
+					writeDirSect(WorkDisk[delNode.alloc[i]], 0,temp); // Deleting the acutal entry.
+				else
+					break;
+			}
+
+			// Now we gotta decrease the parent' inode siz
+			parent.size--;
+			forloop(3,6){
+				forloop2(0,35){
+					if(parent.alloc[0]==readInodeSectInode(WorkDisk[i],j).alloc[0]){
+						writeInodeSectInode(WorkDisk[i],j, parent);
+					}
+				}
+			}
+
+			//Now, we must find the parent dictionary file of del, and remove it
+			size_t found = path.find_last_of("/");
+			string child=path.substr(found+1);
+			bool stop=false;
+			for(int i=0; i<dirCount && !stop; i++){
+				bitset<dirSize>  dirBit(readDirSect(WorkDisk[parent.alloc[0]], i));
+				if(dirBit!=0){
+					dir Dir=getBitDir(dirBit);
+					if(Dir.Name==child){ // Found the cihld directory in parent
+						cout << "I wonder what";
+						dirBit=0;
+						writeDirSect(WorkDisk[parent.alloc[0]]  , i, dirBit);
+						stop=true;
+						break;
+					}
+
+				}
+
+
+			}
+			uint _bitmapSize=WorkDisk[1].to_ulong();
+			_bitmapSize--;
+			WorkDisk[1]=_bitmapSize;
+			_bitmapSize=WorkDisk[2].to_ulong();
+			_bitmapSize--;
+			WorkDisk[2]=_bitmapSize;
+			return 0;
+		}
 		return 0;
 	}
 
