@@ -54,7 +54,7 @@ struct file{
 		}
 	}
 
-	string write(int _Seek, int& status, string& _buffer){
+	string write(int _Seek, int& status, string& BUFFER){
 	if(_Seek>(10*4096-Seek) || _Seek<=0){
 			status=-1;
 			return "";
@@ -62,16 +62,18 @@ struct file{
 		else{
 			// Lmao TODO make sure this writes to both openFile AND file locaiotn
 
+			cout << "WRITE" << BUFFER << '\t' << "\n";
 			forloop(Seek, _Seek){
 				pos War;
 				War.Sect=i/4096;
 				War.Count=i%4096;
-				buffer[War.Sect][War.Count]=_buffer[i];
-				WorkDisk[Loc[War.Sect].Sect][War.Count]=_buffer[i];
-				cout << War.Sect << ':' << War.Count << '\t' << WorkDisk[Loc[War.Sect].Sect][War.Count] << endl;
+				bitset<1> WHAT(BUFFER[i]);
+				buffer[War.Sect][War.Count]=WHAT[0];
+				WorkDisk[Loc[War.Sect].Sect][War.Count]=WHAT[0];
+				cout << BUFFER[i] << ':' << i <<  '\t' << War.Sect << ':' << War.Count << '\t' << buffer[War.Sect][War.Count] << endl;
 			}
 			Seek=_Seek;
-			return _buffer;
+			return BUFFER;
 		}
 	}
 
