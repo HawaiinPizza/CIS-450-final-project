@@ -189,3 +189,30 @@ Archived entries from file /home/zaki/Shool/OpSysms/Ass/P3/Plan.org
   - [ ] Make sure SectorSize/SectorNum is nonzero :: Invalid size/num exception;
   - [ ] Make sure SectorNum does not exceed $\frac{2^{\text{Sector Size/Number of Inodes within a Sector}}}{\text{Sector Size} \ *\ 1024E3}$ :: Number of sectors exceed Sector Size/number of inodes iwthin each sector
   - [ ]  :: 
+
+* DONE Finsihing it up/Refctoring      [4/4]
+  :PROPERTIES:
+  :ARCHIVE_TIME: 2020-04-16 Thu 23:43
+  :ARCHIVE_FILE: ~/Shool/OpSysms/Ass/P3/Plan.org
+  :ARCHIVE_OLPATH: Totest list
+  :ARCHIVE_CATEGORY: Plan
+  :ARCHIVE_TODO: DONE
+  :END:
+  - [X] rename read/write functions in datastruct
+  - [X] pre/post conditions for everything
+  - [X] set error messages in appoerpate palces
+  - [X] Create test cases for everything
+
+* DONE Finsihing it up/Refctoring      [4/4]
+  :PROPERTIES:
+  :ARCHIVE_TIME: 2020-04-16 Thu 23:43
+  :ARCHIVE_FILE: ~/Shool/OpSysms/Ass/P3/Plan.org
+  :ARCHIVE_OLPATH: Totest list
+  :ARCHIVE_CATEGORY: Plan
+  :ARCHIVE_TODO: DONE
+  :END:
+  - [X] rename read/write functions in datastruct
+  - [X] pre/post conditions for everything
+  - [X] set error messages in appoerpate palces
+  - [X] Create test cases for everything
+

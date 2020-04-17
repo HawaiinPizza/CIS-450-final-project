@@ -17,17 +17,22 @@ int DirCreate(string path){
 	size_t found = path.find_last_of("/");
 	inode parent=getInode(path.substr(0,found));
 	if(parent.size==inode().size){ // Parent does not exist
+		osErrMsg="E_DIR_CREATE";
 		return -1;
 	}
 	else{
 		if (child.size != inode().size){ // Child alreayd exist
-			return -2; 
+			osErrMsg="E_DIR_CREATE";
+			return -1;
 		}
 		else if (path.length()>256 ){ // Checking if path exceeds 256 characters
-			return -3;
+			osErrMsg="E_DIR_CREATE";
+			return -1;
 		}
-		else if( WorkDisk[1].to_ulong()>=100) // There are 100 or over files/direcotires already
-			return -5;
+		else if( WorkDisk[1].to_ulong()>=100){ // There are 100 or over files/direcotires already
+			osErrMsg="E_DIR_CREATE";
+			return -1;
+		}
 		else{ // Can make dirctioanry.
 			child.isFile=false;
 			child.size=0;
@@ -43,7 +48,8 @@ int DirCreate(string path){
 				string temp=path.substr(found+1);
 				dir NewDir(temp, posInode.Count+(posInode.Sect-3)*35);
 				if(posParDir.isPar==true){
-					return -6;
+					osErrMsg="E_DIRCREATE";
+					return -1;
 				}
 				else{
 					writeDirSectDir(WorkDisk[posParDir.Sect], posParDir.Count, NewDir );
@@ -51,7 +57,7 @@ int DirCreate(string path){
 				}
 				dir parDir=readDirSectDir(WorkDisk[posParDir.Sect], posParDir.Count);
 				int Alloc=(posDir.Sect);
-				child.alloc[0]=Alloc; //CAUSE OF BUG
+				child.alloc[0]=Alloc; 
 				writeInodeSectInode(WorkDisk[posInode.Sect], posInode.Count, child);
 				// Update size
 				parent.size++;
@@ -77,7 +83,8 @@ int DirCreate(string path){
 				return 0;
 			}
 			else // There is no more space for a new directory
-				return -4;
+				osErrMsg="E_DIR_CREATE";
+				return -1;
 			}
 		}
 	}
@@ -89,7 +96,8 @@ int DirCreate(string path){
 int DirSize(string path){ // Get the size of the dctionary
 	inode inodepath=getInode(path);
 	if (inodepath.size == inode().size){ // indoe does not exist
-		return -1; 
+		osErrMsg="E_DIR_SIZE";
+		return -1;
 	}
 	else{
 		return inodepath.size;
@@ -102,16 +110,17 @@ int DirSize(string path){ // Get the size of the dctionary
 int DirRead(string path, string &buffer){ // Helper function of Read.
 	inode Inode=getInode(path);
 	if(Inode.isFile==true || Inode.alloc[0]==-1 || Inode.alloc[0]==1023){ // Check for is file. Save myself soem headachek
-		return -2;
+		osErrMsg="E_DIR_READ";
+		return -1;
 	}
 	if(buffer.length()!= DirSize(path)){
+		osErrMsg="E_BUFFER_TOO_SMALL";
 		return -1;
 	}
 	forloop2(1, dirCount){
 		bitset<dirSize> bitRead( readDirSect(WorkDisk[Inode.alloc[0]],j));
 		if(bitRead!=0 ){
 			buffer+=getBitDir(bitRead).Name;
-			/* buffer+='\n'; */
 			buffer+=' ';
 		}
 	}
@@ -128,9 +137,6 @@ int _DirRead(string path){ // Helper function of Read.
 		return -1;
 	forloop2(1, dirCount){
 		bitset<dirSize> bitRead( readDirSect(WorkDisk[Inode.alloc[0]],j));
-		if(bitRead!=0 ){
-			cout << "Dir or file has " << getBitDir(bitRead).Name << endl;
-		}
 	}
 	return 0;
 }
@@ -143,15 +149,18 @@ int DirUnlink(string path){ //Remove a file.
 	size_t found = path.find_last_of("/");
 	inode parent=getInode(path.substr(0,found));
 	if(delNode.size==-1){ // File does not exist
+		osErrMsg="E_DIR_NO_EXIST";
 		return -1;
 	}
 	else if ( DirSize(path)!=0){ //Path is not empty. 
 		_DirRead(path);
-		cout << "NOT EMPTY\t" << DirSize(path) << '\t' << delNode.alloc[0] << endl;
-		return -2;
+		/* cout << "NOT EMPTY\t" << DirSize(path) << '\t' << delNode.alloc[0] << endl; */
+		osErrMsg="E_DIR_NOT_EMPTY";
+		return -1;
 	}
 	else if ( delNode.alloc[0]==6){ // 6 is where the root directory is. TODO mkae this look easier to read for Stenier
-		return -3;
+		osErrMsg="E_DEL_ROOT_DIR";
+		return -1;
 	}
 	else{ // Now we can delete it. Hurray. TODO make a getInode iwth possiton of the inode, so I don't have to ifnd it twice like a stupid
 		forloop(3,6){ // Deleting inode.

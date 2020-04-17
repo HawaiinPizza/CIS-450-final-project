@@ -34,7 +34,7 @@ struct file{
 	}
 
 	string read(int _Seek, int& status){
-		if(_Seek>(10*4096-Seek) || _Seek<=0){
+		if(_Seek>(512-Seek) || _Seek<=0){
 			status=-1;
 			return "";
 		}
@@ -53,7 +53,7 @@ struct file{
 	}
 
 	string write(int _Seek, int& status, string& BUFFER){
-		if(_Seek>(10*4096-Seek) || _Seek<=0){
+		if(_Seek>(512-Seek) || _Seek<=0){
 			status=-1;
 			return "";
 		}
@@ -74,7 +74,7 @@ struct file{
 
 
 	int seek(int _Seek){
-		if(_Seek>(10*4096-Seek) || _Seek<=0){
+		if(_Seek>(512-Seek) || _Seek<=0){
 			return -1;
 		}
 		Seek=_Seek;
@@ -318,7 +318,7 @@ int File_Open(string path){
 ///Pre-condition: The fd is valid in teh openfieltable
 //Post-condition: Remove file from openfiletable
 int File_Close(int fd){
-	if(openFileTable.size<=fd){ // Fd not here.
+	if(! openFileTable.isValid[fd]){ // Fd not here.
 		osErrMsg="E_CLOSE_BAD_FD";
 		return -1;
 	}
@@ -333,7 +333,7 @@ int File_Close(int fd){
 //Post-condition: The buffer gets modfied by the file by size
 int File_Read(int fd, string &buffer, int size){
 	int i=openFileTable.read(fd, buffer, size);
-	if(i){
+	if(i==0){
 		return i;
 	}
 	else{
@@ -348,11 +348,13 @@ int File_Read(int fd, string &buffer, int size){
 
 int File_Write(int fd, string &buffer, int size){
 	int i=openFileTable.write(fd, buffer, size);
-	if(i){
-		return i;
+	if(i==0){
+
+		return size;
 	}
 	else if (i==2){
 		osErrMsg="E_FILE_TOO_BIG";
+		return -1;
 	}
 	else{
 		osErrMsg="E_CLOSE_BAD_FD";
@@ -369,11 +371,12 @@ int File_Unlink(string path){
 	size_t found = path.find_last_of("/");
 	inode parent=getInode(path.substr(0,found));
 	if(delNode.size==-1){ // File does not exist
+		osErrMsg="E_NO_SUCH_FILE";
 		return -1;
 	}
 	else if ( openFileTable.isFileOpened(path)  ){ //Path is not empty. 
-		cout << "IS OPENED DUMBASS\n";
-		return -2;
+		osErrMsg="E_FILE_OPENED";
+		return -1;
 	}
 	else{ // Now we can delete it. Hurray. TODO make a getInode iwth possiton of the inode, so I don't have to ifnd it twice like a stupid
 
@@ -411,7 +414,6 @@ int File_Unlink(string path){
 			if(dirBit!=0){
 				dir Dir=getBitDir(dirBit);
 				if(Dir.Name==child){ // Found the cihld directory in parent
-					cout << "I wonder what";
 					dirBit=0;
 					writeDirSect(WorkDisk[parent.alloc[0]]  , i, dirBit);
 					stop=true;

@@ -81,7 +81,7 @@ int Disk_Save(){ // extDisk->workDisk
 // Read and write Functions The method signetuare is differnt, disk is not supposed to be there.
 int Disk_Write( string &buffer, int sector){ // I did not check for buffer being null. IDK what to do in that scenario. 
 	if(buffer.length()!=SectorBit || sector <0 || sector >= SectorNum ){ // One of these conditions happne, which are INVLAID
-		diskErrMsg="E_READ_INVALID_PARM";
+		diskErrMsg="E_WRITE_INVALID_PARM";
 		return -1;
 	}
 	else{

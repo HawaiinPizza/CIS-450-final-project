@@ -1,7 +1,3 @@
-// Whoel Porgram decompsiostion
-//    This is an outline/code of how the whole program will be. 
-//    #+HEADER: :noweb yes :tangle Main.cpp   :colnames no :comments org
-// #+HEADER: :includes "<iostream> <cmath> <vector> <climits> <bitset>"
 #include <iostream>
 #include <cmath>
 #include <queue>
@@ -85,46 +81,45 @@ int main(){
 	cout << "File Open  A/1 " << File_Open("/A/1") << endl;
 	cout << "File Open  A/2 " << File_Open("/A/2") << endl;
 	cout << "File Open  A/3 " << File_Open("/A/3") << endl;
-	cout << "File Open  A/4 " << File_Open("/A/4") << endl;
 	cout << endl;
 
 
 	string _temp;
 	_temp="111001";
-	cout << "Writing to fd 0 of \t" << _temp << '\t' << File_Write(0, _temp, _temp.size()) << endl;
+	cout << "Writing to fd 0 of \t" << _temp << '\t' << File_Write(0, _temp, _temp.size()) << " size " << endl;
 	File_Close(0);
 	File_Open("/A/1");
 
 	string _pothole;
 	_pothole.resize(_temp.size());
-	cout << File_Read(0, _pothole, _pothole.size()) << endl;
-	cout << "Readingfrom  fd 0 with value of  \t" << _pothole << '\t' << endl;  
+	cout << "Status on reading the file is " << File_Read(0, _pothole, _pothole.size()) << endl;
+	cout << "Reading from  fd 0 with value of  \t" << _pothole << '\t' << endl;  
 	if(_pothole==_temp)
-		cout << "😀";
+		cout << "😀 Success string from fd 0 and the string it was written to matches" << endl;
 	else
-		cout << "💀";
+		cout << "💀 Failure string from fd 0 and the string it was written to doesn't" << endl;
 	File_Close(0);
 
 	forloop(0, 4096*11){
 		_temp+="1";
 	}
+	
 	cout << "Writing to fd 0 that has too much bits" << '\t' << File_Write(0, _temp, _temp.size()) << endl;
 	File_Close(0);
 	File_Open("/A/1");
 
-	_pothole;
 	_pothole.resize(_temp.size());
-	cout << File_Read(0, _pothole, _pothole.size()) << endl;
+	cout << "Reading from file has status of " << File_Read(0, _pothole, _pothole.size()) << endl;
 	cout << "Failed at reading because it exceeds sector size " << _pothole << '\t' << endl;  
 	if(_pothole==_temp)
-		cout << "😀";
+		cout << "😀 Success string from fd 0 and the string it was written to matches" << endl;
 	else
-		cout << "💀";
-	File_Close(0);
+		cout << "💀 Failure string from fd 0 and the string it was written to doesn't match" << endl;
+	cout << "Closing file, see later for test of reclosign a file " << File_Close(0) << endl;
 
 	cout << "Removing File /A/0\t" << File_Unlink("/A/0") << endl;
 	cout << "Removing File /A/1\t" << File_Unlink("/A/1") << endl;
-	cout << "Removing File /A/2\t" << File_Unlink("/A/2") << endl;
+	cout << "Removing File /A/2\t" << File_Unlink("/A/2") << "\tBecause /A/2 is still open. " << endl;
 	cout << "Removing File /A/3\t" << File_Unlink("/A/3") << endl;
 	cout << "Removing File /A/4\t" << File_Unlink("/A/4") << endl;
 	cout << "Removing File /A/5\t" << File_Unlink("/A/5") << endl;
@@ -150,11 +145,8 @@ int main(){
 
 	cout << "Unlinking Directory /I\t" << DirUnlink("/I") << endl;
 	cout << "Unlinking Directory /A\t" << DirUnlink("/A") << endl;
-	File_Close(0);
-	File_Close(1);
-	File_Close(2);
-	File_Close(3);
-	File_Close(4);
+	cout << "Closing File 0 " << File_Close(0) << "\t We already closed the file "   << endl;
+	cout << "Closing File 1 " << File_Close(1) << endl;
 	cout << "Removing File /A/2\t" << File_Unlink("/A/2") << endl;
 	cout << "Unlinking Directory /A\t" << DirUnlink("/A") << endl;
 	cout << "Unlinking Directory /B\t" << DirUnlink("/B") << endl;
@@ -165,7 +157,15 @@ int main(){
 	cout << "Unlinking Directory /G\t" << DirUnlink("/G") << endl;
 	cout << "Unlinking Directory /H\t" << DirUnlink("/H") << endl;
 	cout << "Unlinking Directory /K\t" << DirUnlink("/K") << endl;
+	cout << "Unlinking Directory /\t" << DirUnlink("/") << endl;
 
+
+	_temp="";
+	_temp.resize(DirSize("/"));
+	DirRead("/", _temp);
+	cout << "Root has" << _temp << " nothing. It's empty because we removed everythign from root except root\n";
+	_temp="";
+	
 	DirCreate("/I");
 	DirCreate("/A");
 	DirCreate("/B");
@@ -180,7 +180,7 @@ int main(){
 	_temp="";
 	_temp.resize(DirSize("/"));
 	DirRead("/", _temp);
-	cout << "Root has " << _temp << "\t to test whetehr file acccess after closign is workign\n";
+	cout << "Recreating the directoreis, root has " << _temp << "\t to test whetehr file acccess after closign is workign\n";
 	_temp = "";
 	FS_Sync();
 	FS_Reset();

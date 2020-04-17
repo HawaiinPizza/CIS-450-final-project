@@ -155,10 +155,10 @@
     - [ ] File_Seek(int fd, int offset) :: File's posstiion is chnaged by the offset
     - [ ] File_Seek(int fd, int offset) Out of bounds :: Offset is negative/exceeds file size. Return E_SEEK_OUT_OF_BOUNDS
     - [ ] File_Seek(int fd, int offset) bad fd :: File isn't open. Return out of bounds
-** TODO Finsihing it up/Refctoring      [3/4]
+** DONE Finsihing it up/Refctoring      [4/4]
    - [X] rename read/write functions in datastruct
    - [X] pre/post conditions for everything
-   - [ ] set error messages in appoerpate palces
+   - [X] set error messages in appoerpate palces
    - [X] Create test cases for everything
 
 * Algorithm/Code
@@ -187,69 +187,6 @@
     - Anotehr note: there'll be 35 inodes withn a sector, so the spliting of that by 114 is left to futrue zak.
 
     - Writing it to bitstream is simple. if need be write a funciton for it.
-
-      #+HEADER: :noweb yes :tangle Main.cpp   :colnames no :comments org
-     #+HEADER: :includes "<iostream> <cmath> <vector> <climits> <bitset>"
-      #+BEGIN_SRC C++
-	#include<iostream>
-	#include<bitset>
-	using namespace std;
-	// Note in babel mode this will be incorrect
-	
-	void readBitDataInode(string Inode){
-	// Type // Size // 10*10 of which bits are allociated to it.
-	
-	    // This little test is used to demonstrate values used to finding where to substring
-	    /*
-	    string test= "11111NNNNN22222NNNNN33333NNNNN44444NNNNN55555NNNNN66666NNNNN77777NNNNN88888NNNNN99999NNNNN00000NNNNNSSSSSSSSSSSSST";
-	    cout << test.substr(0,100) << endl; //Which are allcoiated
-	    cout << test.substr(100,13) << endl; //Size
-	    cout << test.substr(113,1) << endl; //Type
-	    for(int i=0; i<10; i++){ 
-		cout << test.substr(i*10,10) << endl;  // used to show how to splti the function
-	    }
-	    */
-	    
-	    
-		uint alloc[10];
-		for(int i=0; i<10; i++){
-			bitset<10> temp(Inode.substr(i*10, 10));
-			cout << temp << '\t' << temp.to_ulong() << endl;
-			alloc[i]=temp.to_ulong();
-		}
-		uint size;
-		bitset<13> temp2(Inode.substr(100,13));
-		size=temp2.to_ulong();
-		
-		bool type;
-		bitset<1> temp3(Inode.substr(113,1));
-		cout << temp3 << endl;
-		type=temp3.to_ulong();
-		
-		cout << size << '\t' << type << endl;
-	}
-	
-	int main(){
-		string test= "000000000011111111110000000000111110000000000111111010101001000000000110000000000000100000001000010011111111111110";
-		readBitDataInode(test);
-		cout << "WOW";
-	}
-      #+END_SRC
-
-      #+RESULTS:
-      | 0000000000 |    0 |
-      | 1111111111 | 1023 |
-      | 0000000000 |    0 |
-      | 1111100000 |  992 |
-      | 0000011111 |   31 |
-      | 1010101001 |  681 |
-      | 0000000001 |    1 |
-      | 1000000000 |  512 |
-      | 0000100000 |   32 |
-      | 0010000100 |  132 |
-      |          0 |      |
-      |       8191 |    0 |
-      |        WOW |      |
 
 
 *** datablock
@@ -311,7 +248,6 @@
      | G  |
      | H  |
 
-     
 *** bitmap of indoe/datablock     
     - this is just a bitmap, used to keep trakc of which indoes are allociated and which datablocks are allociated.
 *** Sector/Root Inode      
@@ -352,6 +288,7 @@
 
      #+RESULTS:
      [[file:Plant/FS_BOOT.png]]
+     ]
 
    - FS_Sync :: Copys the working disk to external disk
      #+BEGIN_SRC plantuml  :file Plant/FS_SYNC.png
@@ -383,13 +320,12 @@
      [[file:Plant/FS_RESET.png]]
 
 ** File Access :FILE:
-   - int getDirPath(string path) :: Helper function, used to get the directory given a path.
+   - int getInode(string path) :: Helper function, used to get the inode given a path.
      - Ouptut :: inode number of where it is, or -1 if it's not found.
-      #+BEGIN_SRC plantuml  :file Plant/getDirPath.png
+      #+BEGIN_SRC plantuml  :file Plant/getInode.png
       @startuml
       :Go to root inode, which should be the 0th inode;
       :From the 0th inode, go to root direcotry;
-      :Assume path is whole dirname;
 	while( read each dir in dirname) is (exist in current directory)
 		:Get list of dir names in current direcotry;
 		if(dir matches with a directory in current dirceotry) is (no)
@@ -407,15 +343,14 @@
       #+END_SRC
 
       #+RESULTS:
-      [[file:Plant/getDirPath.png]]
+      [[file:Plant/getInode.png]]
 
-   - int getFilePath(string path) :: Helper function, used to get the file given a path.
+   - int getInode(string path) :: Helper function, used to get the file given a path.
      - Ouptut :: inode number of where it is, or -1 if it's not found.
-      #+BEGIN_SRC plantuml  :file Plant/getFilePath.png
+      #+BEGIN_SRC plantuml  :file Plant/getInode.png
       @startuml
       :Go to root inode, which should be the 0th inode;
       :From the 0th inode, go to root direcotry;
-      :Split path to dirname and basename (if it ends with a /, it's a directory. Else, it's a file);
 	while( read each dir in dirname) is (exist in current directory)
 		:Get list of dir names in current direcotry;
 		if(dir matches with a directory in current dirceotry) is (no)
@@ -437,23 +372,23 @@
       #+END_SRC
 
       #+RESULTS:
-      [[file:Plant/getFilePath.png]]
+      [[file:Plant/getInode.png]]
 
    - File_Create(string path) :: Create a new file at path. There is a check to see if that file already exist, and if there's a free datablock for it.
      #+BEGIN_SRC plantuml  :file Plant/FileCreate.png
 	if(count of free datablocks is > 0 && count of free indoes is >0) is (yes)
-		:int inode=getDirPath(path);
+		:int inode=getInode(path);
 		if(inode == -1) then (true)
 		    :return "E_FILE_CREATE" -1;
 				    stop
 		else
 			:Go to directory specifeid in inode;
-			if(basename file already in directory) is (true)
+			if(basename file already in directory) then (true)
 			    :return "E_FILE_CREATE" -1;
 				    stop
 			else
-				if(directory has not hit the 25 file limit && actualPath.length does not exceed 256 characters) is (true)
-				    :Create new inode, allociated at a free datablock;
+				if(directory has not hit the 25 file limit && actualPath.length does not exceed 256 characters) then (true)
+				    :Create new inode, allociated with 10 datablocks;
 				    :return 0;
 				    stop
 				else
@@ -475,18 +410,18 @@
 
    - File_Open(string path) :: returns the file descriptor of the file, which can be used to read and write to it.
      #+BEGIN_SRC plantuml  :file Plant/FileOpen.png
-	    :int inode=getFilePath(path);
+	    :int inode=getInode(path);
 	    if(inode == -1) then (true)
 		:return "E_NO_SUCH_FILE" -1;
 		stop
 	    else
 		:basename=file descriped by path;
 		    
-		    if(fileOpenTable does not have basename)
+		    if(fileOpenTable does not have basename) then (true)
 			:return -1 "E_FILE_ALREADY_OPEN";
 			stop
 		    else
-			if(fileOpenTable coutn is not 10 or more) is (true)
+			if(fileOpenTable coutn is not 10 or more) then (true)
 				:Append inode to open file table;
 				:return file descriptor, whcih sit he count of open file table;
 				stop
@@ -512,7 +447,7 @@
 		while (i <- 0 to size*8, to account for byte to bit conversion AND file still hasn't reach of file) is (true)
 			:buffer+=file.getBit[i+file.pos()];
 			
-		endwhile
+		endwhile (reach end of file)
 		:file.seek(fd, size);
 		:return size;
 		stop
@@ -526,19 +461,20 @@
    - File_Write(int fd, string buffer, int size IN BYTES) :: Write from buffer to the file. NOTE SIZE HAS TO BE CONSISNET. If it's not, stop the program
      #+BEGIN_SRC plantuml  :file Plant/FileWrite.png
      @startuml
-	if(fd is not in open file table)
+     start
+	if(fd is not in open file table) then (true)
 		:return -1 "E_WRITE_BAD_FD";
 		stop
-	elseif (size != buffer size)
+	elseif (size != buffer size)  then (true)
 		:return -1 "E_SIZE_BUFFER_MISMATCH";
 		stop
 	else
 		:file=openfiletable[fd];
-		while (i <- 0 to size*8, to account for byte to bit conversion AND file still hasn't reach of file) is true)
-			if(write requires a new datablock, but there's no free datablcok) is (yes)
+		while (i <- 0 to size*8, to account for byte to bit conversion AND file still hasn't reach of file) then true)
+			if(write requires a new datablock, but there's no free datablcok) then (true)
 				:return -1 E_NO_SPACE;
 				stop
-			elseif (file has reached max file size of 10 datablocks)
+			elseif (file has reached max file size of 10 datablocks) then (true)
 				:return -1 E_FILE_TOO_BIG;
 				stop
 			else
@@ -561,13 +497,13 @@
      #+BEGIN_SRC plantuml  :file Plant/FileSeek.png
      @startuml
      start
-	if(fd is not in open file table)
+	if(fd is not in open file table) then (true)
 		:return -1 "E_SEEK_BAD_FD";
 		stop
-	elseif (size is greater than file size or it's negative)
+	elseif (size is greater than file size or it's negative)  then (true)
 		:return -1 "E_SEEK_OUT_OF_BOUNDS";
 		stop
-	else
+	else  then (true)
 		:openFileTable[fd].setPos(offset);
 		:return fd;
 		stop
@@ -582,11 +518,11 @@
      @startuml
 
      #+RESULTS:
-     [[file:FileSeek.png]]
+     [[file:Plant/FileSeek.png]]
    - File_Close(int fd) :: Remove file from table
      #+BEGIN_SRC plantuml  :file Plant/FileClose.png
      start
-	if(fd is not in open file table)
+	if(fd is not in open file table)  then (true)
 		:return -1 "E_CLOSE_BAD_FD";
 		stop
 	else
@@ -605,12 +541,12 @@
      #+BEGIN_SRC plantuml  :file Plant/FileDelete.png
      @startuml
      start
-	if(fd is not in open file table)
+	if(fd is not in open file table) then (true)
 		:return -1 "E_FILE_IN_USE";
 		stop
 	else
 		:inode=getPath(path);
-		if(indoe equals) is (-1)
+		if(indoe equals) then (-1)  
 			:return -1 "E_NO_SUCH_FILE";
 			stop
 		else (postive)
@@ -630,15 +566,20 @@
 ** Directory  :DIR:
    - Dir_Create(string path) :: Create directory at path
      #+BEGIN_SRC plantuml  :file Plant/DirCreate.png
-     if(indoe count and datablcok count is not >0)
+     if(indoe count and datablcok count is not >0) then (true)
 	:return E_DIR_CREATE;
 	stop
      endif
-     if(getDirPath(path)) is (is -1)
-	if(getDirPath(path.parent)  && actualPath.length does not exceed 256 characters ) is (is -1)
+     if(getInode(path)) then (is -1) 
+	if(getInode(path.parent)  && actualPath.length does not exceed 256 characters ) then (is -1)
 		:return E_DIR_CREATE;
 		stop
-	else ( is postive   )
+	else if ( parent direcotry's file size is 24) then (true)
+		:return E_MAX_FILE_SIZE;
+		stop
+	else (  getInode(path.parent) is postive s)
+	
+		:Find place to put in new datablock, indoe and parent direcotry entry;
 		:create new direcotry inode
 		create new directory datablock, allociate inode to that.
 		dir.path is the first 15 characters + end of file delimeter
@@ -647,6 +588,9 @@
 			This will always set the dirname to 16 bytes.
 			If need to throw an ecpetion for it, append one here.
 		    endnote
+		    :Update parent direcotry size
+		    Write parent directory the directory of path;
+		    :Update indoe and direcotyr bitmap;
 		stop
 	endif
      else(is postive)
@@ -659,27 +603,21 @@
      [[file:Plant/DirCreate.png]]
 
      @startuml
-
-     #+RESULTS:
-     [[file:DirCreate.png]]
+     
    - Dir_Read(string path, string buffer, itn size) :: Read the contents of a directory.
      #+BEGIN_SRC plantuml  :file Plant/DirRead.png
-     if(indoe count and datablcok count is not >0)
+     if(indoe count and datablcok count is not >0) then (true)
 	:return E_DIR_CREATE;
+	stop
      endif
-     if(getDirPath(path)) is (is -1)
-		:return E_DIR_NO_EXISTT;
+     if(getInode(path)) then (is -1)
+		:return E_DIR_NO_EXIST;
 		stop
 	else ( is postive)
-		if(size>= Dir_Size(path)) is (yes)
+		if(size>= Dir_Size(path)) then (yes)
 			while(dir in directory) is (not done)
-				:buffer+=dir.type
-				buffer+=dir.path;
-				note left
-					This automatically assumes that the path is 16 characters.
-					If see fit, this can be changed,
-					and path could throw an excpetion if greater than 15 characters.
-				endnote
+				:buffer+=dir.path
+				buffer+=" ";
 			endwhile
 			stop
 		else(no)
@@ -695,8 +633,8 @@
    - Dir_Unlink(string path) :: Remove file from drive
       #+BEGIN_SRC plantuml  :file Plant/DirUnlink.png
       @startuml
-		 :inode=getDirPath(path);
-		 if(indoe equals) is (-1)
+		 :inode=getInode(path);
+		 if(indoe equals) then (-1)
 			 :return -1 "E_DIR_NON_EXIST";
 			 stop
 		 else (postive)
@@ -704,12 +642,15 @@
 			    :return -1 "E_DIR_NON_EMPTY";
 			    stop
 			else
-				if(path=="/")
+				if(path=="/") then (true)
 				    :return -1 "E_DEL_ROOT_DIR";
 				    stop
 				else
-					:set inode in inodebitmap as free.
+					:remove inode alloicated to path
+					remove parent's direcotry for this
+					decrease parent's size
 					set all datablocks allociated to it to be 0;
+					:decrease indoe and datablock size;
 					stop
 					
 				endif
@@ -721,6 +662,21 @@
       #+RESULTS:
       [[file:Plant/DirUnlink.png]]
 
+   - Dir_Size(string path) :: Get the file size
+      #+BEGIN_SRC plantuml  :file Plant/Dir_Size.png
+      @startuml
+      :inode = getInode(path);
+      if(inode's size is equal to null inode size) then (true)
+	:osErrMsg="E_DIR_SIZE"
+	return -1;
+    else 
+	:return inode.size;
+	@enduml
+      #+END_SRC
+
+      #+RESULTS:
+      [[file:Plant/Dir_Size.png]]
+      
 ** Disk :DISK:
    
    - DISK_INIT() :: Set all the data in the disk to be 0
@@ -787,8 +743,6 @@
     [[file:Plant/DiskWrite.png]]
 
 
-    #+RESULTS:
-    [[file:DiskWrite.png]]
 
 - DISK_Read(int sector, string buffer) :: read from sector to buffer
 
