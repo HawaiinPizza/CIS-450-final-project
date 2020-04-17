@@ -9,14 +9,12 @@
 #define inodeSize 114
 #define dirSize 160
 #define dirCount 25
-// f stands for File system check. This is just a one liner, that returns -1 if any thing happens. 
-#define f                         \
-	do {                                       \
-		if(FS_Lock ){ \
-			osErrMsg="E_FILE_BOOT"; \
-			return -1; \
-		} \
-	} while (0) \
+#include <fstream>
+#include "BitData.h"
+#include "FS.h"
+std::ofstream LogFile;
+
+
 
 // Forloop, from x to y
 #define forloop(x,y) \
@@ -68,6 +66,36 @@ disk(ExtDisk);
 disk(WorkDisk);
 string osErrMsg="";
 string diskErrMsg="";
+
+
+
+bool printDisk=false; //Used to print each bit in both disks
+
+//Description: Print to the log the currrent command and it's status.
+//PreCondition: The status code to print, and LogFile is opened
+//PostCondition: Wirte to LogFile the current commadn
+#define Log(status, string) \
+	LogFile << __FUNCTION__ << ' ' << status << "\t" << string << std::endl; \
+	/* if(printDisk){ \ */
+	/* 	for(int i=0; i<SectorNum; i++){ \ */
+	/* 		LogFile << "ExtDisk  at Sector " << i << ":\t" << ExtDisk[i] << std::endl; \ */
+	/* 		LogFile << "WorkDisk at Sector " << i << ":\t" << ExtDisk[i] << std::endl; \ */
+	/* 	} \ */
+	/* 	LogFile << std::endl; \ */
+	/* } */  
+
+
+// f stands for File system check. This is just a one liner, that returns -1 if any thing happens. 
+#define f                         \
+	do {                                       \
+		if(FS_Lock ){ \
+			Log(-1, "File system is locked"); \
+			osErrMsg="E_FILE_BOOT"; \
+			return -1; \
+		} \
+	} while (0) \
+
+
 // Inode 
 
 //Description: Inode struuctre, used for reading and writing inode blocks

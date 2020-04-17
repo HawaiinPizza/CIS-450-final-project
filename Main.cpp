@@ -14,6 +14,7 @@
 using namespace std;
 
 int main(){
+	LogFile.open("DirectiveLog1.txt");
 	FS_Boot();
 
 	cout << "Creating directories\n";
@@ -44,6 +45,9 @@ int main(){
 	cout << "Creating Direcotry /H/h\t" << DirCreate("/H/h") << endl;
 	cout << "Creating Direcotry /I/i\t" << DirCreate("/I/i") << endl;
 	cout << "Creating Direcotry /K/k\t" << DirCreate("/K/k") << endl;
+	/* asm("int $3"); */
+	cout << "Creating Direcotry /P/.\t" << DirCreate("/P/.") << "\tFails because parent is not made" << endl;
+	cout << "Creating Direcotry /P/\t" << DirCreate("/P") << endl;
 	cout << "Creating Direcotry /P/.\t" << DirCreate("/P/.") << endl;
 
 	cout << "Creating Directory /A/0\t" << File_Create("/A/0") << endl;
@@ -182,8 +186,9 @@ int main(){
 	DirRead("/", _temp);
 	cout << "Recreating the directoreis, root has " << _temp << "\t to test whetehr file acccess after closign is workign\n";
 	_temp = "";
-	FS_Sync();
-	FS_Reset();
+	cout << "FS Sync always works. It can't failed. But its' error code is " << FS_Sync() << endl;
+	cout << "Locking the file system successfully " <<  FS_Reset() << endl;
+	cout << "Locking the file system badly, since we already locked it. " << FS_Reset() << endl;
 	DirRead("/", _temp);
 	cout << "Reading root after closing file system" << '\t' << _temp << endl;
 
@@ -194,6 +199,18 @@ int main(){
 	DirRead("/", _temp);
 	cout << "Reading root after re opening file system" << '\t' << _temp << endl;
 
+
+	cout << "Now than, let's test out disk write fucntions.\n\n";
+	{
+		string _temp="111";
+		cout << "Writing " << _temp << " to sector 1 " << Disk_Write(_temp, 1) << " It's invalid because the buffer only has 3 values " << endl;
+
+		cout << "Reading sector 9 " << Disk_Read(_temp, 9) << endl;
+
+		cout << "Writing from sector 9 to sector 1001 " << Disk_Write(_temp, 1001) << " It's invalid because sector 1001 is out of bounds"  << endl;
+
+		cout << "Writing from sector 9 to sector 1 " << Disk_Write(_temp, 1) << endl;
+	}
 
 
 	return 0;

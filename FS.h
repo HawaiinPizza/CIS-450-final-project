@@ -10,6 +10,7 @@
 #define MagicNum 18
 #define SBNum 18
 #include "Disk.h"
+#include "BitData.h"
 
 // Global data
 bool FS_Lock=true;
@@ -35,11 +36,13 @@ int FS_Boot(){
 				for(i=0; i<SectorNum; i++){
 					WorkDisk[i]=ExtDisk[i];
 				}
-				return 0;
+				Log(0, "");
+return 0;
 			}
 			else { // ERRORR. 
 				osErrMsg="E_FILE_Boot";
-				return -1;
+				Log(-1, "");
+return -1;
 			}
 		}
 	}
@@ -47,7 +50,8 @@ int FS_Boot(){
 	ExtDisk[0]=SBNum;
 	Disk_Init(ExtDisk);
 	Disk_Save();
-	return 0;
+	Log(0, "");
+return 0;
 } 
 
 
@@ -59,7 +63,8 @@ int FS_Sync(){ // Saves workign disk to extenral disk.
 	f;
 	for(int i=0; i<SectorNum; i++)
 		ExtDisk[i]=WorkDisk[i];
-	return 0;
+	Log(0, "");
+return 0;
 }
 
 
@@ -72,6 +77,7 @@ int FS_Reset(){ //
 		osErrMsg="E_FILE_RESET";
 	f;	
 	FS_Lock=true;
+	Log(0, "");
 	return 0;
 }
 

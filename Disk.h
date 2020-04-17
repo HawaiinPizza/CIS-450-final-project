@@ -16,6 +16,7 @@
 	//Post-condition: Create a disk.
 
 int Disk_Init(disk(DISK)){ // Setup the disk
+	f;
 	// Set each sector 0
 	for(int i=0; i<SectorNum; i++){ 
 		DISK[i]=0;
@@ -53,6 +54,7 @@ int Disk_Init(disk(DISK)){ // Setup the disk
 	writeInodeSect(DISK[3], 0, inodeString);
 
 
+	Log(0, "");
 	return 0;
 }
 //Description: Save the working disk onto the extenral disk
@@ -61,8 +63,10 @@ int Disk_Init(disk(DISK)){ // Setup the disk
 
 // Save and load functions
 int Disk_Load(){ // workDisk->extDisk
+	f;
 	for(int i=0; i<SectorNum; i++ )
 		ExtDisk[i]=WorkDisk[i];
+	Log(0, "");
 	return 0;
 }
 
@@ -70,8 +74,10 @@ int Disk_Load(){ // workDisk->extDisk
 	///Pre-condition: 
 	//Post-condition: Working disk has external disk value
 int Disk_Save(){ // extDisk->workDisk
+	f;
 	for(int i=0; i<SectorNum; i++ )
 		WorkDisk[i]=ExtDisk[i];
+	Log(0, "");
 	return 0;
 }
 
@@ -80,8 +86,13 @@ int Disk_Save(){ // extDisk->workDisk
 	//Post-condition: WRite the buffer onto the disk
 // Read and write Functions The method signetuare is differnt, disk is not supposed to be there.
 int Disk_Write( string &buffer, int sector){ // I did not check for buffer being null. IDK what to do in that scenario. 
+	f;
 	if(buffer.length()!=SectorBit || sector <0 || sector >= SectorNum ){ // One of these conditions happne, which are INVLAID
 		diskErrMsg="E_WRITE_INVALID_PARM";
+		string _temp=buffer;
+		_temp+=" ";
+		_temp+=to_string(sector);
+		Log(-1, _temp);
 		return -1;
 	}
 	else{
@@ -90,14 +101,23 @@ int Disk_Write( string &buffer, int sector){ // I did not check for buffer being
 
 	}
 
+	string _temp=buffer;
+	_temp+=" ";
+	_temp+=to_string(sector);
+	Log(0, _temp);
 	return 0;
 }
 //Description: Read the value of a sector
 ///Pre-condition: The buffer is of correct size and sector is in range.
 //Post-condition: Set teh buffer to correct value
 int Disk_Read( string &buffer, int sector){ // I did not check for buffer being null. IDK what to do in that scenario. 
+	f;
 	if(sector <0 || sector >= SectorNum ){ // One of these conditions happne, which are INVLAID
 		diskErrMsg="E_READ_INVALID_PARM";
+		string _temp=buffer;
+		_temp+=" ";
+		_temp+=to_string(sector);
+		Log(-1, _temp);
 		return -1;
 	}
 	else{
@@ -109,6 +129,10 @@ int Disk_Read( string &buffer, int sector){ // I did not check for buffer being 
 
 	}
 
+	string _temp=buffer;
+	_temp+=" ";
+	_temp+=to_string(sector);
+	Log(0, _temp);
 	return 0;
 }
 

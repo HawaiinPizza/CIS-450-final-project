@@ -168,25 +168,34 @@ openFile openFileTable;
 //Post-condition: Create a file to the path, with ti's corresponding inode.
 
 int File_Create(string path){ 
+	f;
 	inode child=getInode(path);
 	size_t found = path.find_last_of("/");
 	inode parent=getInode(path.substr(0,found));
 	if(parent.size==inode().size){ // Parent does not exist
 		osErrMsg="E_FILE_CREATE";
-		return -1;
+		Log(-1, path); 
+		Log(0, path); 
+		return 0;
 	}
 	else{
 		if (child.size != inode().size){ // Child alreayd exist
 			osErrMsg="E_FILE_CREATE";
-			return -1; 
+			Log(-1, path); 
+			Log(0, path); 
+			return 0; 
 		}
 		else if (path.length()>256 ){ // Checking if path exceeds 256 characters
 			osErrMsg="E_FILE_CREATE";
-			return -1;
+			Log(-1, path); 
+			Log(0, path); 
+			return 0;
 		}
 		else if( WorkDisk[1].to_ulong()>=100){ // There are 100 or over files/direcotires already
 			osErrMsg="E_FILE_CREATE";
-			return -1;
+			Log(-1, path); 
+			Log(0, path); 
+			return 0;
 		}
 		else{ // Can make dirctioanry.
 			child.size=0;
@@ -205,7 +214,9 @@ int File_Create(string path){
 			forloop(0,10){
 				if ( posFile[i].Count==-1){
 					osErrMsg="E_FILE_CREATE";
-					return -1;
+					Log(-1, path); 
+					Log(0, path); 
+					return 0;
 				}
 
 			}
@@ -258,7 +269,9 @@ int File_Create(string path){
 			}
 			else{ // There is no more space for a new directory
 				osErrMsg="E_FILE_CREATE";
-				return -1;
+				Log(-1, path); 
+				Log(0, path); 
+				return 0;
 			}
 
 
@@ -266,180 +279,226 @@ int File_Create(string path){
 
 		}
 	}
-//Description: Set the file to the opnefie table. 
-///Pre-condition: The file exist and the openfiletable does not exceed size
-//Post-condition: Opne file 
-int File_Open(string path){
-	inode fileNode=getInode(path);
-	if(fileNode.alloc[0]==1023 || fileNode.alloc[0]==-1 || fileNode.isFile==false){
-		osErrMsg="E_NO_SUCH_FILE";
-		return -1;
-	}
-	else{
-		if( openFileTable.isFileOpened(path) ){ // FIle is already opened
-
-			osErrMsg="E_ALREADY_OPENED";
-			return -1;
-		}
-		else if ( openFileTable.size>=10){
-			osErrMsg="E_FILE_CREATE";
-			return -3;
+	//Description: Set the file to the opnefie table. 
+	///Pre-condition: The file exist and the openfiletable does not exceed size
+	//Post-condition: Opne file 
+	int File_Open(string path){
+	f;
+		inode fileNode=getInode(path);
+		if(fileNode.alloc[0]==1023 || fileNode.alloc[0]==-1 || fileNode.isFile==false){
+			osErrMsg="E_NO_SUCH_FILE";
+			Log(-1, path); 
+			Log(0, path); 
+			return 0;
 		}
 		else{
-			// Setup file
-			pos Temp[10];
-			forloop(0,10){
-				Temp[i].Sect=fileNode.alloc[i];
-				Temp[i].Count=0;
-			}
+			if( openFileTable.isFileOpened(path) ){ // FIle is already opened
 
-			int _alloc[10];
-			file File(Temp, path);
-			int _temp=openFileTable.addFileOpen(File);
-			if(_temp)
-				return _temp;
+				osErrMsg="E_ALREADY_OPENED";
+				Log(-1, path); 
+				Log(0, path); 
+				return 0;
+			}
+			else if ( openFileTable.size>=10){
+				osErrMsg="E_FILE_CREATE";
+				return -3;
+			}
 			else{
-				osErrMsg="E_FILE_OPENED";
-				return -1;
-			}
-
-
-
-		}
-
-
-
-	}
-
-
-}
-
-//Description: Close the file, or just remove the file from the openfiletable
-///Pre-condition: The fd is valid in teh openfieltable
-//Post-condition: Remove file from openfiletable
-int File_Close(int fd){
-	if(! openFileTable.isValid[fd]){ // Fd not here.
-		osErrMsg="E_CLOSE_BAD_FD";
-		return -1;
-	}
-	else{
-		openFileTable.rmFileOpen(fd);
-	}
-	return 0;
-}
-
-//Description: Read a file from teh openfile table. 
-///Pre-condition: The buffer is equal to size and fd exist
-//Post-condition: The buffer gets modfied by the file by size
-int File_Read(int fd, string &buffer, int size){
-	int i=openFileTable.read(fd, buffer, size);
-	if(i==0){
-		return i;
-	}
-	else{
-		osErrMsg="E_CLOSE_BAD_FD";
-		return -1;
-	}
-}
-
-//Description: write a file from teh openfile table. 
-///Pre-condition: The buffer is equal to size and fd exist
-//Post-condition: The file gets modfied by the buffer by size
-
-int File_Write(int fd, string &buffer, int size){
-	int i=openFileTable.write(fd, buffer, size);
-	if(i==0){
-
-		return size;
-	}
-	else if (i==2){
-		osErrMsg="E_FILE_TOO_BIG";
-		return -1;
-	}
-	else{
-		osErrMsg="E_CLOSE_BAD_FD";
-		return -1;
-	}
-}
-
-
-//Description: Delete the file 
-///Pre-condition: The file itself exist AND it's nonempty. Input of a path
-//Post-condition: Delete the file and it's corresponding entry in it's parent file and inode.
-int File_Unlink(string path){
-	inode delNode=getInode(path);
-	size_t found = path.find_last_of("/");
-	inode parent=getInode(path.substr(0,found));
-	if(delNode.size==-1){ // File does not exist
-		osErrMsg="E_NO_SUCH_FILE";
-		return -1;
-	}
-	else if ( openFileTable.isFileOpened(path)  ){ //Path is not empty. 
-		osErrMsg="E_FILE_OPENED";
-		return -1;
-	}
-	else{ // Now we can delete it. Hurray. TODO make a getInode iwth possiton of the inode, so I don't have to ifnd it twice like a stupid
-
-		forloop(3,6){ // Deleting inode.
-			forloop2(0,35){
-				if(delNode.alloc[0]==readInodeSectInode(WorkDisk[i],j).alloc[0]){
-					writeInodeSect(WorkDisk[i], j, "0");
-				}
-			}
-		}
-		bitset<dirSize> temp(0);
-		for(int i=0; i<10; i++){
-			if(delNode.alloc[i]!=1023)
-				writeDirSect(WorkDisk[delNode.alloc[i]], 0,temp); // Deleting the acutal entry.
-			else
-				break;
-		}
-
-		// Now we gotta decrease the parent' inode siz
-		parent.size--;
-		forloop(3,6){
-			forloop2(0,35){
-				if(parent.alloc[0]==readInodeSectInode(WorkDisk[i],j).alloc[0]){
-					writeInodeSectInode(WorkDisk[i],j, parent);
-				}
-			}
-		}
-
-		//Now, we must find the parent dictionary file of del, and remove it
-		size_t found = path.find_last_of("/");
-		string child=path.substr(found+1);
-		bool stop=false;
-		for(int i=0; i<dirCount && !stop; i++){
-			bitset<dirSize>  dirBit(readDirSect(WorkDisk[parent.alloc[0]], i));
-			if(dirBit!=0){
-				dir Dir=getBitDir(dirBit);
-				if(Dir.Name==child){ // Found the cihld directory in parent
-					dirBit=0;
-					writeDirSect(WorkDisk[parent.alloc[0]]  , i, dirBit);
-					stop=true;
-					break;
+				// Setup file
+				pos Temp[10];
+				forloop(0,10){
+					Temp[i].Sect=fileNode.alloc[i];
+					Temp[i].Count=0;
 				}
 
+				int _alloc[10];
+				file File(Temp, path);
+				int _temp=openFileTable.addFileOpen(File);
+				if(_temp)
+					return _temp;
+				else{
+					osErrMsg="E_FILE_OPENED";
+					Log(-1, path); 
+					Log(0, path); 
+					return 0;
+				}
+
+
+
 			}
 
 
+
 		}
-		uint _bitmapSize=WorkDisk[1].to_ulong();
-		_bitmapSize--;
-		WorkDisk[1]=_bitmapSize;
-		_bitmapSize=WorkDisk[2].to_ulong();
-		_bitmapSize--;
-		WorkDisk[2]=_bitmapSize;
+
+
+	}
+
+	//Description: Close the file, or just remove the file from the openfiletable
+	///Pre-condition: The fd is valid in teh openfieltable
+	//Post-condition: Remove file from openfiletable
+	int File_Close(int fd){
+	f;
+		if(! openFileTable.isValid[fd]){ // Fd not here.
+			osErrMsg="E_CLOSE_BAD_FD";
+			string buffer=to_string(fd);
+			Log(-1, buffer);
+			return -1;
+		}
+		else{
+			openFileTable.rmFileOpen(fd);
+		}
+		string buffer=to_string(fd);
+		Log(0, buffer);
 		return 0;
 	}
-	return 0;
-}
 
-//Description: Move the file by seek. Not really used, since openfiletable already has it's own seek function.
-///Pre-condition: offset is within range, and fd exist
-//Post-condition: move the file by the offset.
-int File_Seek(int fd, int offset){
-	return openFileTable.seek(fd, offset);
-}
+	//Description: Read a file from teh openfile table. 
+	///Pre-condition: The buffer is equal to size and fd exist
+	//Post-condition: The buffer gets modfied by the file by size
+	int File_Read(int fd, string &buffer, int size){
+	f;
+		int i=openFileTable.read(fd, buffer, size);
+		if(i==0){
+			string buffer=to_string(fd);
+			buffer +=" "+buffer + " ";
+			buffer+=to_string(size);
+			Log(i, buffer);
+			return i;
+		}
+		else{
+			osErrMsg="E_CLOSE_BAD_FD";
+			string buffer=to_string(fd);
+			buffer +=" "+buffer + " ";
+			buffer+=to_string(size);
+			Log(i, buffer);
+			return -1;
+		}
+	}
+
+	//Description: write a file from teh openfile table. 
+	///Pre-condition: The buffer is equal to size and fd exist
+	//Post-condition: The file gets modfied by the buffer by size
+
+	int File_Write(int fd, string &buffer, int size){
+	f;
+		int i=openFileTable.write(fd, buffer, size);
+		if(i==0){
+
+			string buffer=to_string(fd);
+			buffer +=" "+buffer + " ";
+			buffer+=to_string(size);
+			Log(size, buffer);
+			return size;
+		}
+		else if (i==2){
+			osErrMsg="E_FILE_TOO_BIG";
+			string buffer=to_string(fd);
+			buffer +=" "+buffer + " ";
+			buffer+=to_string(size);
+			Log(-1, buffer);
+			return -1;
+		}
+		else{
+			string buffer=to_string(fd);
+			buffer +=" "+buffer + " ";
+			buffer+=to_string(size);
+			Log(-1, buffer);
+			osErrMsg="E_CLOSE_BAD_FD";
+			return -1;
+		}
+	}
+
+
+	//Description: Delete the file 
+	///Pre-condition: The file itself exist AND it's nonempty. Input of a path
+	//Post-condition: Delete the file and it's corresponding entry in it's parent file and inode.
+	int File_Unlink(string path){
+	f;
+		inode delNode=getInode(path);
+		size_t found = path.find_last_of("/");
+		inode parent=getInode(path.substr(0,found));
+		if(delNode.size==-1){ // File does not exist
+			osErrMsg="E_NO_SUCH_FILE";
+			Log(-1, path);
+			return -1;
+		}
+		else if ( openFileTable.isFileOpened(path)  ){ //Path is not empty. 
+			osErrMsg="E_FILE_OPENED";
+			Log(-1, path);
+			return -1;
+		}
+		else{ // Now we can delete it. Hurray. TODO make a getInode iwth possiton of the inode, so I don't have to ifnd it twice like a stupid
+
+			forloop(3,6){ // Deleting inode.
+				forloop2(0,35){
+					if(delNode.alloc[0]==readInodeSectInode(WorkDisk[i],j).alloc[0]){
+						writeInodeSect(WorkDisk[i], j, "0");
+					}
+				}
+			}
+			bitset<dirSize> temp(0);
+			for(int i=0; i<10; i++){
+				if(delNode.alloc[i]!=1023)
+					writeDirSect(WorkDisk[delNode.alloc[i]], 0,temp); // Deleting the acutal entry.
+				else
+					break;
+			}
+
+			// Now we gotta decrease the parent' inode siz
+			parent.size--;
+			forloop(3,6){
+				forloop2(0,35){
+					if(parent.alloc[0]==readInodeSectInode(WorkDisk[i],j).alloc[0]){
+						writeInodeSectInode(WorkDisk[i],j, parent);
+					}
+				}
+			}
+
+			//Now, we must find the parent dictionary file of del, and remove it
+			size_t found = path.find_last_of("/");
+			string child=path.substr(found+1);
+			bool stop=false;
+			for(int i=0; i<dirCount && !stop; i++){
+				bitset<dirSize>  dirBit(readDirSect(WorkDisk[parent.alloc[0]], i));
+				if(dirBit!=0){
+					dir Dir=getBitDir(dirBit);
+					if(Dir.Name==child){ // Found the cihld directory in parent
+						dirBit=0;
+						writeDirSect(WorkDisk[parent.alloc[0]]  , i, dirBit);
+						stop=true;
+						break;
+					}
+
+				}
+
+
+			}
+			uint _bitmapSize=WorkDisk[1].to_ulong();
+			_bitmapSize--;
+			WorkDisk[1]=_bitmapSize;
+			_bitmapSize=WorkDisk[2].to_ulong();
+			_bitmapSize--;
+			WorkDisk[2]=_bitmapSize;
+			Log(0, path);
+			return 0;
+		}
+		Log(0, path);
+		return 0;
+	}
+
+	//Description: Move the file by seek. Not really used, since openfiletable already has it's own seek function.
+	///Pre-condition: offset is within range, and fd exist
+	//Post-condition: move the file by the offset.
+	int File_Seek(int fd, int offset){
+	f;
+		//Not used, but it works Stener. Because it just invokes openfiletable seek.
+		string _temp=to_string(fd);
+		_temp+="\t";
+		_temp+=offset;
+		int status=openFileTable.seek(fd, offset);
+		Log(status, _temp);
+		return status;
+	}
 
 #endif

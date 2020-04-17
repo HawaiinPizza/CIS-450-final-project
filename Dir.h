@@ -13,24 +13,29 @@
 ///Pre-condition: string path with it's parent made
 //Post-condition: The direcotry is made in the parent
 int DirCreate(string path){ 
+	f;
 	inode child=getInode(path);
 	size_t found = path.find_last_of("/");
 	inode parent=getInode(path.substr(0,found));
 	if(parent.size==inode().size){ // Parent does not exist
 		osErrMsg="E_DIR_CREATE";
+		Log(-1, path);	
 		return -1;
 	}
 	else{
 		if (child.size != inode().size){ // Child alreayd exist
 			osErrMsg="E_DIR_CREATE";
+			Log(-1, path);
 			return -1;
 		}
 		else if (path.length()>256 ){ // Checking if path exceeds 256 characters
 			osErrMsg="E_DIR_CREATE";
+			Log(-1, path);
 			return -1;
 		}
 		else if( WorkDisk[1].to_ulong()>=100){ // There are 100 or over files/direcotires already
 			osErrMsg="E_DIR_CREATE";
+			Log(-1, path);
 			return -1;
 		}
 		else{ // Can make dirctioanry.
@@ -49,6 +54,7 @@ int DirCreate(string path){
 				dir NewDir(temp, posInode.Count+(posInode.Sect-3)*35);
 				if(posParDir.isPar==true){
 					osErrMsg="E_DIRCREATE";
+					Log(-1, path);
 					return -1;
 				}
 				else{
@@ -80,135 +86,152 @@ int DirCreate(string path){
 				_bitmapSize=WorkDisk[2].to_ulong();
 				_bitmapSize++;
 				WorkDisk[2]=_bitmapSize;
+				Log(0, path);
 				return 0;
 			}
 			else // There is no more space for a new directory
 				osErrMsg="E_DIR_CREATE";
-				return -1;
+			Log(-1, path);
+			return -1;
 			}
 		}
 	}
 
-//Description: Gets the size of the direcotry
-///Pre-condition: The direcotry exist
-//Post-condition: Returns the number of directoreis in a direcotry
+	//Description: Gets the size of the direcotry
+	///Pre-condition: The direcotry exist
+	//Post-condition: Returns the number of directoreis in a direcotry
 
-int DirSize(string path){ // Get the size of the dctionary
-	inode inodepath=getInode(path);
-	if (inodepath.size == inode().size){ // indoe does not exist
-		osErrMsg="E_DIR_SIZE";
-		return -1;
-	}
-	else{
-		return inodepath.size;
-	}
-}
-
-//Description: Get each direcotry in the direcotry
-///Pre-condition: The direcotry exist, and the buffer is of appoeriate size
-//Post-condition: Writes each direcotyr name in buffer
-int DirRead(string path, string &buffer){ // Helper function of Read.
-	inode Inode=getInode(path);
-	if(Inode.isFile==true || Inode.alloc[0]==-1 || Inode.alloc[0]==1023){ // Check for is file. Save myself soem headachek
-		osErrMsg="E_DIR_READ";
-		return -1;
-	}
-	if(buffer.length()!= DirSize(path)){
-		osErrMsg="E_BUFFER_TOO_SMALL";
-		return -1;
-	}
-	forloop2(1, dirCount){
-		bitset<dirSize> bitRead( readDirSect(WorkDisk[Inode.alloc[0]],j));
-		if(bitRead!=0 ){
-			buffer+=getBitDir(bitRead).Name;
-			buffer+=' ';
+	int DirSize(string path){ // Get the size of the dctionary
+	f;
+		inode inodepath=getInode(path);
+		if (inodepath.size == inode().size){ // indoe does not exist
+			osErrMsg="E_DIR_SIZE";
+			Log(-1, path);
+			return -1;
+		}
+		else{
+			Log(inodepath.size, path);
+			return inodepath.size;
 		}
 	}
-	return 0;
-	// See if next alloc is valid 
-}
 
-//Description: Get each direcotry in the direcotry
-///Pre-condition: The direcotry exist, and the buffer is of appoeriate size
-//Post-condition: Print out each direcotry.
-int _DirRead(string path){ // Helper function of Read.
-	inode Inode=getInode(path);
-	if(Inode.isFile==true || Inode.alloc[0]==-1 || Inode.alloc[0]==1023) // Check for is file. Save myself soem headachek
-		return -1;
-	forloop2(1, dirCount){
-		bitset<dirSize> bitRead( readDirSect(WorkDisk[Inode.alloc[0]],j));
-	}
-	return 0;
-}
-
-//Description: Delete the directory 
-///Pre-condition: The direcotry itself exist AND it's nonempty. Input of a path
-//Post-condition: Delete the direcotyr and it's corresponding entry in it's parent direcotry and inode.
-int DirUnlink(string path){ //Remove a file.
-	inode delNode=getInode(path);
-	size_t found = path.find_last_of("/");
-	inode parent=getInode(path.substr(0,found));
-	if(delNode.size==-1){ // File does not exist
-		osErrMsg="E_DIR_NO_EXIST";
-		return -1;
-	}
-	else if ( DirSize(path)!=0){ //Path is not empty. 
-		_DirRead(path);
-		/* cout << "NOT EMPTY\t" << DirSize(path) << '\t' << delNode.alloc[0] << endl; */
-		osErrMsg="E_DIR_NOT_EMPTY";
-		return -1;
-	}
-	else if ( delNode.alloc[0]==6){ // 6 is where the root directory is. TODO mkae this look easier to read for Stenier
-		osErrMsg="E_DEL_ROOT_DIR";
-		return -1;
-	}
-	else{ // Now we can delete it. Hurray. TODO make a getInode iwth possiton of the inode, so I don't have to ifnd it twice like a stupid
-		forloop(3,6){ // Deleting inode.
-			forloop2(0,35){
-				if(delNode.alloc[0]==readInodeSectInode(WorkDisk[i],j).alloc[0]){
-					writeInodeSect(WorkDisk[i], j, "0");
-				}
+	//Description: Get each direcotry in the direcotry
+	///Pre-condition: The direcotry exist, and the buffer is of appoeriate size
+	//Post-condition: Writes each direcotyr name in buffer
+	int DirRead(string path, string &buffer){ // Helper function of Read.
+	f;
+		inode Inode=getInode(path);
+		if(Inode.isFile==true || Inode.alloc[0]==-1 || Inode.alloc[0]==1023){ // Check for is file. Save myself soem headachek
+			osErrMsg="E_DIR_READ";
+			Log(-1, path);
+			return -1;
+		}
+		if(buffer.length()!= DirSize(path)){
+			osErrMsg="E_BUFFER_TOO_SMALL";
+			Log(-1, path);
+			return -1;
+		}
+		forloop2(1, dirCount){
+			bitset<dirSize> bitRead( readDirSect(WorkDisk[Inode.alloc[0]],j));
+			if(bitRead!=0 ){
+				buffer+=getBitDir(bitRead).Name;
+				buffer+=' ';
 			}
 		}
-		bitset<dirSize> temp(0);
-		for(int i=0; i<10; i++){
-			if(delNode.alloc[i]!=1023)
-				writeDirSect(WorkDisk[delNode.alloc[i]], 0,temp); // Deleting the acutal entry.
-			else
-				break;
+		Log(0, path);
+		return 0;
+		// See if next alloc is valid 
+	}
+
+	//Description: Get each direcotry in the direcotry
+	///Pre-condition: The direcotry exist, and the buffer is of appoeriate size
+	//Post-condition: Print out each direcotry.
+	int _DirRead(string path){ // Helper function of Read.
+	f;
+		inode Inode=getInode(path);
+		if(Inode.isFile==true || Inode.alloc[0]==-1 || Inode.alloc[0]==1023) // Check for is file. Save myself soem headachek
+			Log(-1, path);
+		return -1;
+		forloop2(1, dirCount){
+			bitset<dirSize> bitRead( readDirSect(WorkDisk[Inode.alloc[0]],j));
 		}
-		// Now we gotta decrease the parent' inode siz
-		parent.size--;
-		forloop(3,6){
-			forloop2(0,35){
-				if(parent.alloc[0]==readInodeSectInode(WorkDisk[i],j).alloc[0]){
-					writeInodeSectInode(WorkDisk[i],j, parent);
-				}
-			}
-		}
-		//Now, we must find the parent dictionary file of del, and remove it
-		size_t found = path.find_last_of("/");
-		string child=path.substr(found+1);
-		bool stop=false;
-		for(int i=0; i<dirCount && !stop; i++){
-			bitset<dirSize>  dirBit(readDirSect(WorkDisk[parent.alloc[0]], i));
-			if(dirBit!=0){
-				dir Dir=getBitDir(dirBit);
-				if(Dir.Name==child){ // Found the cihld directory in parent
-					dirBit=0;
-					writeDirSect(WorkDisk[parent.alloc[0]]  , i, dirBit);
-					stop=true;
-					break;
-				}
-			}
-		}
-		uint _bitmapSize=WorkDisk[1].to_ulong();
-		_bitmapSize--;
-		WorkDisk[1]=_bitmapSize;
-		_bitmapSize=WorkDisk[2].to_ulong();
-		_bitmapSize--;
-		WorkDisk[2]=_bitmapSize;
+		Log(0, path);
 		return 0;
 	}
-}
+
+	//Description: Delete the directory 
+	///Pre-condition: The direcotry itself exist AND it's nonempty. Input of a path
+	//Post-condition: Delete the direcotyr and it's corresponding entry in it's parent direcotry and inode.
+	int DirUnlink(string path){ //Remove a file.
+	f;
+		inode delNode=getInode(path);
+		size_t found = path.find_last_of("/");
+		inode parent=getInode(path.substr(0,found));
+		if(delNode.size==-1){ // File does not exist
+			osErrMsg="E_DIR_NO_EXIST";
+			Log(-1, path);
+			return -1;
+		}
+		else if ( DirSize(path)!=0){ //Path is not empty. 
+			_DirRead(path);
+			/* cout << "NOT EMPTY\t" << DirSize(path) << '\t' << delNode.alloc[0] << endl; */
+			osErrMsg="E_DIR_NOT_EMPTY";
+			Log(-1, path);
+			return -1;
+		}
+		else if ( delNode.alloc[0]==6){ // 6 is where the root directory is. TODO mkae this look easier to read for Stenier
+			osErrMsg="E_DEL_ROOT_DIR";
+			Log(-1, path);
+			return -1;
+		}
+		else{ // Now we can delete it. Hurray. TODO make a getInode iwth possiton of the inode, so I don't have to ifnd it twice like a stupid
+			forloop(3,6){ // Deleting inode.
+				forloop2(0,35){
+					if(delNode.alloc[0]==readInodeSectInode(WorkDisk[i],j).alloc[0]){
+						writeInodeSect(WorkDisk[i], j, "0");
+					}
+				}
+			}
+			bitset<dirSize> temp(0);
+			for(int i=0; i<10; i++){
+				if(delNode.alloc[i]!=1023)
+					writeDirSect(WorkDisk[delNode.alloc[i]], 0,temp); // Deleting the acutal entry.
+				else
+					break;
+			}
+			// Now we gotta decrease the parent' inode siz
+			parent.size--;
+			forloop(3,6){
+				forloop2(0,35){
+					if(parent.alloc[0]==readInodeSectInode(WorkDisk[i],j).alloc[0]){
+						writeInodeSectInode(WorkDisk[i],j, parent);
+					}
+				}
+			}
+			//Now, we must find the parent dictionary file of del, and remove it
+			size_t found = path.find_last_of("/");
+			string child=path.substr(found+1);
+			bool stop=false;
+			for(int i=0; i<dirCount && !stop; i++){
+				bitset<dirSize>  dirBit(readDirSect(WorkDisk[parent.alloc[0]], i));
+				if(dirBit!=0){
+					dir Dir=getBitDir(dirBit);
+					if(Dir.Name==child){ // Found the cihld directory in parent
+						dirBit=0;
+						writeDirSect(WorkDisk[parent.alloc[0]]  , i, dirBit);
+						stop=true;
+						break;
+					}
+				}
+			}
+			uint _bitmapSize=WorkDisk[1].to_ulong();
+			_bitmapSize--;
+			WorkDisk[1]=_bitmapSize;
+			_bitmapSize=WorkDisk[2].to_ulong();
+			_bitmapSize--;
+			WorkDisk[2]=_bitmapSize;
+			Log(0, path);
+			return 0;
+		}
+	}
 #endif
