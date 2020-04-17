@@ -4,9 +4,8 @@
 #include <climits>
 #include <bitset>
 #include <cassert>
-#include "Dir.h"
-#include "Dir.h"
 #include "FS.h"
+#include "Dir.h"
 #include "Disk.h"
 #include "Dir.h"
 #include "File.h"
@@ -15,6 +14,10 @@ using namespace std;
 
 int main(){
 	LogFile.open("DirectiveLog1.txt");
+
+	cout << "Any funciton excpet for FS_Boot and FS_Reset will have tiem same effect, if run before FS Boot. Let's prove it\n";
+	cout << "Creating Direcotry /I\t" << DirCreate("/I") << endl;
+	cout << "Creating Directory /A/0\t" << File_Create("/A/0") << endl;
 	FS_Boot();
 
 	cout << "Creating directories\n";

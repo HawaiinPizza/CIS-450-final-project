@@ -10,7 +10,6 @@
 #define dirSize 160
 #define dirCount 25
 #include <fstream>
-#include "BitData.h"
 #include "FS.h"
 std::ofstream LogFile;
 
@@ -84,7 +83,7 @@ bool printDisk=false; //Used to print each bit in both disks
 	/* 	LogFile << std::endl; \ */
 	/* } */  
 
-
+bool FS_Lock=true; // In here cause I don't know how to make it run without issues in FS.h.
 // f stands for File system check. This is just a one liner, that returns -1 if any thing happens. 
 #define f                         \
 	do {                                       \

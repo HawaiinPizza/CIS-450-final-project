@@ -12,9 +12,6 @@
 #include "Disk.h"
 #include "BitData.h"
 
-// Global data
-bool FS_Lock=true;
-
 
 
 

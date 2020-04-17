@@ -14,7 +14,6 @@
 //Description: Setup the disk to have root and rest all zeros
 	///Pre-condition: Input of a disk
 	//Post-condition: Create a disk.
-
 int Disk_Init(disk(DISK)){ // Setup the disk
 	f;
 	// Set each sector 0

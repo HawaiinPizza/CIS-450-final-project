@@ -1,3 +1,5 @@
+DirCreate -1	File system is locked
+File_Create -1	File system is locked
 Disk_Init 0	
 Disk_Save 0	
 FS_Boot 0	
@@ -130,9 +132,8 @@ DirSize 11	/
 DirRead 0	/
 FS_Sync 0	
 FS_Reset 0	
-FS_Reset -1	
-DirSize 11	/
-DirRead -1	/
+FS_Reset -1	File system is locked
+DirRead -1	File system is locked
 FS_Boot 0	
 DirSize 11	/
 DirSize 11	/
