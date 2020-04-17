@@ -19,6 +19,9 @@ bool FS_Lock=true;
 
 
 
+//Description: Boot up the filesystem
+///Pre-condition: If the external disk exist, than check the magic number
+//Post-condition: If magic number is valid OR file is empty, boot up disk
 
 // FS_Boot() ExtDisk->Workign Disk or throw error if magic num differnt
 // Removes external disk, and set up external disk.
@@ -42,12 +45,15 @@ int FS_Boot(){
 	}
 	// External is not made. As such, set the sueprblock to a number.
 	ExtDisk[0]=SBNum;
-	cout <<" FUCKIGN HELL" << endl;
 	Disk_Init(ExtDisk);
 	Disk_Save();
 	return 0;
 } 
 
+
+//Description: Save the current file system to disk
+///Pre-condition: There is no lock
+//Post-condition: Save the file system
 
 int FS_Sync(){ // Saves workign disk to extenral disk.
 	f;
@@ -58,21 +64,18 @@ int FS_Sync(){ // Saves workign disk to extenral disk.
 
 
 
+//Description: Sets a lock on the file system
+///Pre-condition: file system isn't already locked.
+//Post-condition: Locks the system.
 int FS_Reset(){ // 
+	if(FS_Lock)
+		osErrMsg="E_FILE_RESET";
 	f;	
 	FS_Lock=true;
 	return 0;
 }
 
 
-string FS_Check(){
-	string temp="";
-	if(FS_Lock)
-		temp="Lock "+osErrMsg;
-	else
-		temp="No Lock"+osErrMsg;;
-	return temp;
-}
 
 
 #endif

@@ -1,6 +1,6 @@
 #+LATEX_HEADER : \usepackage{amsmath}
 - [ ] Make sure bitmaps gets changed  in the create functiosn for filecreate/dircreate, and file unlink/dir unlink
-* Totest list [3/4]
+* Totest list [4/5]
 ** DONE Bitmaniplation     [2/2] :BIT:
 *** DONE Inode :INODE: [2/2]
     
@@ -62,7 +62,7 @@
      - [X] Buffer is nonNull :: If not, than return E_READ_INVALID_PARAM
      - [X] Sector paramter is out of boudns :: retrun E_READ_INVALID_PARM
      - [X] Sector has data being read from to it :: Write the Sector to Buffer.
-** Setting up Directories and files [3/3]
+** DONE Setting up Directories and files [3/3]
 *** DONE getFilePath(string path) and getDirPath(string path)
     - Input :: string path
     - Expected Output :: given path, get the inode assoicated with it | -1 if that path is not found with the correct type
@@ -155,11 +155,11 @@
     - [ ] File_Seek(int fd, int offset) :: File's posstiion is chnaged by the offset
     - [ ] File_Seek(int fd, int offset) Out of bounds :: Offset is negative/exceeds file size. Return E_SEEK_OUT_OF_BOUNDS
     - [ ] File_Seek(int fd, int offset) bad fd :: File isn't open. Return out of bounds
-** TODO Finsihing it up/Refctoring      [0/4]
-   - [ ] rename read/write functions in datastruct
-   - [ ] pre/post conditions for everything
+** TODO Finsihing it up/Refctoring      [3/4]
+   - [X] rename read/write functions in datastruct
+   - [X] pre/post conditions for everything
    - [ ] set error messages in appoerpate palces
-   - [ ] Create test cases for everything
+   - [X] Create test cases for everything
 
 * Algorithm/Code
 ** Whoel Porgram decompsiostion
@@ -840,7 +840,6 @@
    - How can a buffer be null, cause you can't pass null strings in c++
    - Method signature chagnes, change I have to pass the disk. Is that valid?
    - Also, which disk does disk_write and disk_read write to? I assumed working
-   - I want to test if after closing the file system, the user can re open it and see their stuff is saved. HOWEVER<>
 * Changes/Journal
 ** Changes
   - Wrote teh read/write by Inode/dir funcitons, which allow for bit writing in the drive
@@ -868,6 +867,9 @@
     - INCLUDE IN BOLD :: There's only 24 files within a directory
     - dirSize returns in bits, not bytes.
     - Almsot done wtih project. now, 1 funciton left.cjj
+*** Wedensday, 2 days left
+    - Made some test cases, can determiend now the program is done.
+    - All that's left is error messages and writing test case 2.
 * Specifications 
 ** System Decomposistion  
 *** Data

@@ -11,6 +11,9 @@
 #include "BitData.h"
 
 
+//Description: Setup the disk to have root and rest all zeros
+	///Pre-condition: Input of a disk
+	//Post-condition: Create a disk.
 
 int Disk_Init(disk(DISK)){ // Setup the disk
 	// Set each sector 0
@@ -52,6 +55,9 @@ int Disk_Init(disk(DISK)){ // Setup the disk
 
 	return 0;
 }
+//Description: Save the working disk onto the extenral disk
+	///Pre-condition:
+	//Post-condition: Working disk si saved.
 
 // Save and load functions
 int Disk_Load(){ // workDisk->extDisk
@@ -60,12 +66,18 @@ int Disk_Load(){ // workDisk->extDisk
 	return 0;
 }
 
+//Description: Load the external disk onto ram/working disk
+	///Pre-condition: 
+	//Post-condition: Working disk has external disk value
 int Disk_Save(){ // extDisk->workDisk
 	for(int i=0; i<SectorNum; i++ )
 		WorkDisk[i]=ExtDisk[i];
 	return 0;
 }
 
+//Description: Write the disk given the buffer
+	///Pre-condition: The buffer is of correct size and sector is within range
+	//Post-condition: WRite the buffer onto the disk
 // Read and write Functions The method signetuare is differnt, disk is not supposed to be there.
 int Disk_Write( string &buffer, int sector){ // I did not check for buffer being null. IDK what to do in that scenario. 
 	if(buffer.length()!=SectorBit || sector <0 || sector >= SectorNum ){ // One of these conditions happne, which are INVLAID
@@ -80,7 +92,9 @@ int Disk_Write( string &buffer, int sector){ // I did not check for buffer being
 
 	return 0;
 }
-
+//Description: Read the value of a sector
+///Pre-condition: The buffer is of correct size and sector is in range.
+//Post-condition: Set teh buffer to correct value
 int Disk_Read( string &buffer, int sector){ // I did not check for buffer being null. IDK what to do in that scenario. 
 	if(sector <0 || sector >= SectorNum ){ // One of these conditions happne, which are INVLAID
 		diskErrMsg="E_READ_INVALID_PARM";

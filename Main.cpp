@@ -16,17 +16,7 @@
 #include "File.h"
 
 using namespace std;
-#define siz 50
-#define set 13
-// Read and write are here for histroical purposes. They are take a size (how many inodes/directories can you fit in a sector) and set (aka how long is a inode/directory) and count (which spot in sector do you want to change" and maniplates them.
-//
 
-int r(){
-	return ExtDisk[0].to_ulong();
-}
-int y(){
-	return WorkDisk[0].to_ulong();
-}
 int main(){
 	FS_Boot();
 
