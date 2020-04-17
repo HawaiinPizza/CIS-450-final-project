@@ -12,7 +12,7 @@
 
 using namespace std;
 
-int main(){
+int mainTest(){
 	LogFile.open("DirectiveLog1.txt");
 
 	cout << "Any funciton excpet for FS_Boot and FS_Reset will have tiem same effect, if run before FS Boot. Let's prove it\n";
@@ -218,4 +218,8 @@ int main(){
 
 	return 0;
 
+}
+
+
+int main(){ // Get user input
 }
